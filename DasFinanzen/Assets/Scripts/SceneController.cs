@@ -14,14 +14,15 @@ public class SceneController : MonoBehaviour
     [SerializeField] private CatagoryData[] dailyData = null;
     [SerializeField] private CatagoryData[] monthlyData = null;
 
-    void InitializeCatagories(CatagoryData[] catagoryDatas, Catagory catagoryInitial, RectTransform catagoryMask) {
+    void InitializeCatagories(CatagoryData[] catagoryDatas, Catagory catagoryInitial, GameObject catagoryParent) {
         Vector3 startPos = catagoryInitial.transform.localPosition;
+        RectTransform catagoryMask = catagoryParent.GetComponent<RectTransform>();
         for (int i = 0; i < catagoryDatas.Length; i++) {
             Catagory newCatagory;
             if (i == 0)
                 newCatagory = catagoryInitial;
             else {
-                newCatagory = Instantiate(catagoryInitial) as Catagory;
+                newCatagory = Instantiate(original: catagoryInitial, parent: catagoryParent.transform) as Catagory;
                 catagoryMask.sizeDelta = new Vector2(catagoryMask.sizeDelta.x, catagoryMask.sizeDelta.y + CatagoryOffset);
                 newCatagory.transform.localPosition = new Vector3(startPos.x, startPos.y - (CatagoryOffset * i), startPos.z);
             }
@@ -30,8 +31,8 @@ public class SceneController : MonoBehaviour
     }
 
     void Start() {
-        InitializeCatagories(dailyData, dailyInitial, dailyParent.GetComponent<RectTransform>());
-        InitializeCatagories(monthlyData, monthlyInitial, monthlyParent.GetComponent<RectTransform>());
+        InitializeCatagories(dailyData, dailyInitial, dailyParent);
+        InitializeCatagories(monthlyData, monthlyInitial, monthlyParent);
     }
 }
 

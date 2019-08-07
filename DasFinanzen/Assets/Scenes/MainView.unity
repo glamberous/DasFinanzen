@@ -1466,17 +1466,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a09c22d65a694e741a1a88384aedfdb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dailyTile: {fileID: 1587189814}
-  monthlyTile: {fileID: 1263799577}
-  initialDaily: {fileID: 1223887128}
-  initialMonthly: {fileID: 2146454361}
-  appData:
+  dailyParent: {fileID: 1587189814}
+  monthlyParent: {fileID: 1263799577}
+  dailyInitial: {fileID: 1223887128}
+  monthlyInitial: {fileID: 2146454361}
+  dailyData:
   - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
   - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
   - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
   - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
   - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
-  - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
+  monthlyData: []
 --- !u!4 &864846842
 Transform:
   m_ObjectHideFlags: 0
