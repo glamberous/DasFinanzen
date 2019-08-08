@@ -1473,10 +1473,12 @@ MonoBehaviour:
   dailyData:
   - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
   - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
+  - {fileID: 11400000, guid: 339e26167cfbc5046b56b028f6255dcc, type: 2}
+  - {fileID: 11400000, guid: 339e26167cfbc5046b56b028f6255dcc, type: 2}
   - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
-  - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
-  - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
-  monthlyData: []
+  monthlyData:
+  - {fileID: 11400000, guid: ada74a5cf18b2cf4a8d048b2ecb66fdb, type: 2}
+  - {fileID: 11400000, guid: ada74a5cf18b2cf4a8d048b2ecb66fdb, type: 2}
 --- !u!4 &864846842
 Transform:
   m_ObjectHideFlags: 0
