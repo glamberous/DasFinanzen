@@ -4,14 +4,11 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Tests
-{
-    public class UI_Tests
-    {
+namespace Tests {
+    public class Test_Tests {
         // A Test behaves as an ordinary method
         [Test]
-        public void UI_TestsSimplePasses()
-        {
+        public void UI_TestsSimplePasses() {
             bool Koda = true;
             // Use the Assert class to test conditions
             Assert.IsTrue(Koda);
@@ -20,8 +17,7 @@ namespace Tests
         // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
         // `yield return null;` to skip a frame.
         [UnityTest]
-        public IEnumerator UI_TestsWithEnumeratorPasses()
-        {
+        public IEnumerator UI_TestsWithEnumeratorPasses() {
             bool Gizmo = false;
             // Use the Assert class to test conditions.
             // Use yield to skip a frame.

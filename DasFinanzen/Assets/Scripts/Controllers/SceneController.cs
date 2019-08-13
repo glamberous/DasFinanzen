@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Threading;
 
 public class SceneController : MonoBehaviour
 {
@@ -11,8 +12,7 @@ public class SceneController : MonoBehaviour
     [SerializeField] private GameObject monthlyParent = null;
     [SerializeField] private Catagory dailyInitial = null;
     [SerializeField] private Catagory monthlyInitial = null;
-    [SerializeField] private CatagoryData[] dailyData = null;
-    [SerializeField] private CatagoryData[] monthlyData = null;
+    [SerializeField] private AppData appData = null;
 
     void InitializeCatagories(CatagoryData[] catagoryDatas, Catagory catagoryOriginal, GameObject catagoryParent) {
         Vector3 startPos = catagoryOriginal.transform.localPosition;
@@ -22,17 +22,18 @@ public class SceneController : MonoBehaviour
             if (i == 0)
                 newCatagory = catagoryOriginal;
             else {
-                newCatagory = Instantiate(original: catagoryOriginal, parent: catagoryParent.transform) as Catagory;
                 catagoryMask.sizeDelta = new Vector2(catagoryMask.sizeDelta.x, catagoryMask.sizeDelta.y + CatagoryOffset);
+
+                newCatagory = Instantiate(original: catagoryOriginal, parent: catagoryParent.transform) as Catagory;
                 newCatagory.transform.localPosition = new Vector3(startPos.x, startPos.y - (CatagoryOffset * i), startPos.z);
             }
-            //newCatagory.LoadData(catagoryDatas[i]);
+            newCatagory.Construct(catagoryDatas[i]);
         }
     }
 
     void Start() {
-        InitializeCatagories(dailyData, dailyInitial, dailyParent);
-        InitializeCatagories(monthlyData, monthlyInitial, monthlyParent);
+        InitializeCatagories(appData.DailyCatagoryData, dailyInitial, dailyParent);
+        InitializeCatagories(appData.MonthlyCatagoryData, monthlyInitial, monthlyParent);
     }
 }
 

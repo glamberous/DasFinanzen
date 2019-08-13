@@ -5,24 +5,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 
-
-/*
 public static class SaveSystem {
-    
-    public static void SaveAppData(List<Catagory> catagories) {
+    public static void SaveAppData(AppData appData) {
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/ProfileData.Fin";
 
-        using (FileStream stream = File.Open(path, FileMode.Create)) {
-            AppData appData = new AppData(catagories);
-
+        using (FileStream stream = File.Open(path, FileMode.Create))
             formatter.Serialize(stream, appData);
-        }
     }
 
     public static AppData LoadProfile() {
         string path = Application.persistentDataPath + "/ProfileData.Fin";
-        AppData appData = null;
+        AppData appData;
         if (File.Exists(path)) {
             BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream stream = File.Open(path, FileMode.Open)) {
@@ -35,4 +29,4 @@ public static class SaveSystem {
             //return AppData NewUserAppData;
         }
     }
-} */
+} 
