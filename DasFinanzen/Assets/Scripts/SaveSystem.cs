@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem {
+    /*
     public static void SaveAppData(AppData appData) {
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/ProfileData.Fin";
@@ -29,4 +30,5 @@ public static class SaveSystem {
             //return AppData NewUserAppData;
         }
     }
+    */
 } 

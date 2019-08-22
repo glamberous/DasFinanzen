@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿/*
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -35,6 +36,6 @@ public class SceneController : MonoBehaviour
         InitializeCatagories(appData.DailyCatagoryData, dailyInitial, dailyParent);
         InitializeCatagories(appData.MonthlyCatagoryData, monthlyInitial, monthlyParent);
     }
-}
+}*/
 
 

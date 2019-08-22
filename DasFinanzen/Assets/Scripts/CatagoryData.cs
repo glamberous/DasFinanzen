@@ -4,10 +4,10 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-/*
 [CreateAssetMenu(fileName = "New CatagoryData", menuName = "CatagoryData")]
 public class CatagoryData : ScriptableObject {
     public bool Reoccurring;
     public string NameText;
     public string ColorCode;
-}   */
+    public List<ExpenseData> Expenses = new List<ExpenseData>();
+}

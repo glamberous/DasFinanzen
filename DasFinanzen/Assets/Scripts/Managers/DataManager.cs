@@ -18,8 +18,7 @@ public class DataManager : MonoBehaviour, ManagerInterface {
 
     public void SaveGameState() {
         Dictionary<string, object> gamestate = new Dictionary<string, object>();
-        //gamestate.Add("daily", Managers.Catagory.GetData());
-        //gamestate.Add("monthly", Managers.Catagory.GetData());
+        gamestate.Add("catagories", Managers.Catagory.GetData());
 
         FileStream stream = File.Create(filename);
         BinaryFormatter formatter = new BinaryFormatter();
@@ -40,9 +39,6 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
         stream.Close();
 
-        //Managers.Inventory.UpdateData((Dictionary<string, int>)gamestate["inventory"]);
-        //Managers.Player.UpdateData((int)gamestate["health"], (int)gamestate["maxHealth"]);
-        //Managers.Mission.UpdateData((int)gamestate["curLevel"], (int)gamestate["maxLevel"]);
-        //Managers.Mission.RestartCurrent();
+        Managers.Catagory.UpdateData(List<CatagoryData>gamestate["catagories"], (List<ExpenseData>gamestate["expenses"]);
     }
 }
