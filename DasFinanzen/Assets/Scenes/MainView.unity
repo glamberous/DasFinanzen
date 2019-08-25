@@ -355,6 +355,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 95234820}
+  - component: {fileID: 95234821}
   m_Layer: 0
   m_Name: ColorBar
   m_TagString: Untagged
@@ -382,6 +383,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -80}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &95234821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95234819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90eef4dae39009a4a8637a8a51348b89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OriginalColorBarObject: {fileID: 0}
 --- !u!1 &117371778
 GameObject:
   m_ObjectHideFlags: 0
@@ -2660,7 +2674,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afae9c153a4f05f4abba13058fbe570a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExpenseDatas: []
 --- !u!1 &1270079956
 GameObject:
   m_ObjectHideFlags: 0
@@ -4098,7 +4111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afae9c153a4f05f4abba13058fbe570a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExpenseDatas: []
 --- !u!1 &1959914292
 GameObject:
   m_ObjectHideFlags: 0
@@ -4339,7 +4351,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991909260}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.250484, y: 0.67067695, z: 301.3086}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1980440653}

@@ -35,7 +35,7 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         testExpense.NameText = "Testing";
         testExpense.CatagoryID = 0;
         expenses.Add(testExpense);
-        Managers.Catagory.UpdateData(expenses);
+        Managers.Catagory.LoadData(expenses);
 
         /*
         if (!File.Exists(filename)) {

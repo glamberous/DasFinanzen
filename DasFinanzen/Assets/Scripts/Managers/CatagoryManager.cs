@@ -1,37 +1,34 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CatagoryManager : MonoBehaviour, ManagerInterface {
     public ManagerStatus status { get; private set; }
+
+    // Catagories for other classes to reference.
     [System.NonSerialized] public List<Catagory> Catagories = new List<Catagory>();
-    public CatagoryData[] CatagoryDatas = null;
 
     private const float CatagoryOffset = 30.0f;
 
+    // Initialization Variables
+    [SerializeField] private CatagoryData[] CatagoryDatas = null;
     [SerializeField] private Catagory DailyOriginal = null;
-    private CatagoryUIData DailyUIData = null;
-
     [SerializeField] private Catagory MonthlyOriginal = null;
-    private CatagoryUIData MonthlyUIData = null;
 
     public void Startup() {
         Debug.Log("Catagory manager starting...");
 
-        DailyUIData = new CatagoryUIData(DailyOriginal);
-        MonthlyUIData = new CatagoryUIData(MonthlyOriginal);
         InitializeCatagories();
-        //Managers.Data.LoadGameState();
-        Managers.Data.SaveGameState();
 
-
-        //Get and Load all catagory data here?
-        //filename = Path.Combine(Application.persistentDataPath, "game.dat");
+        Managers.Data.LoadGameState();
 
         status = ManagerStatus.Started;
     }
 
     private void InitializeCatagories() {
+        CatagoryUIData DailyUIData = new CatagoryUIData(DailyOriginal);
+        CatagoryUIData MonthlyUIData = new CatagoryUIData(MonthlyOriginal);
         foreach (CatagoryData data in CatagoryDatas)
             if (data.Reoccurring)
                 Catagories.Add(InitializeCatagory(data, MonthlyUIData));
@@ -49,8 +46,7 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
             newCatagory = Instantiate(original: UIData.Original, parent: UIData.Parent.transform) as Catagory;
             newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (CatagoryOffset * UIData.Count), UIData.StartPos.z);
         }
-        newCatagory.Construct();
-        newCatagory.UpdateData(myCatagoryData);
+        newCatagory.Construct(myCatagoryData);
         UIData.Count++;
         return newCatagory;
     }
@@ -58,24 +54,22 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     private void UpdateTileSize(CatagoryUIData UIData) => UIData.Tile.sizeDelta =
         new Vector2(UIData.DefaultSizeDelta.x, UIData.DefaultSizeDelta.y + (CatagoryOffset * (UIData.Count - 1)));
 
-    public void UpdateData(List<ExpenseData> expenseDatas) {
-        foreach (ExpenseData expenseData in expenseDatas)
-            foreach (Catagory catagory in Catagories)
-                if (expenseData.CatagoryID == catagory.CatagoryID) {
-                    catagory.ExpenseDatas.Add(expenseData);
-                    break;
-                }  
+    public void LoadData(List<ExpenseData> expenseDatas) {
+        var expenseDatasByCatagoryID = expenseDatas.ToLookup(data => data.CatagoryID);
+        foreach (Catagory catagory in Catagories)
+            if (expenseDatasByCatagoryID.Contains(catagory.CatagoryID))
+                catagory.LoadExpenses(expenseDatasByCatagoryID[catagory.CatagoryID].ToList<ExpenseData>());
     }
 
     public List<ExpenseData> GetData() {
         List<ExpenseData> expenseDatas = new List<ExpenseData>();
         foreach (Catagory catagory in Catagories)
-            expenseDatas.Add(catagory.GetData());
+            expenseDatas.AddRange(catagory.GetExpenseDatas());
         return expenseDatas;
     }
 }
 
-public class CatagoryUIData {
+internal class CatagoryUIData {
     public Catagory Original;
     public GameObject Parent;
     public Vector3 StartPos;

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DailyAverageSpend : MonoBehaviour
-{
-    
+public static class DailyAverageSpend{
+    public static void CalculateBDAS() {
+
+    }
 }
