@@ -1,15 +1,18 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Catagory : MonoBehaviour {
     private TextMeshProUGUI NameTextMesh;
     private TextMeshProUGUI TotalTextMesh;
     private Image ColorPatchImage;
+    public List<ExpenseData> ExpenseDatas = new List<ExpenseData>();
 
     private bool Reoccurring;
-    private int CatagoryID;
+    public int CatagoryID { get; private set; }
     private string colorCode;
     private string ColorCode {
         get => colorCode;
@@ -28,12 +31,8 @@ public class Catagory : MonoBehaviour {
         TotalTextMesh = gameObject.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
     }
 
-    public CatagoryData GetData() {
-        CatagoryData data = new CatagoryData();
-        data.Reoccurring = Reoccurring;
-        data.NameText = NameTextMesh.text;
-        data.ColorCode = ColorCode;
-        data.CatagoryID = CatagoryID;
+    public ExpenseData GetData() {
+        ExpenseData data = new ExpenseData();
         return data;
     }
 
@@ -49,10 +48,8 @@ public class Catagory : MonoBehaviour {
 
     public Decimal GetExpensesTotal() {
         Decimal total = 0.00m;
-        /*
-        foreach (ExpenseData expense in Expenses)
+        foreach (ExpenseData expense in ExpenseDatas)
             total += expense.Amount;
-        */
         return total;
     }
 }

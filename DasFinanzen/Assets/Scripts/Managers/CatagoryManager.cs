@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class CatagoryManager : MonoBehaviour, ManagerInterface {
     public ManagerStatus status { get; private set; }
-    [HideInInspector] public List<Catagory> Catagories = new List<Catagory>();
+    [System.NonSerialized] public List<Catagory> Catagories = new List<Catagory>();
+    public CatagoryData[] CatagoryDatas = null;
 
     private const float CatagoryOffset = 30.0f;
 
@@ -19,15 +20,19 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
 
         DailyUIData = new CatagoryUIData(DailyOriginal);
         MonthlyUIData = new CatagoryUIData(MonthlyOriginal);
-        Managers.Data.LoadGameState();
+        InitializeCatagories();
+        //Managers.Data.LoadGameState();
+        Managers.Data.SaveGameState();
+
+
         //Get and Load all catagory data here?
         //filename = Path.Combine(Application.persistentDataPath, "game.dat");
 
         status = ManagerStatus.Started;
     }
-    
-    public void UpdateData(List<CatagoryData> catagoryDatas, List<ExpenseData> expenseDatas) {
-        foreach (CatagoryData data in catagoryDatas)
+
+    private void InitializeCatagories() {
+        foreach (CatagoryData data in CatagoryDatas)
             if (data.Reoccurring)
                 Catagories.Add(InitializeCatagory(data, MonthlyUIData));
             else
@@ -35,9 +40,6 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         UpdateTileSize(MonthlyUIData);
         UpdateTileSize(DailyUIData);
     }
-
-    private void UpdateTileSize(CatagoryUIData UIData) => UIData.Tile.sizeDelta =
-        new Vector2(UIData.DefaultSizeDelta.x, UIData.DefaultSizeDelta.y + (CatagoryOffset * (UIData.Count - 1)));
 
     private Catagory InitializeCatagory(CatagoryData myCatagoryData, CatagoryUIData UIData) {
         Catagory newCatagory;
@@ -53,11 +55,23 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         return newCatagory;
     }
 
-    public List<CatagoryData> GetData() {
-        List<CatagoryData> catagoryDatas = new List<CatagoryData>();
+    private void UpdateTileSize(CatagoryUIData UIData) => UIData.Tile.sizeDelta =
+        new Vector2(UIData.DefaultSizeDelta.x, UIData.DefaultSizeDelta.y + (CatagoryOffset * (UIData.Count - 1)));
+
+    public void UpdateData(List<ExpenseData> expenseDatas) {
+        foreach (ExpenseData expenseData in expenseDatas)
+            foreach (Catagory catagory in Catagories)
+                if (expenseData.CatagoryID == catagory.CatagoryID) {
+                    catagory.ExpenseDatas.Add(expenseData);
+                    break;
+                }  
+    }
+
+    public List<ExpenseData> GetData() {
+        List<ExpenseData> expenseDatas = new List<ExpenseData>();
         foreach (Catagory catagory in Catagories)
-            catagoryDatas.Add(catagory.GetData());
-        return catagoryDatas;
+            expenseDatas.Add(catagory.GetData());
+        return expenseDatas;
     }
 }
 

@@ -4,8 +4,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 public class DataManager : MonoBehaviour, ManagerInterface {
-    public List<CatagoryData> DefaultCatagories = null;
-    public ExpenseData DefaultExpense = null;
 
     public ManagerStatus status { get; private set; }
     private string filename;
@@ -13,25 +11,31 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     public void Startup() {
         Debug.Log("Data manager starting...");
 
-        filename = Path.Combine(Application.persistentDataPath, "game.dat");
+        filename = Path.Combine(Application.persistentDataPath, "data.fin");
 
         status = ManagerStatus.Started;
     }
 
     public void SaveGameState() {
         Dictionary<string, object> gamestate = new Dictionary<string, object>();
-        gamestate.Add("catagories", Managers.Catagory.GetData());
+        gamestate.Add("expenses", Managers.Catagory.GetData());
 
         FileStream stream = File.Create(filename);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, gamestate);
         stream.Close();
+        Debug.Log("Data was saved.");
     }
 
     public void LoadGameState() {
         List<ExpenseData> expenses = new List<ExpenseData>();
-        expenses.Add(DefaultExpense);
-        Managers.Catagory.UpdateData(DefaultCatagories, expenses);
+        ExpenseData testExpense = new ExpenseData();
+        testExpense.Amount = 6.66m;
+        testExpense.EpochDate = 1566701026;
+        testExpense.NameText = "Testing";
+        testExpense.CatagoryID = 0;
+        expenses.Add(testExpense);
+        Managers.Catagory.UpdateData(expenses);
 
         /*
         if (!File.Exists(filename)) {
@@ -48,5 +52,6 @@ public class DataManager : MonoBehaviour, ManagerInterface {
 
         Managers.Catagory.UpdateData(gamestate["catagories"] as List<CatagoryData>, gamestate["expenses"] as List<ExpenseData>);
         */
+        Debug.Log("Data was Loaded.");
     }
 }

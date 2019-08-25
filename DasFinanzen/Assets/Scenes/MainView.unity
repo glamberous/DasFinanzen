@@ -1137,11 +1137,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d51d78cecfffe6041a6793661776ef94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Catagories:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  CatagoryDatas:
+  - {fileID: 11400000, guid: 339e26167cfbc5046b56b028f6255dcc, type: 2}
+  - {fileID: 11400000, guid: 561c4a667d9de794ea98cd8240219644, type: 2}
+  - {fileID: 11400000, guid: ada74a5cf18b2cf4a8d048b2ecb66fdb, type: 2}
+  - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
   DailyOriginal: {fileID: 1223887128}
   MonthlyOriginal: {fileID: 1874660104}
 --- !u!114 &434004928
@@ -1156,12 +1156,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5c1891dddbbd494bb3eaef10b023999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultCatagories:
-  - {fileID: 11400000, guid: 339e26167cfbc5046b56b028f6255dcc, type: 2}
-  - {fileID: 11400000, guid: 561c4a667d9de794ea98cd8240219644, type: 2}
-  - {fileID: 11400000, guid: ada74a5cf18b2cf4a8d048b2ecb66fdb, type: 2}
-  - {fileID: 11400000, guid: 78e9ee2d69d185446b16a50e8c493306, type: 2}
-  DefaultExpense: {fileID: 0}
 --- !u!114 &434004929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2666,6 +2660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afae9c153a4f05f4abba13058fbe570a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ExpenseDatas: []
 --- !u!1 &1270079956
 GameObject:
   m_ObjectHideFlags: 0
@@ -4103,6 +4098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afae9c153a4f05f4abba13058fbe570a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ExpenseDatas: []
 --- !u!1 &1959914292
 GameObject:
   m_ObjectHideFlags: 0

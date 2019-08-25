@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New ExpenseData", menuName = "ExpenseData")]
 [System.Serializable]
-public class ExpenseData : ScriptableObject {
+public class ExpenseData {
     public int EpochDate;
     public string NameText;
-    public decimal Amount = 1.00m;
+    public decimal Amount;
     public int CatagoryID;
 }
