@@ -71,7 +71,7 @@ public class CatagoryUIData {
         Original = original;
         StartPos = original.transform.localPosition;
         Parent = original.transform.parent.gameObject;
-        Tile = Parent.GetComponent<RectTransform>()
+        Tile = Parent.GetComponent<RectTransform>();
         DefaultSizeDelta = Tile.sizeDelta;
         Count = 0;
     }

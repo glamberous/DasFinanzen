@@ -1,6 +1,4 @@
-﻿
-
-// Place the name of the GameEvents I should be checking for in the broadcaster here.
+﻿// Place the name of the GameEvents I should be checking for in the broadcaster here.
 
 public static class GameEvent {
     //These are all Examples

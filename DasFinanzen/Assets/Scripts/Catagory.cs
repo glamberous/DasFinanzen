@@ -10,7 +10,7 @@ public class Catagory : MonoBehaviour {
     private Image ColorPatchImage;
 
     private bool Reoccurring;
-    public ExpenseData[] ExpenseData;
+    //public ExpenseData[] ExpenseData;
     private string colorCode;
     private string ColorCode {
         get => colorCode;

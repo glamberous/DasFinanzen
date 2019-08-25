@@ -39,6 +39,6 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
         stream.Close();
 
-        Managers.Catagory.UpdateData(List<CatagoryData>gamestate["catagories"], (List<ExpenseData>gamestate["expenses"]);
+        Managers.Catagory.UpdateData(List<CatagoryData>gamestate["catagories"], List<ExpenseData>gamestate["expenses"]);
     }
 }
