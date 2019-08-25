@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e992456f65e75354c8ef39ad706cb0aa, type: 3}
   m_Name: HOA
   m_EditorClassIdentifier: 
-  Reoccurring: 0
+  Reoccurring: 1
   NameText: HOA
   ColorCode: 60B9BD
-  ExpenseData: []
+  CatagoryID: 1

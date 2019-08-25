@@ -4,6 +4,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 public class DataManager : MonoBehaviour, ManagerInterface {
+    public List<CatagoryData> DefaultCatagories = null;
+    public ExpenseData DefaultExpense = null;
 
     public ManagerStatus status { get; private set; }
     private string filename;
@@ -27,6 +29,11 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     }
 
     public void LoadGameState() {
+        List<ExpenseData> expenses = new List<ExpenseData>();
+        expenses.Add(DefaultExpense);
+        Managers.Catagory.UpdateData(DefaultCatagories, expenses);
+
+        /*
         if (!File.Exists(filename)) {
             Debug.Log("No saved game");
             return;
@@ -39,6 +46,7 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
         stream.Close();
 
-        Managers.Catagory.UpdateData(List<CatagoryData>gamestate["catagories"], List<ExpenseData>gamestate["expenses"]);
+        Managers.Catagory.UpdateData(gamestate["catagories"] as List<CatagoryData>, gamestate["expenses"] as List<ExpenseData>);
+        */
     }
 }

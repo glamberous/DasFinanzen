@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class CatagoryManager : MonoBehaviour, ManagerInterface {
     public ManagerStatus status { get; private set; }
-    public List<Catagory> Catagories = new List<Catagory>();
+    [HideInInspector] public List<Catagory> Catagories = new List<Catagory>();
 
     private const float CatagoryOffset = 30.0f;
+
     [SerializeField] private Catagory DailyOriginal = null;
     private CatagoryUIData DailyUIData = null;
 
@@ -14,10 +15,11 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     private CatagoryUIData MonthlyUIData = null;
 
     public void Startup() {
-        Debug.Log("Data manager starting...");
+        Debug.Log("Catagory manager starting...");
 
         DailyUIData = new CatagoryUIData(DailyOriginal);
         MonthlyUIData = new CatagoryUIData(MonthlyOriginal);
+        Managers.Data.LoadGameState();
         //Get and Load all catagory data here?
         //filename = Path.Combine(Application.persistentDataPath, "game.dat");
 
@@ -35,7 +37,7 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     }
 
     private void UpdateTileSize(CatagoryUIData UIData) => UIData.Tile.sizeDelta =
-        new Vector2(UIData.DefaultSizeDelta.x, UIData.DefaultSizeDelta.y + (CatagoryOffset * UIData.Count));
+        new Vector2(UIData.DefaultSizeDelta.x, UIData.DefaultSizeDelta.y + (CatagoryOffset * (UIData.Count - 1)));
 
     private Catagory InitializeCatagory(CatagoryData myCatagoryData, CatagoryUIData UIData) {
         Catagory newCatagory;
@@ -53,18 +55,18 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
 
     public List<CatagoryData> GetData() {
         List<CatagoryData> catagoryDatas = new List<CatagoryData>();
-        foreach (Catagory catagory in AllCatagories)
+        foreach (Catagory catagory in Catagories)
             catagoryDatas.Add(catagory.GetData());
         return catagoryDatas;
     }
 }
 
 public class CatagoryUIData {
-    public Catagory Original = null;
-    public GameObject Parent = null;
-    public Vector3 StartPos = null;
-    public Vector2 DefaultSizeDelta = null;
-    public RectTransform Tile = null;
+    public Catagory Original;
+    public GameObject Parent;
+    public Vector3 StartPos;
+    public Vector2 DefaultSizeDelta;
+    public RectTransform Tile;
     public int Count = 0;
 
     public CatagoryUIData(Catagory original) {

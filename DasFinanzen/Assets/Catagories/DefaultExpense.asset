@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e992456f65e75354c8ef39ad706cb0aa, type: 3}
-  m_Name: Default
+  m_Script: {fileID: 11500000, guid: 757be646cd1cb604e864321655d3d9eb, type: 3}
+  m_Name: DefaultExpense
   m_EditorClassIdentifier: 
-  Reoccurring: 0
-  NameText: 
-  ColorCode: 
+  EpochDate: 1566701026
+  NameText: Testing
+  CatagoryID: 0
