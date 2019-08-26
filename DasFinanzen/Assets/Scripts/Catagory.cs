@@ -10,9 +10,9 @@ public class Catagory : MonoBehaviour {
     private TextMeshProUGUI TotalTextMesh;
     private Image ColorPatchImage;
     private List<ExpenseData> ExpenseDatas = new List<ExpenseData>();
-
     private bool Reoccurring;
     public int CatagoryID { get; private set; }
+
     private string colorCode;
     [HideInInspector] public string ColorCode {
         get => colorCode;
@@ -22,6 +22,15 @@ public class Catagory : MonoBehaviour {
             NameTextMesh.color = newColor;
             TotalTextMesh.color = newColor;
             ColorPatchImage.color = newColor;
+        }
+    }
+
+    private decimal expensesTotal;
+    [HideInInspector] public decimal ExpensesTotal {
+        get => expensesTotal;
+        private set {
+            expensesTotal = value;
+            TotalTextMesh.text = value.ToString("C");
         }
     }
 
@@ -58,8 +67,8 @@ public class Catagory : MonoBehaviour {
 
     private void UpdateExpenseTotalText() => TotalTextMesh.text = GetExpensesTotal().ToString("C");
 
-    public Decimal GetExpensesTotal() {
-        Decimal total = 0.00m;
+    private decimal GetExpensesTotal() {
+        decimal total = 0.00m;
         foreach (ExpenseData expense in ExpenseDatas)
             total += expense.Amount;
         return total;
