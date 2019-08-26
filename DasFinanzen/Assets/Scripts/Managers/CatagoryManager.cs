@@ -20,7 +20,6 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         Debug.Log("Catagory manager starting...");
 
         InitializeCatagories();
-
         Managers.Data.LoadGameState();
 
         status = ManagerStatus.Started;
@@ -55,10 +54,9 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         new Vector2(UIData.DefaultSizeDelta.x, UIData.DefaultSizeDelta.y + (CatagoryOffset * (UIData.Count - 1)));
 
     public void LoadData(List<ExpenseData> expenseDatas) {
-        var expenseDatasByCatagoryID = expenseDatas.ToLookup(data => data.CatagoryID);
+        ILookup<int, ExpenseData> sortedExpenseDatas = expenseDatas.ToLookup(data => data.CatagoryID);
         foreach (Catagory catagory in Catagories)
-            if (expenseDatasByCatagoryID.Contains(catagory.CatagoryID))
-                catagory.LoadExpenses(expenseDatasByCatagoryID[catagory.CatagoryID].ToList<ExpenseData>());
+            catagory.LoadExpenses(sortedExpenseDatas[catagory.CatagoryID].ToList<ExpenseData>() ?? new List<ExpenseData>());
     }
 
     public List<ExpenseData> GetData() {

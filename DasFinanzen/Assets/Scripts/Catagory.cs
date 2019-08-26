@@ -14,9 +14,9 @@ public class Catagory : MonoBehaviour {
     private bool Reoccurring;
     public int CatagoryID { get; private set; }
     private string colorCode;
-    private string ColorCode {
+    [HideInInspector] public string ColorCode {
         get => colorCode;
-        set {
+        private set {
             colorCode = value;
             Color newColor = ColorConverter.HexToColor(value);
             NameTextMesh.color = newColor;
@@ -29,7 +29,10 @@ public class Catagory : MonoBehaviour {
         ColorPatchImage = gameObject.transform.GetChild(0).gameObject.GetComponent<Image>();
         NameTextMesh = gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
         TotalTextMesh = gameObject.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
+        SetCatagoryData(data);
+    }
 
+    private void SetCatagoryData(CatagoryData data) {
         CatagoryID = data.CatagoryID;
         Reoccurring = data.Reoccurring;
         NameTextMesh.text = data.NameText;

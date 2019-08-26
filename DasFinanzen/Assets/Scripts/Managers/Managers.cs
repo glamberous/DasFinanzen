@@ -4,11 +4,15 @@ using UnityEngine;
 
 [RequireComponent(typeof(DataManager))]
 [RequireComponent(typeof(CatagoryManager))]
+[RequireComponent(typeof(ColorBarManager))]
+[RequireComponent(typeof(GraphManager))]
 //Add new Managers to make them required
 
 public class Managers : MonoBehaviour {
     public static DataManager Data { get; private set; }
     public static CatagoryManager Catagory { get; private set; }
+    public static ColorBarManager ColorBar { get; private set; }
+    public static GraphManager Graph { get; private set; }
     //Add More Managers here
 
     private List<ManagerInterface> startSequence;
@@ -18,11 +22,15 @@ public class Managers : MonoBehaviour {
 
         Data = GetComponent<DataManager>();
         Catagory = GetComponent<CatagoryManager>();
+        ColorBar = GetComponent<ColorBarManager>();
+        Graph = GetComponent<GraphManager>();
         //Add GetComponent for new Managers here
 
         startSequence = new List<ManagerInterface>();
         startSequence.Add(Data);
         startSequence.Add(Catagory);
+        startSequence.Add(ColorBar);
+        startSequence.Add(Graph);
         //Add More Managers to the list here
 
         StartCoroutine(StartupManagers());

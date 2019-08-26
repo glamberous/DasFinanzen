@@ -14,6 +14,19 @@ public class ColorBar : MonoBehaviour {
     }
 
     private void OnExpensesUpdated() {
+        List<ColorBarCatagoryData> colorBarCatagoryDatas = new List<ColorBarCatagoryData>();
+        //foreach(Catagory catagory in Managers.Catagory.Catagories) 
         
+    }
+}
+
+internal class ColorBarCatagoryData {
+    decimal TotalExpenses = 0.00m;
+    string ColorCode = "FFFFFF";
+    float RightRect = 0.00f;
+    
+    public ColorBarCatagoryData(Catagory catagory) {
+        TotalExpenses = catagory.GetExpensesTotal();
+        ColorCode = catagory.ColorCode;
     }
 }
