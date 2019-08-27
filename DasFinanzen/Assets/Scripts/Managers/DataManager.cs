@@ -12,6 +12,7 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         Debug.Log("Data manager starting...");
 
         filename = Path.Combine(Application.persistentDataPath, "data.fin");
+        Managers.Data.LoadGameState();
 
         status = ManagerStatus.Started;
     }
@@ -19,6 +20,7 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     public void SaveGameState() {
         Dictionary<string, object> gamestate = new Dictionary<string, object>();
         gamestate.Add("expenses", Managers.Catagory.GetData());
+        gamestate.Add("expenseGoal", Managers.ColorBar.GetData());
 
         FileStream stream = File.Create(filename);
         BinaryFormatter formatter = new BinaryFormatter();
@@ -30,12 +32,13 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     public void LoadGameState() {
         List<ExpenseData> expenses = new List<ExpenseData>();
         ExpenseData testExpense = new ExpenseData();
-        testExpense.Amount = 6.66m;
+        testExpense.Amount = 666.66m;
         testExpense.EpochDate = 1566701026;
         testExpense.NameText = "Testing";
-        testExpense.CatagoryID = 0;
+        testExpense.ID = 0;
         expenses.Add(testExpense);
         Managers.Catagory.LoadData(expenses);
+        Managers.ColorBar.LoadData(700.00m);
 
         /*
         if (!File.Exists(filename)) {

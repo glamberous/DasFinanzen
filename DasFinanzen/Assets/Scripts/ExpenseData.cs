@@ -7,5 +7,5 @@ public class ExpenseData {
     public int EpochDate;
     public string NameText;
     public decimal Amount;
-    public int CatagoryID;
+    public int ID;
 }

@@ -7,7 +7,7 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     public ManagerStatus status { get; private set; }
 
     // Catagories for other classes to reference.
-    [System.NonSerialized] public List<Catagory> Catagories = new List<Catagory>();
+    [System.NonSerialized] public Dictionary<int, Catagory> Catagories = new Dictionary<int, Catagory>();
 
     private const float CatagoryOffset = 30.0f;
 
@@ -20,19 +20,19 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         Debug.Log("Catagory manager starting...");
 
         InitializeCatagories();
-        Managers.Data.LoadGameState();
 
         status = ManagerStatus.Started;
     }
 
+    #region Initialization
     private void InitializeCatagories() {
         CatagoryUIData DailyUIData = new CatagoryUIData(DailyOriginal);
         CatagoryUIData MonthlyUIData = new CatagoryUIData(MonthlyOriginal);
         foreach (CatagoryData data in CatagoryDatas)
             if (data.Reoccurring)
-                Catagories.Add(InitializeCatagory(data, MonthlyUIData));
+                Catagories.Add(data.ID, InitializeCatagory(data, MonthlyUIData));
             else
-                Catagories.Add(InitializeCatagory(data, DailyUIData));
+                Catagories.Add(data.ID, InitializeCatagory(data, DailyUIData));
         UpdateTileSize(MonthlyUIData);
         UpdateTileSize(DailyUIData);
     }
@@ -49,20 +49,25 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         UIData.Count++;
         return newCatagory;
     }
-
+    
     private void UpdateTileSize(CatagoryUIData UIData) => UIData.Tile.sizeDelta =
         new Vector2(UIData.DefaultSizeDelta.x, UIData.DefaultSizeDelta.y + (CatagoryOffset * (UIData.Count - 1)));
 
+    #endregion
+
     public void LoadData(List<ExpenseData> expenseDatas) {
-        ILookup<int, ExpenseData> sortedExpenseDatas = expenseDatas.ToLookup(data => data.CatagoryID);
-        foreach (Catagory catagory in Catagories)
-            catagory.LoadExpenses(sortedExpenseDatas[catagory.CatagoryID].ToList<ExpenseData>() ?? new List<ExpenseData>());
+        var sortedExpenseDatas = expenseDatas.GroupBy(expense => expense.ID);
+        foreach (var expenseDataGroup in sortedExpenseDatas)
+            if (Catagories.ContainsKey(expenseDataGroup.Key))
+                Catagories[expenseDataGroup.Key].LoadExpenses(expenseDataGroup.ToList<ExpenseData>());
+            else
+                Debug.Log($"ERROR: Catagory ID {expenseDataGroup.Key} could not be found. Expense Data was lost.");
     }
 
     public List<ExpenseData> GetData() {
         List<ExpenseData> expenseDatas = new List<ExpenseData>();
-        foreach (Catagory catagory in Catagories)
-            expenseDatas.AddRange(catagory.GetExpenseDatas());
+        foreach (KeyValuePair<int, Catagory> catagory in Catagories)
+            expenseDatas.AddRange(catagory.Value.GetExpenseDatas());
         return expenseDatas;
     }
 }

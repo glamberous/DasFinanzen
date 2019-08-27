@@ -7,5 +7,5 @@ public class CatagoryData : ScriptableObject {
     public bool Reoccurring;
     public string NameText;
     public string ColorCode;
-    public int CatagoryID;
+    public int ID;
 }

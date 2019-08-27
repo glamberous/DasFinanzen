@@ -11,10 +11,11 @@ public class Catagory : MonoBehaviour {
     private Image ColorPatchImage;
     private List<ExpenseData> ExpenseDatas = new List<ExpenseData>();
     private bool Reoccurring;
-    public int CatagoryID { get; private set; }
+    public int ID { get; private set; }
 
     private string colorCode;
-    [HideInInspector] public string ColorCode {
+    [HideInInspector]
+    public string ColorCode {
         get => colorCode;
         private set {
             colorCode = value;
@@ -42,11 +43,11 @@ public class Catagory : MonoBehaviour {
     }
 
     private void SetCatagoryData(CatagoryData data) {
-        CatagoryID = data.CatagoryID;
+        ID = data.ID;
         Reoccurring = data.Reoccurring;
         NameTextMesh.text = data.NameText;
         ColorCode = data.ColorCode;
-        UpdateExpenseTotalText(); //Ensures default reported Expense Total is $0.00
+        UpdateExpensesTotal(); //Ensures default reported Expense Total is $0.00
     }
 
     public List<ExpenseData> GetExpenseDatas() {
@@ -55,18 +56,16 @@ public class Catagory : MonoBehaviour {
 
     public void AddExpense(ExpenseData data) {
         ExpenseDatas.Add(data);
-        UpdateExpenseTotalText();
+        UpdateExpensesTotal();
         Messenger.Broadcast(CatagoryEvent.EXPENSES_UPDATED);
     }
 
     public void LoadExpenses(List<ExpenseData> expenseDatas) {
         ExpenseDatas = expenseDatas;
-        UpdateExpenseTotalText();
-        Messenger.Broadcast(CatagoryEvent.EXPENSES_UPDATED);
+        UpdateExpensesTotal();
     }
 
-    private void UpdateExpenseTotalText() => TotalTextMesh.text = GetExpensesTotal().ToString("C");
-
+    private void UpdateExpensesTotal() => ExpensesTotal = GetExpensesTotal();
     private decimal GetExpensesTotal() {
         decimal total = 0.00m;
         foreach (ExpenseData expense in ExpenseDatas)
