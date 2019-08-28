@@ -6,7 +6,7 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
     public ManagerStatus status { get; private set; }
     [SerializeField] private ColorBar OriginalColorBar = null;
     private ColorBar[] ColorBars = null;
-    private decimal ExpensesGoal = 700.00m;
+    private decimal ExpensesGoal = 700.00m; //TODO - Break this into it's own class
 
     public void Startup() {
         Debug.Log("ColorBar manager starting...");
@@ -19,6 +19,7 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
     public void LoadData(decimal goal) => ExpensesGoal = goal;
     public decimal GetData() => ExpensesGoal;
 
+    #region Initialization
     public void InitializeColorBar() {
         ColorBars = new ColorBar[Managers.Catagory.Catagories.Count];
         int count = 0;
@@ -32,11 +33,12 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
             ColorBars[count++] = newBar;
         }
     }
+    #endregion
 
     private void UpdateColorBar() {
         float tempFloat = 0.00f;
         foreach (ColorBar colorBar in ColorBars) {
-            colorBar.transform.localPosition = new Vector3(tempFloat - 310.0f, 0, 0); // Needs - 310.0f here cause of Parent Issues that I couldn't figure out.
+            colorBar.transform.localPosition = new Vector3(tempFloat - 310.0f, 0, 0); // Needs - 310.0f here cause of Parent Issues that I can't figure out. 310 is added during runtime for some reason.
             colorBar.Width = (((float)Managers.Catagory.Catagories[colorBar.ID].ExpensesTotal / (float)ExpensesGoal) * Screen.width);
             tempFloat += colorBar.Width;
         }
