@@ -62,6 +62,7 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
                 Catagories[expenseDataGroup.Key].LoadExpenses(expenseDataGroup.ToList<ExpenseData>());
             else
                 Debug.Log($"ERROR: Catagory ID {expenseDataGroup.Key} could not be found. Expense Data was lost.");
+        Messenger.Broadcast(CatagoryEvent.EXPENSES_UPDATED);
     }
 
     public List<ExpenseData> GetData() {

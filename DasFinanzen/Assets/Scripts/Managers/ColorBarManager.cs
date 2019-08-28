@@ -12,7 +12,7 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
         Debug.Log("ColorBar manager starting...");
         InitializeColorBar();
         Messenger.AddListener(CatagoryEvent.EXPENSES_UPDATED, OnExpensesUpdated);
-        UpdateColorBar();
+
         status = ManagerStatus.Started;
     }
 
@@ -27,19 +27,18 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
             if (count == 0)
                 newBar = OriginalColorBar;
             else 
-                newBar = Instantiate(original: ColorBars[count-1], parent: ColorBars[count-1].transform.parent.gameObject.transform) as ColorBar;
+                newBar = Instantiate(original: OriginalColorBar, parent: OriginalColorBar.transform.parent.gameObject.transform) as ColorBar;
             newBar.Construct(catagory.Value.ID, catagory.Value.ColorCode);
             ColorBars[count++] = newBar;
         }
     }
 
     private void UpdateColorBar() {
-        float width = 0.00f;
+        float tempFloat = 0.00f;
         foreach (ColorBar colorBar in ColorBars) {
-            width += ((float)(Managers.Catagory.Catagories[colorBar.ID].ExpensesTotal / ExpensesGoal) * Screen.width) + width;
-            //decimal testExpenseTotal = Managers.Catagory.Catagories[colorBar.ID].ExpensesTotal;
-            // ^ This keeps returning 0 even for my test Catagory.
-            colorBar.Width = width;
+            colorBar.transform.localPosition = new Vector3(tempFloat - 310.0f, 0, 0); // Needs - 310.0f here cause of Parent Issues that I couldn't figure out.
+            colorBar.Width = (((float)Managers.Catagory.Catagories[colorBar.ID].ExpensesTotal / (float)ExpensesGoal) * Screen.width);
+            tempFloat += colorBar.Width;
         }
     }
 

@@ -32,7 +32,7 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     public void LoadGameState() {
         List<ExpenseData> expenses = new List<ExpenseData>();
         ExpenseData testExpense = new ExpenseData();
-        testExpense.Amount = 666.66m;
+        testExpense.Amount = 600.00m;
         testExpense.EpochDate = 1566701026;
         testExpense.NameText = "Testing";
         testExpense.ID = 0;

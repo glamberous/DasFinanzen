@@ -25,7 +25,7 @@ public class ColorBar : MonoBehaviour {
         get => width;
         set {
             width = value;
-            BarRect.sizeDelta = new Vector2(BarRect.sizeDelta.x + value, BarRect.sizeDelta.y);
+            BarRect.sizeDelta = new Vector2(value, BarRect.sizeDelta.y);
         }
     }
 
