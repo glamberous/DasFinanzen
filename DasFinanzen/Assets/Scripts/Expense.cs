@@ -10,34 +10,38 @@ public class Expense : MonoBehaviour {
     private TextMeshProUGUI NameTextMesh = null;
     private TextMeshProUGUI ExpenseTextMesh = null;
 
+    private decimal amount;
     private decimal Amount {
-        get => Amount;
+        get => amount;
         set {
-            Amount = value;
+            amount = value;
             ExpenseTextMesh.text = value.ToString();
         }
     }
 
+    private string nameText;
     private string NameText {
-        get => NameText;
+        get => nameText;
         set {
-            NameText = value;
+            nameText = value;
             NameTextMesh.text = value;
         }
     }
 
+    private int date;
     private int Date {
-        get => Date;
+        get => date;
         set {
-            Date = value;
+            date = value;
             DateTextMesh.text = value.ToString();
         }
     }
 
+    private string colorCode;
     private string ColorCode {
-        get => ColorCode;
+        get => colorCode;
         set {
-            ColorCode = value;
+            colorCode = value;
             Color newColor = ColorConverter.HexToColor(value);
             NameTextMesh.color = newColor;
             DateTextMesh.color = newColor;

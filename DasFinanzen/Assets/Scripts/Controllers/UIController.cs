@@ -6,7 +6,6 @@ public class UIController : MonoBehaviour {
     [SerializeField] private GameObject SubCatagoryView = null;
     [SerializeField] private GameObject GraphView = null;
 
-
     private void Awake() {
         Messenger<int>.AddListener(AppEvent.SUB_VIEW_TOGGLE, OnSubViewToggled);
     }

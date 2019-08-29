@@ -16,6 +16,7 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     [SerializeField] private Catagory DailyOriginal = null;
     [SerializeField] private Catagory MonthlyOriginal = null;
     [SerializeField] private Expense ExpenseOriginal = null;
+    private TileUIData ExpenseTileData = null;
 
     public void Startup() {
         Debug.Log("Catagory manager starting...");
@@ -27,8 +28,8 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
 
     #region Catagories
     private void InitializeCatagories() {
-        CatagoryUIData DailyUIData = new CatagoryUIData(DailyOriginal);
-        CatagoryUIData MonthlyUIData = new CatagoryUIData(MonthlyOriginal);
+        TileUIData DailyUIData = new TileUIData(DailyOriginal.gameObject);
+        TileUIData MonthlyUIData = new TileUIData(MonthlyOriginal.gameObject);
         foreach (CatagoryData data in CatagoryDatas)
             if (data.Reoccurring)
                 Catagories.Add(data.ID, InitializeCatagory(data, MonthlyUIData));
@@ -36,17 +37,14 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
                 Catagories.Add(data.ID, InitializeCatagory(data, DailyUIData));
         MonthlyUIData.UpdateTileSize();
         DailyUIData.UpdateTileSize();
-        // Null Variables so Garbage Collector will pick them up.
-        MonthlyUIData = null;
-        DailyUIData = null;
     }
 
-    private Catagory InitializeCatagory(CatagoryData myCatagoryData, CatagoryUIData UIData) {
+    private Catagory InitializeCatagory(CatagoryData myCatagoryData, TileUIData UIData) {
         Catagory newCatagory;
         if (UIData.Count == 0)
-            newCatagory = UIData.Original;
+            newCatagory = UIData.Original.GetComponent<Catagory>();
         else {
-            newCatagory = Instantiate(original: UIData.Original, parent: UIData.Parent.transform) as Catagory;
+            newCatagory = Instantiate(original: UIData.Original.GetComponent<Catagory>(), parent: UIData.Parent.transform) as Catagory;
             newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
         }
         newCatagory.Construct(myCatagoryData);
@@ -77,40 +75,28 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
 
     #region Expenses
 
-
     public void PrepareSubCatagoryView(int ID) {
-        ClearExpenses();
         SetSelectedCatagory(ID);
         InitializeExpenses();
-    }
-
-    private void ClearExpenses() {
-        int count = 0;
-        foreach (Expense expense in SelectedCatagoryExpenses) {
-            if (count++ == 0)
-                continue;
-            else
-                Destroy(expense);
-        }
-        SelectedCatagoryExpenses = new List<Expense>();
     }
 
     private void SetSelectedCatagory(int ID) => SelectedCatagory = Catagories[ID];
 
     private void InitializeExpenses() {
-        ExpenseUIData expenseUIData = new ExpenseUIData(ExpenseOriginal);
+        if (ExpenseTileData == null)
+            ExpenseTileData = new TileUIData(ExpenseOriginal.gameObject);
+        ExpenseTileData.Count = 0;
         foreach (ExpenseData data in SelectedCatagory.GetExpenseDatas())
-            SelectedCatagoryExpenses.Add(InitializeExpense(data, expenseUIData));
-        expenseUIData.UpdateTileSize();
-        expenseUIData = null; //Null variable so Garbage Collector will pick it up.
+            SelectedCatagoryExpenses.Add(InitializeExpense(data, ExpenseTileData));
+        ExpenseTileData.UpdateTileSize();
     }
 
-    private Expense InitializeExpense(ExpenseData myExpenseData, ExpenseUIData UIData) {
+    private Expense InitializeExpense(ExpenseData myExpenseData, TileUIData UIData) {
         Expense newExpense;
         if (UIData.Count == 0)
-            newExpense = UIData.Original;
+            newExpense = ExpenseOriginal;
         else {
-            newExpense = Instantiate(original: UIData.Original, parent: UIData.Parent.transform) as Expense;
+            newExpense = Instantiate(original: ExpenseOriginal, parent: UIData.Parent.transform) as Expense;
             newExpense.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
         }
         newExpense.Construct(myExpenseData);
@@ -120,22 +106,38 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
 
     public void ExitSubCatagoryView() {
         SaveExpenseDatas();
+        ClearExpenses();
     }
 
     private void SaveExpenseDatas() {
         
     }
+
+    private void ClearExpenses() {
+        int count = 0;
+        foreach (Expense expense in SelectedCatagoryExpenses) {
+            if (count++ == 0)
+                continue; // Spare ExpenseOriginal from being Destroyed
+            else
+                Destroy(expense);
+        }
+        SelectedCatagoryExpenses = new List<Expense>();
+    }
     #endregion
 }
 
-abstract class UIData {
+internal class TileUIData {
+    public GameObject Original;
     public GameObject Parent;
     public Vector3 StartPos;
     public Vector2 DefaultSizeDelta;
     public RectTransform Tile;
     public int Count = 0;
 
-    public void Construct(GameObject parent) {
+    public TileUIData(GameObject original) {
+        Original = original;
+        StartPos = original.transform.localPosition;
+        Parent = original.transform.parent.gameObject;
         Tile = Parent.GetComponent<RectTransform>();
         DefaultSizeDelta = Tile.sizeDelta;
         Count = 0;
@@ -143,28 +145,6 @@ abstract class UIData {
 
     public void UpdateTileSize() => Tile.sizeDelta =
         new Vector2(DefaultSizeDelta.x, DefaultSizeDelta.y + (Constants.CatagoryOffset * (Count - 1)));
-}
-
-internal class CatagoryUIData : UIData {
-    public Catagory Original;
-    
-    public CatagoryUIData(Catagory original) {
-        Original = original;
-        StartPos = original.transform.localPosition;
-        Parent = original.transform.parent.gameObject;
-        base.Construct(Parent);
-    }
-}
-
-internal class ExpenseUIData : UIData {
-    public Expense Original;
-
-    public ExpenseUIData(Expense original) {
-        Original = original;
-        StartPos = original.transform.localPosition;
-        Parent = original.transform.parent.gameObject;
-        base.Construct(Parent);
-    }
 }
 
 internal static class Constants {

@@ -72,5 +72,10 @@ public class Catagory : MonoBehaviour {
             total += expense.Amount;
         return total;
     }
+
+    public void OnMouseDown() {
+        Messenger<int>.Broadcast(AppEvent.SUB_VIEW_TOGGLE, ID);
+        Debug.Log($"Catagory {ID} clicked!");
+    }
 }
 
