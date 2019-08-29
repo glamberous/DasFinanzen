@@ -57,7 +57,7 @@ public class Catagory : MonoBehaviour {
     public void AddExpense(ExpenseData data) {
         ExpenseDatas.Add(data);
         UpdateExpensesTotal();
-        Messenger.Broadcast(CatagoryEvent.EXPENSES_UPDATED);
+        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
     }
 
     public void LoadExpenses(List<ExpenseData> expenseDatas) {

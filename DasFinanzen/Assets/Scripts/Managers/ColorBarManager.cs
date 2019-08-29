@@ -11,7 +11,7 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
     public void Startup() {
         Debug.Log("ColorBar manager starting...");
         InitializeColorBar();
-        Messenger.AddListener(CatagoryEvent.EXPENSES_UPDATED, OnExpensesUpdated);
+        Messenger.AddListener(AppEvent.EXPENSES_UPDATED, OnExpensesUpdated);
 
         status = ManagerStatus.Started;
     }
