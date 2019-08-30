@@ -38,7 +38,8 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
     private void UpdateColorBar() {
         float tempFloat = 0.00f;
         foreach (ColorBar colorBar in ColorBars) {
-            colorBar.transform.localPosition = new Vector3(tempFloat - 310.0f, 0, 0); // Needs - 310.0f here cause of Parent Issues that I can't figure out. 310 is added during runtime for some reason.
+            colorBar.transform.localPosition = new Vector3(tempFloat, 0, 0); // Needs - 310.0f here cause of Parent Issues that I can't figure out. 310 is added during runtime for some reason.
+            Debug.Log(Screen.width);
             colorBar.Width = (((float)Managers.Catagory.Catagories[colorBar.ID].ExpensesTotal / (float)ExpensesGoal) * Screen.width);
             tempFloat += colorBar.Width;
         }

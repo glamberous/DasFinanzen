@@ -16,11 +16,11 @@ public class UIController : MonoBehaviour {
 
     private void OnSubViewToggled(int catagoryID) {
         if (SubCatagoryView.activeInHierarchy) {
-            Managers.Catagory.ExitSubCatagoryView();
             SubCatagoryView.SetActive(false);
+            Managers.Catagory.DeconstructSubCatagoryView();
         }
         else {
-            Managers.Catagory.PrepareSubCatagoryView(catagoryID);
+            Managers.Catagory.ConstructSubCatagoryView(catagoryID);
             SubCatagoryView.SetActive(true);
         }
     }

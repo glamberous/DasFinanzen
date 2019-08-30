@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CatagoryManager : MonoBehaviour, ManagerInterface {
-    public ManagerStatus status { get; private set; }
-
-    // Catagories for other classes to reference.
+    // Variables for other classes to reference.
     [System.NonSerialized] public Dictionary<int, Catagory> Catagories = new Dictionary<int, Catagory>();
     [System.NonSerialized] public Catagory SelectedCatagory = null;
     [System.NonSerialized] public List<Expense> SelectedCatagoryExpenses = new List<Expense>();
@@ -18,6 +16,7 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     [SerializeField] private Expense ExpenseOriginal = null;
     private TileUIData ExpenseTileData = null;
 
+    public ManagerStatus status { get; private set; }
     public void Startup() {
         Debug.Log("Catagory manager starting...");
 
@@ -74,8 +73,7 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     #endregion
 
     #region Expenses
-
-    public void PrepareSubCatagoryView(int ID) {
+    public void ConstructSubCatagoryView(int ID) {
         SetSelectedCatagory(ID);
         InitializeExpenses();
     }
@@ -83,34 +81,50 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     private void SetSelectedCatagory(int ID) => SelectedCatagory = Catagories[ID];
 
     private void InitializeExpenses() {
-        if (ExpenseTileData == null)
-            ExpenseTileData = new TileUIData(ExpenseOriginal.gameObject);
-        ExpenseTileData.Count = 0;
+        ResetExpenseTileData();
+        if (SelectedCatagory.GetExpenseDatas().Count != 0)
+            InitializeRegularExpenseView();
+        else
+            InitializeEmptyExpenseView();
+    }
+
+    private void InitializeRegularExpenseView() {
         foreach (ExpenseData data in SelectedCatagory.GetExpenseDatas())
-            SelectedCatagoryExpenses.Add(InitializeExpense(data, ExpenseTileData));
+            InitializeExpense(data);
         ExpenseTileData.UpdateTileSize();
     }
 
-    private Expense InitializeExpense(ExpenseData myExpenseData, TileUIData UIData) {
-        Expense newExpense;
-        if (UIData.Count == 0)
-            newExpense = ExpenseOriginal;
-        else {
-            newExpense = Instantiate(original: ExpenseOriginal, parent: UIData.Parent.transform) as Expense;
-            newExpense.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
-        }
-        newExpense.Construct(myExpenseData);
-        UIData.Count++;
-        return newExpense;
+    private void ResetExpenseTileData() {
+        if (ExpenseTileData == null)
+            ExpenseTileData = new TileUIData(ExpenseOriginal.gameObject);
+        ExpenseTileData.Count = 0;
+        ExpenseTileData.Parent.SetActive(true);
     }
 
-    public void ExitSubCatagoryView() {
+    private void InitializeEmptyExpenseView() {
+        ExpenseTileData.Parent.SetActive(false);
+        // Probably needs more Code here for unique UI when Empty.
+    }
+
+    private void InitializeExpense(ExpenseData myExpenseData) {
+        Expense newExpense;
+        if (ExpenseTileData.Count == 0)
+            newExpense = ExpenseOriginal;
+        else 
+            newExpense = Instantiate(original: ExpenseOriginal, parent: ExpenseTileData.Parent.transform) as Expense;
+        newExpense.transform.localPosition = new Vector3(ExpenseTileData.StartPos.x, ExpenseTileData.StartPos.y - (Constants.CatagoryOffset * ExpenseTileData.Count), ExpenseTileData.StartPos.z);
+        newExpense.Construct(myExpenseData);
+        SelectedCatagoryExpenses.Add(newExpense);
+        ExpenseTileData.Count++;
+    }
+
+    public void DeconstructSubCatagoryView() {
         SaveExpenseDatas();
         ClearExpenses();
     }
 
     private void SaveExpenseDatas() {
-        
+        //TODO Finish this method
     }
 
     private void ClearExpenses() {

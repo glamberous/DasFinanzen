@@ -15,7 +15,7 @@ public class Expense : MonoBehaviour {
         get => amount;
         set {
             amount = value;
-            ExpenseTextMesh.text = value.ToString();
+            ExpenseTextMesh.text = value.ToString("C");
         }
     }
 
