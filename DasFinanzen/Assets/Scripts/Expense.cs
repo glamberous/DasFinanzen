@@ -28,12 +28,13 @@ public class Expense : MonoBehaviour {
         }
     }
 
-    private int date;
-    private int Date {
+    private long date;
+    private long Date {
         get => date;
         set {
             date = value;
-            DateTextMesh.text = value.ToString();
+            System.DateTimeOffset newDate = System.DateTimeOffset.FromUnixTimeSeconds(value);
+            DateTextMesh.text = string.Format("{0}/{1}", newDate.Month.ToString(), newDate.Day.ToString());
         }
     }
 

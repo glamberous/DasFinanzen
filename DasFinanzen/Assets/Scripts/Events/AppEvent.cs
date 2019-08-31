@@ -5,4 +5,5 @@ public static class AppEvent {
 
     public const string SUB_VIEW_TOGGLE = "SUB_VIEW_TOGGLE";
     public const string GRAPH_VIEW_TOGGLE = "GRAPH_VIEW_TOGGLE";
+    public const string ADD_EXPENSE_TOGGLE = "ADD_EXPENSE_TOGGLE";
 }

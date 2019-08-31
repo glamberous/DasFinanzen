@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using System;
 
 public class Catagory : MonoBehaviour {
@@ -71,11 +72,6 @@ public class Catagory : MonoBehaviour {
         foreach (ExpenseData expense in ExpenseDatas)
             total += expense.Amount;
         return total;
-    }
-
-    public void OnMouseDown() {
-        Messenger<int>.Broadcast(AppEvent.SUB_VIEW_TOGGLE, ID);
-        Debug.Log($"Catagory {ID} clicked!");
     }
 }
 

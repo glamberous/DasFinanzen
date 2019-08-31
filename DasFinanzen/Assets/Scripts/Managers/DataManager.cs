@@ -33,7 +33,7 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         List<ExpenseData> expenses = new List<ExpenseData>();
         ExpenseData testExpense = new ExpenseData();
         testExpense.Amount = 600.00m;
-        testExpense.EpochDate = 1566701026;
+        testExpense.EpochDate = 1567273880;
         testExpense.NameText = "Testing";
         testExpense.ID = 0;
         expenses.Add(testExpense);

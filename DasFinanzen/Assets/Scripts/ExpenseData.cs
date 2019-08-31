@@ -4,7 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class ExpenseData {
-    public int EpochDate;
+    public long EpochDate;
     public string NameText;
     public decimal Amount;
     public int ID;

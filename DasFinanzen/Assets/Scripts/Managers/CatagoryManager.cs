@@ -16,6 +16,9 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     [SerializeField] private Expense ExpenseOriginal = null;
     private TileUIData ExpenseTileData = null;
 
+    //private List<BoxCollider2D> MainColliders = new List<BoxCollider2D>();
+    //private List<BoxCollider2D> SubCatagoryColliders = new List<BoxCollider2D>();
+
     public ManagerStatus status { get; private set; }
     public void Startup() {
         Debug.Log("Catagory manager starting...");
@@ -25,7 +28,7 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         status = ManagerStatus.Started;
     }
 
-    #region Catagories
+    #region MainView
     private void InitializeCatagories() {
         TileUIData DailyUIData = new TileUIData(DailyOriginal.gameObject);
         TileUIData MonthlyUIData = new TileUIData(MonthlyOriginal.gameObject);
@@ -50,29 +53,9 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         UIData.Count++;
         return newCatagory;
     }
-
     #endregion
 
-    #region Save/Load
-    public void LoadData(List<ExpenseData> expenseDatas) {
-        var sortedExpenseDatas = expenseDatas.GroupBy(expense => expense.ID);
-        foreach (var expenseDataGroup in sortedExpenseDatas)
-            if (Catagories.ContainsKey(expenseDataGroup.Key))
-                Catagories[expenseDataGroup.Key].LoadExpenses(expenseDataGroup.ToList<ExpenseData>());
-            else
-                Debug.Log($"ERROR: Catagory ID {expenseDataGroup.Key} could not be found. Expense Data was lost.");
-        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
-    }
-
-    public List<ExpenseData> GetData() {
-        List<ExpenseData> expenseDatas = new List<ExpenseData>();
-        foreach (KeyValuePair<int, Catagory> catagory in Catagories)
-            expenseDatas.AddRange(catagory.Value.GetExpenseDatas());
-        return expenseDatas;
-    }
-    #endregion
-
-    #region Expenses
+    #region ExpensesView
     public void ConstructSubCatagoryView(int ID) {
         SetSelectedCatagory(ID);
         InitializeExpenses();
@@ -138,6 +121,37 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
         SelectedCatagoryExpenses = new List<Expense>();
     }
     #endregion
+
+    #region AddExpenseView
+    public void DeconstructAddExpenseView() {
+        Debug.Log("DeconstructExpenseView");
+    }
+
+    public void ConstructAddExpenseView() {
+        Debug.Log("ConstructExpenseView");
+    }
+
+    #endregion
+
+    #region Save/Load
+    public void LoadData(List<ExpenseData> expenseDatas) {
+        var sortedExpenseDatas = expenseDatas.GroupBy(expense => expense.ID);
+        foreach (var expenseDataGroup in sortedExpenseDatas)
+            if (Catagories.ContainsKey(expenseDataGroup.Key))
+                Catagories[expenseDataGroup.Key].LoadExpenses(expenseDataGroup.ToList<ExpenseData>());
+            else
+                Debug.Log($"ERROR: Catagory ID {expenseDataGroup.Key} could not be found. Expense Data was lost.");
+        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
+    }
+
+    public List<ExpenseData> GetData() {
+        List<ExpenseData> expenseDatas = new List<ExpenseData>();
+        foreach (KeyValuePair<int, Catagory> catagory in Catagories)
+            expenseDatas.AddRange(catagory.Value.GetExpenseDatas());
+        return expenseDatas;
+    }
+    #endregion
+
 }
 
 internal class TileUIData {
