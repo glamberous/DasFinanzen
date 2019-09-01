@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using System;
 
-public class Catagory : MonoBehaviour {
+public class Catagory : MonoBehaviour, IPointerClickHandler {
     private TextMeshProUGUI NameTextMesh;
     private TextMeshProUGUI TotalTextMesh;
     private Image ColorPatchImage;
@@ -73,5 +73,7 @@ public class Catagory : MonoBehaviour {
             total += expense.Amount;
         return total;
     }
+
+    public void OnPointerClick(PointerEventData eventData) => Messenger<int>.Broadcast(AppEvent.SUB_VIEW_TOGGLE, ID);
 }
 
