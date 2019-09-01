@@ -3,10 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 using System;
 
-public class Catagory : MonoBehaviour, IPointerClickHandler {
+public class Catagory : MonoBehaviour {
     private TextMeshProUGUI NameTextMesh;
     private TextMeshProUGUI TotalTextMesh;
     private Image ColorPatchImage;
@@ -74,6 +73,6 @@ public class Catagory : MonoBehaviour, IPointerClickHandler {
         return total;
     }
 
-    public void OnPointerClick(PointerEventData eventData) => Messenger<int>.Broadcast(AppEvent.SUB_VIEW_TOGGLE, ID);
+    private void OnMouseDown() => Messenger<int>.Broadcast(AppEvent.SUB_VIEW_TOGGLE, ID);
 }
 
