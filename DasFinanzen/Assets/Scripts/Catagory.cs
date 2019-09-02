@@ -9,13 +9,11 @@ public class Catagory : MonoBehaviour {
     private TextMeshProUGUI NameTextMesh;
     private TextMeshProUGUI TotalTextMesh;
     private Image ColorPatchImage;
-    private List<ExpenseData> ExpenseDatas = new List<ExpenseData>();
     private bool Reoccurring;
     public int ID { get; private set; }
 
     private string colorCode;
-    [HideInInspector]
-    public string ColorCode {
+    [HideInInspector] public string ColorCode {
         get => colorCode;
         private set {
             colorCode = value;
@@ -27,7 +25,7 @@ public class Catagory : MonoBehaviour {
     }
 
     private decimal expensesTotal;
-    [HideInInspector] public decimal ExpensesTotal {
+    public decimal ExpensesTotal {
         get => expensesTotal;
         private set {
             expensesTotal = value;
@@ -50,29 +48,6 @@ public class Catagory : MonoBehaviour {
         UpdateExpensesTotal(); //Ensures default reported Expense Total is $0.00
     }
 
-    public List<ExpenseData> GetExpenseDatas() {
-        return ExpenseDatas;
-    }
-
-    public void AddExpense(ExpenseData data) {
-        ExpenseDatas.Add(data);
-        UpdateExpensesTotal();
-        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
-    }
-
-    public void LoadExpenses(List<ExpenseData> expenseDatas) {
-        ExpenseDatas = expenseDatas;
-        UpdateExpensesTotal();
-    }
-
-    private void UpdateExpensesTotal() => ExpensesTotal = GetExpensesTotal();
-    private decimal GetExpensesTotal() {
-        decimal total = 0.00m;
-        foreach (ExpenseData expense in ExpenseDatas)
-            total += expense.Amount;
-        return total;
-    }
-
-    private void OnMouseDown() => Messenger<int>.Broadcast(AppEvent.SUB_VIEW_TOGGLE, ID);
+    public void UpdateExpensesTotal() => ExpensesTotal = Managers.Expense.GetExpensesTotal(ID);
 }
 

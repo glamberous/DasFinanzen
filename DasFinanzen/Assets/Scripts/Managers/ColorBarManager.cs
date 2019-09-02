@@ -10,11 +10,14 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
 
     public void Startup() {
         Debug.Log("ColorBar manager starting...");
+
         InitializeColorBar();
-        Messenger.AddListener(AppEvent.EXPENSES_UPDATED, OnExpensesUpdated);
+        Messenger.AddListener(AppEvent.EXPENSES_UPDATED, UpdateColorBar);
 
         status = ManagerStatus.Started;
     }
+
+    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, UpdateColorBar);
 
     public void LoadData(decimal goal) => ExpensesGoal = goal;
     public decimal GetData() => ExpensesGoal;
@@ -38,14 +41,9 @@ public class ColorBarManager : MonoBehaviour, ManagerInterface {
     private void UpdateColorBar() {
         float tempFloat = 0.00f;
         foreach (ColorBar colorBar in ColorBars) {
-            colorBar.transform.localPosition = new Vector3(tempFloat, 0, 0); // Needs - 310.0f here cause of Parent Issues that I can't figure out. 310 is added during runtime for some reason.
-            Debug.Log(Screen.width);
-            colorBar.Width = (((float)Managers.Catagory.Catagories[colorBar.ID].ExpensesTotal / (float)ExpensesGoal) * Screen.width);
+            colorBar.transform.localPosition = new Vector3(tempFloat, 0, 0);
+            colorBar.Width = (((float)Managers.Expense.GetExpensesTotal(colorBar.ID) / (float)ExpensesGoal) * Screen.width);
             tempFloat += colorBar.Width;
         }
-    }
-
-    private void OnExpensesUpdated() {
-        UpdateColorBar();
     }
 }

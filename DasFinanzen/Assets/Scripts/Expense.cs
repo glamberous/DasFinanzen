@@ -58,7 +58,7 @@ public class Expense : MonoBehaviour {
     }
 
     public void SetExpenseData(ExpenseData data) {
-        ColorCode = Managers.Catagory.SelectedCatagory.ColorCode;
+        ColorCode = Managers.Catagory.CurrentCatagory.ColorCode;
         Amount = data.Amount;
         NameText = data.NameText;
         Date = data.EpochDate;

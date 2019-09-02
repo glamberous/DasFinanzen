@@ -1385,6 +1385,7 @@ GameObject:
   - component: {fileID: 434004927}
   - component: {fileID: 434004932}
   - component: {fileID: 434004931}
+  - component: {fileID: 434004933}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1404,6 +1405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d51d78cecfffe6041a6793661776ef94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentID: -1
   CatagoryDatas:
   - {fileID: 11400000, guid: 339e26167cfbc5046b56b028f6255dcc, type: 2}
   - {fileID: 11400000, guid: 561c4a667d9de794ea98cd8240219644, type: 2}
@@ -1416,7 +1418,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80ec692ad5bcd8c44b6a15b4253cfcde, type: 2}
   DailyOriginal: {fileID: 1223887128}
   MonthlyOriginal: {fileID: 1874660104}
-  ExpenseOriginal: {fileID: 278360460}
 --- !u!114 &434004928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1480,6 +1481,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OriginalColorBar: {fileID: 2028519881}
+--- !u!114 &434004933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434004926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c4d935ee487ee4880c3bebc5abfb1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Expenses: []
+  ExpenseOriginal: {fileID: 278360460}
 --- !u!1 &434545017
 GameObject:
   m_ObjectHideFlags: 0
@@ -3420,7 +3435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b9e7538df76e9f4fbf1811e9dcaa73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SubCatagoryView: {fileID: 1413277814}
+  ExpenseView: {fileID: 1413277814}
   AddExpenseView: {fileID: 366099075}
   GraphView: {fileID: 277958005}
 --- !u!4 &864846842
@@ -5488,6 +5503,7 @@ GameObject:
   - component: {fileID: 1223887127}
   - component: {fileID: 1223887128}
   - component: {fileID: 1223887129}
+  - component: {fileID: 1223887130}
   m_Layer: 5
   m_Name: DailyCatagory
   m_TagString: Untagged
@@ -5555,6 +5571,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 300, y: 20}
   m_EdgeRadius: 0
+--- !u!114 &1223887130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223887126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccbf6243fcbd42946b853deb8eb8277d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1270079956
 GameObject:
   m_ObjectHideFlags: 0
@@ -6494,7 +6522,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1413277815}
   m_Layer: 0
-  m_Name: View_SubCatagory
+  m_Name: View_Expense
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

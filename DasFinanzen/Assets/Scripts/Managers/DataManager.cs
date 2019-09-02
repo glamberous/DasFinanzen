@@ -4,7 +4,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 public class DataManager : MonoBehaviour, ManagerInterface {
-
     public ManagerStatus status { get; private set; }
     private string filename;
 
@@ -13,13 +12,14 @@ public class DataManager : MonoBehaviour, ManagerInterface {
 
         filename = Path.Combine(Application.persistentDataPath, "data.fin");
         Managers.Data.LoadGameState();
+        
 
         status = ManagerStatus.Started;
     }
 
     public void SaveGameState() {
         Dictionary<string, object> gamestate = new Dictionary<string, object>();
-        gamestate.Add("expenses", Managers.Catagory.GetData());
+        gamestate.Add("expenses", Managers.Expense.GetData());
         gamestate.Add("expenseGoal", Managers.ColorBar.GetData());
 
         FileStream stream = File.Create(filename);
@@ -37,8 +37,9 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         testExpense.NameText = "Testing";
         testExpense.ID = 0;
         expenses.Add(testExpense);
-        Managers.Catagory.LoadData(expenses);
+        Managers.Expense.LoadData(expenses);
         Managers.ColorBar.LoadData(700.00m);
+        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
 
         /*
         if (!File.Exists(filename)) {

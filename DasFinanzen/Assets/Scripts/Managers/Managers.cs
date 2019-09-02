@@ -6,10 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(ColorBarManager))]
 [RequireComponent(typeof(GraphManager))]
 [RequireComponent(typeof(DataManager))]
+[RequireComponent(typeof(ExpenseManager))]
 //Add new Managers to make them required
 
 public class Managers : MonoBehaviour {
-    public static CatagoryManager Catagory { get; private set; }
+    public static ExpenseManager Expense { get; private set; }
+    public static CatagoryManager Catagory { get; private set; }    
     public static ColorBarManager ColorBar { get; private set; }
     public static GraphManager Graph { get; private set; }
     public static DataManager Data { get; private set; }
@@ -20,6 +22,7 @@ public class Managers : MonoBehaviour {
     void Awake() {
         DontDestroyOnLoad(gameObject);
 
+        Expense = GetComponent<ExpenseManager>();
         Catagory = GetComponent<CatagoryManager>();
         ColorBar = GetComponent<ColorBarManager>();
         Graph = GetComponent<GraphManager>();
@@ -27,6 +30,7 @@ public class Managers : MonoBehaviour {
         //Add GetComponent for new Managers here
 
         startSequence = new List<ManagerInterface>();
+        startSequence.Add(Expense);
         startSequence.Add(Catagory);
         startSequence.Add(ColorBar);
         startSequence.Add(Graph);

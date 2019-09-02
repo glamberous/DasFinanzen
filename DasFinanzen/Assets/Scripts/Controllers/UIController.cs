@@ -3,33 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UIController : MonoBehaviour {
-    [SerializeField] private GameObject SubCatagoryView = null;
+    [SerializeField] private GameObject ExpenseView = null;
     [SerializeField] private GameObject AddExpenseView = null;
     [SerializeField] private GameObject GraphView = null;
 
     private void Awake() {
-        Messenger<int>.AddListener(AppEvent.SUB_VIEW_TOGGLE, OnSubViewToggled);
+        Messenger.AddListener(AppEvent.EXPENSE_VIEW_TOGGLE, OnExpenseViewToggled);
         Messenger<bool>.AddListener(AppEvent.ADD_EXPENSE_TOGGLE, OnAddExpenseToggled);
 
         AddExpenseView.SetActive(false);
-        SubCatagoryView.SetActive(false);
+        ExpenseView.SetActive(false);
     }
 
     private void OnDestroy() {
-        Messenger<int>.RemoveListener(AppEvent.SUB_VIEW_TOGGLE, OnSubViewToggled);
+        Messenger.RemoveListener(AppEvent.EXPENSE_VIEW_TOGGLE, OnExpenseViewToggled);
         Messenger<bool>.RemoveListener(AppEvent.ADD_EXPENSE_TOGGLE, OnAddExpenseToggled);
     }
 
-    //private void ActivateViewColliders(string )
-
-    private void OnSubViewToggled(int catagoryID) {
-        if (SubCatagoryView.activeInHierarchy) {
-            SubCatagoryView.SetActive(false);
-            Managers.Catagory.DeconstructSubCatagoryView();
+    private void OnExpenseViewToggled() {
+        if (ExpenseView.activeInHierarchy) {
+            ExpenseView.SetActive(false);
+            Managers.Expense.DeconstructExpenseView();
         }
         else {
-            Managers.Catagory.ConstructSubCatagoryView(catagoryID);
-            SubCatagoryView.SetActive(true);
+            Managers.Expense.ConstructExpenseView();
+            ExpenseView.SetActive(true);
         }
     }
 
@@ -38,9 +36,9 @@ public class UIController : MonoBehaviour {
             // Trigger Save of new Expense
         if (AddExpenseView.activeInHierarchy) {
             AddExpenseView.SetActive(false);
-            Managers.Catagory.DeconstructAddExpenseView();
+            Managers.Expense.DeconstructAddExpenseView();
         } else {
-            Managers.Catagory.ConstructAddExpenseView();
+            Managers.Expense.ConstructAddExpenseView();
             AddExpenseView.SetActive(true);
         }
     }
