@@ -32,8 +32,8 @@ public class UIController : MonoBehaviour {
     }
 
     private void OnAddExpenseToggled(bool triggerSave) {
-        if (triggerSave) 
-            // Trigger Save of new Expense
+        if (triggerSave)
+            Debug.Log("Save Triggered!");
         if (AddExpenseView.activeInHierarchy) {
             AddExpenseView.SetActive(false);
             Managers.Expense.DeconstructAddExpenseView();
@@ -42,6 +42,4 @@ public class UIController : MonoBehaviour {
             AddExpenseView.SetActive(true);
         }
     }
-
-
 }

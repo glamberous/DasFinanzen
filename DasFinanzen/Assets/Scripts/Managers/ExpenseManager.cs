@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TMPro;
 
 public class ExpenseManager : MonoBehaviour, ManagerInterface {
     [HideInInspector] public List<Expense> Expenses = new List<Expense>();
@@ -11,6 +12,7 @@ public class ExpenseManager : MonoBehaviour, ManagerInterface {
     private List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasLookup[Managers.Catagory.CurrentID].ToList<ExpenseData>(); }
 
     [SerializeField] private Expense ExpenseOriginal = null;
+    [SerializeField] private TextMeshProUGUI ExpenseViewTitle = null;
     private TileUIData ExpenseTileData = null;
 
     public ManagerStatus status { get; private set; }
@@ -31,6 +33,7 @@ public class ExpenseManager : MonoBehaviour, ManagerInterface {
 
     #region ExpensesView
     public void ConstructExpenseView() {
+        ExpenseViewTitle.text = Managers.Catagory.CurrentCatagory.NameText;
         ResetExpenseTileData();
         if (CurrentExpenseDatas.Count != 0)
             InitializeRegularExpenseView();
@@ -83,6 +86,7 @@ public class ExpenseManager : MonoBehaviour, ManagerInterface {
     #endregion
 
     #region AddExpenseView
+
     public void DeconstructAddExpenseView() {
         Debug.Log("DeconstructExpenseView");
     }
@@ -94,6 +98,7 @@ public class ExpenseManager : MonoBehaviour, ManagerInterface {
     #endregion
 
     #region Save/Load
+
     public void LoadData(List<ExpenseData> expenseDatas) => ExpenseDatasLookup = expenseDatas.ToLookup(expense => expense.ID);
     public List<ExpenseData> GetData() => ExpenseDatasLookup.SelectMany( expenseData => expenseData ).ToList<ExpenseData>();
 

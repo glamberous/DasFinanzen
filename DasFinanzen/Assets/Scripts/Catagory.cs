@@ -12,6 +12,15 @@ public class Catagory : MonoBehaviour {
     private bool Reoccurring;
     public int ID { get; private set; }
 
+    private string nameText;
+    [HideInInspector] public string NameText {
+        get => nameText;
+        private set {
+            nameText = value;
+            NameTextMesh.text = value;
+        }
+    }
+
     private string colorCode;
     [HideInInspector] public string ColorCode {
         get => colorCode;
@@ -43,7 +52,7 @@ public class Catagory : MonoBehaviour {
     private void SetCatagoryData(CatagoryData data) {
         ID = data.ID;
         Reoccurring = data.Reoccurring;
-        NameTextMesh.text = data.NameText;
+        NameText = data.NameText;
         ColorCode = data.ColorCode;
         UpdateExpensesTotal(); //Ensures default reported Expense Total is $0.00
     }
