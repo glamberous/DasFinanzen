@@ -7,11 +7,10 @@ using TMPro;
 public class ExpenseManager : MonoBehaviour, ManagerInterface {
     [HideInInspector] public List<Expense> Expenses = new List<Expense>();
 
-    // Working Expense Data Variables
-    private Dictionary<int, List<ExpenseData>> ExpenseDatasDict = new Dictionary<int, List<ExpenseData>>();
-    private List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasDict[Managers.Catagory.CurrentID]; }
-
     // Initialization variables
+    private ILookup<int, ExpenseData> ExpenseDatasLookup = new List<ExpenseData>().ToLookup(expense => expense.ID);
+    private List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasLookup[Managers.Catagory.CurrentID].ToList<ExpenseData>(); }
+
     [SerializeField] private Expense ExpenseOriginal = null;
     [SerializeField] private TextMeshProUGUI ExpenseViewTitle = null;
     private TileUIData ExpenseTileData = null;
@@ -27,7 +26,7 @@ public class ExpenseManager : MonoBehaviour, ManagerInterface {
 
     public decimal GetExpensesTotal(int ID) {
         decimal total = 0.00m;
-        foreach (ExpenseData expense in ExpenseDatasDict[ID])
+        foreach (ExpenseData expense in ExpenseDatasLookup[ID].ToList<ExpenseData>())
             total += expense.Amount;
         return total;
     }
@@ -88,8 +87,6 @@ public class ExpenseManager : MonoBehaviour, ManagerInterface {
 
     #region AddExpenseView
 
-    private ExpenseData ExpenseToAdd = null;
-
     public void DeconstructAddExpenseView() {
         Debug.Log("DeconstructExpenseView");
     }
@@ -102,19 +99,8 @@ public class ExpenseManager : MonoBehaviour, ManagerInterface {
 
     #region Save/Load
 
-    public void LoadData(List<ExpenseData> expenseDatas) {
-        foreach (ExpenseData expenseData in expenseDatas) {
-            if (!ExpenseDatasDict.ContainsKey(expenseData.ID))
-                ExpenseDatasDict[expenseData.ID] = new List<ExpenseData>();
-            ExpenseDatasDict[expenseData.ID].Add(expenseData);
-        }
-    }
-    public List<ExpenseData> GetData() {
-        List<ExpenseData> expenseDatasToExport = new List<ExpenseData>();
-        foreach (KeyValuePair<int, List<ExpenseData>> expenseDatas in ExpenseDatasDict)
-            expenseDatasToExport.AddRange(expenseDatas.Value);
-        return expenseDatasToExport;
-    }
+    public void LoadData(List<ExpenseData> expenseDatas) => ExpenseDatasLookup = expenseDatas.ToLookup(expense => expense.ID);
+    public List<ExpenseData> GetData() => ExpenseDatasLookup.SelectMany( expenseData => expenseData ).ToList<ExpenseData>();
 
     #endregion
 }
