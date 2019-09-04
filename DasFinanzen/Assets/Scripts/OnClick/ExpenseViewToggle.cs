@@ -9,7 +9,7 @@ public class ExpenseViewToggle : MonoBehaviour {
     private void OnMouseDown() {
         Catagory catagory = gameObject.GetComponent<Catagory>();
         if (catagory != null)
-            Managers.Catagory.CurrentID = catagory.ID;
+            Managers.Data.CurrentID = catagory.Data.ID;
         Messenger.Broadcast(AppEvent.EXPENSE_VIEW_TOGGLE);
     }
 }

@@ -3,14 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CatagoryManager : MonoBehaviour, ManagerInterface {
+public class CatagoryUIManager : MonoBehaviour, ManagerInterface {
     // Variables for other classes to reference.
-    [HideInInspector] public Dictionary<int, Catagory> Catagories = new Dictionary<int, Catagory>();
-    [HideInInspector] public Catagory CurrentCatagory { get => Catagories[CurrentID]; }
-    [HideInInspector] public int CurrentID = -1;
+    [HideInInspector] public Dictionary<int, Catagory> CatagoryUIs = new Dictionary<int, Catagory>();
 
     // Initialization Variables
-    [SerializeField] private CatagoryData[] CatagoryDatas = null;
     [SerializeField] private Catagory DailyOriginal = null;
     [SerializeField] private Catagory MonthlyOriginal = null;
 
@@ -27,11 +24,11 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
     private void InitializeCatagories() {
         TileUIData DailyUIData = new TileUIData(DailyOriginal.gameObject);
         TileUIData MonthlyUIData = new TileUIData(MonthlyOriginal.gameObject);
-        foreach (CatagoryData data in CatagoryDatas)
-            if (data.Reoccurring)
-                Catagories.Add(data.ID, InitializeCatagory(data, MonthlyUIData));
+        foreach (KeyValuePair<int, CatagoryData> data in Managers.Data.CatagoryDataDict)
+            if (data.Value.Reoccurring)
+                CatagoryUIs.Add(data.Value.ID, InitializeCatagory(data.Value, MonthlyUIData));
             else
-                Catagories.Add(data.ID, InitializeCatagory(data, DailyUIData));
+                CatagoryUIs.Add(data.Value.ID, InitializeCatagory(data.Value, DailyUIData));
         MonthlyUIData.UpdateTileSize();
         DailyUIData.UpdateTileSize();
     }
@@ -44,14 +41,15 @@ public class CatagoryManager : MonoBehaviour, ManagerInterface {
             newCatagory = Instantiate(original: UIData.Original.GetComponent<Catagory>(), parent: UIData.Parent.transform) as Catagory;
             newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
         }
-        newCatagory.Construct(myCatagoryData);
+        newCatagory.Initialize(myCatagoryData);
         UIData.Count++;
         return newCatagory;
     }
 
-    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, OnExpensesUpdated);
     private void OnExpensesUpdated() {
-        foreach (KeyValuePair<int, Catagory> catagory in Catagories)
+        foreach (KeyValuePair<int, Catagory> catagory in CatagoryUIs)
             catagory.Value.UpdateExpensesTotal();
     }
+
+    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, OnExpensesUpdated);
 }

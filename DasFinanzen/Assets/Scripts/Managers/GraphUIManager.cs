@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GraphManager : MonoBehaviour, ManagerInterface {
+public class GraphUIManager : MonoBehaviour, ManagerInterface {
     public ManagerStatus status { get; private set; }
     //[SerializeField] private GameObject OriginalColorBarObject = null;
 

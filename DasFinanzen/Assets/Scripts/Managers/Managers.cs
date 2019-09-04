@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CatagoryManager))]
-[RequireComponent(typeof(ColorBarManager))]
-[RequireComponent(typeof(GraphManager))]
+[RequireComponent(typeof(CatagoryUIManager))]
+[RequireComponent(typeof(ColorBarUIManager))]
+[RequireComponent(typeof(GraphUIManager))]
 [RequireComponent(typeof(DataManager))]
-[RequireComponent(typeof(ExpenseManager))]
+[RequireComponent(typeof(ExpenseUIManager))]
 //Add new Managers to make them required
 
 public class Managers : MonoBehaviour {
-    public static ExpenseManager Expense { get; private set; }
-    public static CatagoryManager Catagory { get; private set; }    
-    public static ColorBarManager ColorBar { get; private set; }
-    public static GraphManager Graph { get; private set; }
     public static DataManager Data { get; private set; }
+    public static CatagoryUIManager CatagoryUI { get; private set; }
+    public static ExpenseUIManager ExpenseUI { get; private set; }
+    public static ColorBarUIManager ColorBarUI { get; private set; }
+    public static GraphUIManager GraphUI { get; private set; }
     //Add More Managers here
 
     private List<ManagerInterface> startSequence;
@@ -22,19 +22,19 @@ public class Managers : MonoBehaviour {
     void Awake() {
         DontDestroyOnLoad(gameObject);
 
-        Expense = GetComponent<ExpenseManager>();
-        Catagory = GetComponent<CatagoryManager>();
-        ColorBar = GetComponent<ColorBarManager>();
-        Graph = GetComponent<GraphManager>();
         Data = GetComponent<DataManager>();
+        CatagoryUI = GetComponent<CatagoryUIManager>();
+        ExpenseUI = GetComponent<ExpenseUIManager>();
+        ColorBarUI = GetComponent<ColorBarUIManager>();
+        GraphUI = GetComponent<GraphUIManager>();
         //Add GetComponent for new Managers here
 
         startSequence = new List<ManagerInterface>();
-        startSequence.Add(Expense);
-        startSequence.Add(Catagory);
-        startSequence.Add(ColorBar);
-        startSequence.Add(Graph);
         startSequence.Add(Data);
+        startSequence.Add(CatagoryUI);
+        startSequence.Add(ExpenseUI);
+        startSequence.Add(ColorBarUI);
+        startSequence.Add(GraphUI);
         //Add More Managers to the list here
 
         StartCoroutine(StartupManagers());

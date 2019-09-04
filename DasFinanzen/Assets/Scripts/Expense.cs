@@ -5,50 +5,10 @@ using UnityEngine.UI;
 using TMPro;
 
 public class Expense : MonoBehaviour {
-    [HideInInspector] public int ID { get; private set; }
     private TextMeshProUGUI DateTextMesh = null;
     private TextMeshProUGUI NameTextMesh = null;
     private TextMeshProUGUI ExpenseTextMesh = null;
-
-    private decimal amount;
-    private decimal Amount {
-        get => amount;
-        set {
-            amount = value;
-            ExpenseTextMesh.text = value.ToString("C");
-        }
-    }
-
-    private string nameText;
-    private string NameText {
-        get => nameText;
-        set {
-            nameText = value;
-            NameTextMesh.text = value;
-        }
-    }
-
-    private long date;
-    private long Date {
-        get => date;
-        set {
-            date = value;
-            System.DateTimeOffset newDate = System.DateTimeOffset.FromUnixTimeSeconds(value);
-            DateTextMesh.text = string.Format("{0}/{1}", newDate.Month.ToString(), newDate.Day.ToString());
-        }
-    }
-
-    private string colorCode;
-    private string ColorCode {
-        get => colorCode;
-        set {
-            colorCode = value;
-            Color newColor = ColorConverter.HexToColor(value);
-            NameTextMesh.color = newColor;
-            DateTextMesh.color = newColor;
-            ExpenseTextMesh.color = newColor;
-        }
-    }
+    private ExpenseData Data = null;
 
     public void Construct(ExpenseData data) {
         DateTextMesh = gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
@@ -57,20 +17,23 @@ public class Expense : MonoBehaviour {
         SetExpenseData(data);
     }
 
-    public void SetExpenseData(ExpenseData data) {
-        ColorCode = Managers.Catagory.CurrentCatagory.ColorCode;
-        Amount = data.Amount;
-        NameText = data.NameText;
-        Date = data.EpochDate;
-        ID = data.ID;
+    public void SetColor(string colorCode) {
+        Color newColor = ColorConverter.HexToColor(colorCode);
+        NameTextMesh.color = newColor;
+        DateTextMesh.color = newColor;
+        ExpenseTextMesh.color = newColor;
     }
 
-    public ExpenseData GetExpenseData() {
-        ExpenseData newData = new ExpenseData();
-        newData.Amount = Amount;
-        newData.NameText = NameText;
-        newData.EpochDate = Date;
-        newData.ID = ID;
-        return newData;
+    public void SetDate(long date) {
+        System.DateTimeOffset newDate = System.DateTimeOffset.FromUnixTimeSeconds(date);
+        DateTextMesh.text = string.Format("{0}/{1}", newDate.Month.ToString(), newDate.Day.ToString());
+    }
+
+    public void SetExpenseData(ExpenseData data) {
+        Data = data;
+        ExpenseTextMesh.text = data.Amount.ToString("C");
+        NameTextMesh.text = data.NameText;
+        SetDate(data.EpochDate);
+        SetColor(Managers.Data.CurrentCatagoryData.ColorCode);
     }
 }

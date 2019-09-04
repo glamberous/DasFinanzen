@@ -23,10 +23,10 @@ public class UIController : MonoBehaviour {
     private void OnExpenseViewToggled() {
         if (ExpenseView.activeInHierarchy) {
             ExpenseView.SetActive(false);
-            Managers.Expense.DeconstructExpenseView();
+            Managers.ExpenseUI.DeconstructExpenseView();
         }
         else {
-            Managers.Expense.ConstructExpenseView();
+            Managers.ExpenseUI.ConstructExpenseView();
             ExpenseView.SetActive(true);
         }
     }
@@ -36,9 +36,9 @@ public class UIController : MonoBehaviour {
             Debug.Log("Save Triggered!");
         if (AddExpenseView.activeInHierarchy) {
             AddExpenseView.SetActive(false);
-            Managers.Expense.DeconstructAddExpenseView();
+            Managers.ExpenseUI.DeconstructAddExpenseView();
         } else {
-            Managers.Expense.ConstructAddExpenseView();
+            Managers.ExpenseUI.ConstructAddExpenseView();
             AddExpenseView.SetActive(true);
         }
     }

@@ -4,36 +4,22 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class ColorBar : MonoBehaviour {
+    private int ID = -1;
     private Image ColorBarImage = null;
     private RectTransform BarRect = null;
-    private string colorCode = null;
-    private float width = 0.00f;
 
-    [HideInInspector]
-    public int ID { get; private set; }
-
-    [HideInInspector]
-    public string ColorCode {
-        get => colorCode;
-        private set {
-            colorCode = value;
-            ColorBarImage.color = ColorConverter.HexToColor(value);
-        }
-    }
-    [HideInInspector]
-    public float Width {
-        get => width;
-        set {
-            width = value;
-            BarRect.sizeDelta = new Vector2(value, BarRect.sizeDelta.y);
-        }
+    public void Initialize(CatagoryData data) {
+        Construct();
+        SetColor(data.ColorCode);
+        ID = data.ID;
     }
 
-    public void Construct(int id, string hexColor) {
+    public void Construct() {
         BarRect = gameObject.GetComponent<RectTransform>();
         ColorBarImage = gameObject.GetComponent<Image>();
-        ID = id;
-        ColorCode = hexColor;
     }
 
+    public void SetColor(string colorCode) => ColorBarImage.color = ColorConverter.HexToColor(colorCode);
+    public void SetWidth(float width) => BarRect.sizeDelta = new Vector2(width, BarRect.sizeDelta.y);
+    public float GetWidth() => BarRect.sizeDelta.x;
 }

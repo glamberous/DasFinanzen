@@ -9,54 +9,33 @@ public class Catagory : MonoBehaviour {
     private TextMeshProUGUI NameTextMesh;
     private TextMeshProUGUI TotalTextMesh;
     private Image ColorPatchImage;
-    private bool Reoccurring;
-    public int ID { get; private set; }
+    [HideInInspector] public CatagoryData Data = null;
 
-    private string nameText;
-    [HideInInspector] public string NameText {
-        get => nameText;
-        private set {
-            nameText = value;
-            NameTextMesh.text = value;
-        }
+    public void Initialize(CatagoryData data) {
+        Construct();
+        SetCatagoryData(data);
+        UpdateExpensesTotal();
     }
 
-    private string colorCode;
-    [HideInInspector] public string ColorCode {
-        get => colorCode;
-        private set {
-            colorCode = value;
-            Color newColor = ColorConverter.HexToColor(value);
-            NameTextMesh.color = newColor;
-            TotalTextMesh.color = newColor;
-            ColorPatchImage.color = newColor;
-        }
-    }
-
-    private decimal expensesTotal;
-    public decimal ExpensesTotal {
-        get => expensesTotal;
-        private set {
-            expensesTotal = value;
-            TotalTextMesh.text = value.ToString("C");
-        }
-    }
-
-    public void Construct(CatagoryData data) {
+    public void Construct() {
         ColorPatchImage = gameObject.transform.GetChild(0).gameObject.GetComponent<Image>();
         NameTextMesh = gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
         TotalTextMesh = gameObject.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
-        SetCatagoryData(data);
     }
 
-    private void SetCatagoryData(CatagoryData data) {
-        ID = data.ID;
-        Reoccurring = data.Reoccurring;
-        NameText = data.NameText;
-        ColorCode = data.ColorCode;
-        UpdateExpensesTotal(); //Ensures default reported Expense Total is $0.00
+    public void SetCatagoryData(CatagoryData data) {
+        Data = data;
+        NameTextMesh.text = data.NameText;
+        SetColor(data.ColorCode);
     }
 
-    public void UpdateExpensesTotal() => ExpensesTotal = Managers.Expense.GetExpensesTotal(ID);
+    private void SetColor(string colorCode) {
+        Color newColor = ColorConverter.HexToColor(colorCode);
+        NameTextMesh.color = newColor;
+        TotalTextMesh.color = newColor;
+        ColorPatchImage.color = newColor;
+    }
+
+    public void UpdateExpensesTotal() => TotalTextMesh.text = Managers.Data.GetExpensesTotal(Data.ID).ToString("C");
 }
 
