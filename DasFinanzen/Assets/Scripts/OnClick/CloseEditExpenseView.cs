@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(BoxCollider2D))]
 
-public class AddExpenseViewToggle : MonoBehaviour {
+public class CloseEditExpenseView : MonoBehaviour {
     [SerializeField] private bool TriggerSave = false;
 
-    private void OnMouseDown() => Messenger<bool>.Broadcast(AppEvent.ADD_EXPENSE_TOGGLE, TriggerSave);
+    private void OnMouseDown() => Messenger<bool>.Broadcast(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, TriggerSave);
 }

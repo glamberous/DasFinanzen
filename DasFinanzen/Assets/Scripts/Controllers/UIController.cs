@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class UIController : MonoBehaviour {
     [SerializeField] private GameObject ExpenseView = null;
-    [SerializeField] private GameObject AddExpenseView = null;
+    [SerializeField] private GameObject EditExpenseView = null;
     [SerializeField] private GameObject GraphView = null;
 
     private void Awake() {
-        Messenger.AddListener(AppEvent.EXPENSE_VIEW_TOGGLE, OnExpenseViewToggled);
-        Messenger<bool>.AddListener(AppEvent.ADD_EXPENSE_TOGGLE, OnAddExpenseToggled);
+        Messenger.AddListener(AppEvent.TOGGLE_EXPENSE_VIEW, OnExpenseViewToggled);
+        Messenger<bool>.AddListener(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, OnEditExpenseClose);
+        Messenger<ExpenseData>.AddListener(AppEvent.OPEN_EDIT_EXPENSE_VIEW, OnEditExpenseOpen);
 
-        AddExpenseView.SetActive(false);
+        EditExpenseView.SetActive(false);
         ExpenseView.SetActive(false);
-    }
-
-    private void OnDestroy() {
-        Messenger.RemoveListener(AppEvent.EXPENSE_VIEW_TOGGLE, OnExpenseViewToggled);
-        Messenger<bool>.RemoveListener(AppEvent.ADD_EXPENSE_TOGGLE, OnAddExpenseToggled);
     }
 
     private void OnExpenseViewToggled() {
@@ -31,15 +27,21 @@ public class UIController : MonoBehaviour {
         }
     }
 
-    private void OnAddExpenseToggled(bool triggerSave) {
+    private void OnEditExpenseClose(bool triggerSave) {
         if (triggerSave)
-            Debug.Log("Save Triggered!");
-        if (AddExpenseView.activeInHierarchy) {
-            AddExpenseView.SetActive(false);
-            Managers.ExpenseUI.DeconstructAddExpenseView();
-        } else {
-            Managers.ExpenseUI.ConstructAddExpenseView();
-            AddExpenseView.SetActive(true);
-        }
+            Managers.EditExpenseUI.SaveEditExpense();
+        EditExpenseView.SetActive(false);
+        Managers.EditExpenseUI.DeconstructEditExpenseView();
+    }
+
+    private void OnEditExpenseOpen(ExpenseData expenseData) {
+        Managers.EditExpenseUI.ConstructEditExpenseView(expenseData);
+        EditExpenseView.SetActive(true);
+    }
+
+    private void OnDestroy() {
+        Messenger.RemoveListener(AppEvent.TOGGLE_EXPENSE_VIEW, OnExpenseViewToggled);
+        Messenger<bool>.RemoveListener(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, OnEditExpenseClose);
+        Messenger<ExpenseData>.RemoveListener(AppEvent.OPEN_EDIT_EXPENSE_VIEW, OnEditExpenseOpen);
     }
 }

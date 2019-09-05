@@ -10,8 +10,8 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     [HideInInspector] public Dictionary<int, List<ExpenseData>> ExpenseDatasDict = new Dictionary<int, List<ExpenseData>>();
 
     [HideInInspector] public int CurrentID = -1;
-    [HideInInspector] public List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasDict[CurrentID]; }
-    [HideInInspector] public CatagoryData CurrentCatagoryData { get => CatagoryDataDict[CurrentID]; }
+    [HideInInspector] public List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasDict[CurrentID] ?? null; }
+    [HideInInspector] public CatagoryData CurrentCatagoryData { get => CatagoryDataDict[CurrentID] ?? null; }
 
     [HideInInspector] public decimal BudgetGoal = 1000.00m;
     
@@ -44,12 +44,13 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         LoadCatagories();
         
         List<ExpenseData> expenses = new List<ExpenseData>();
-        ExpenseData testExpense = new ExpenseData();
-        testExpense.Amount = 600.00m;
-        testExpense.EpochDate = 1567273880;
-        testExpense.NameText = "Testing";
-        testExpense.ID = 0;
-        expenses.Add(testExpense);
+        
+        ExpenseData expenseData = new ExpenseData();
+        expenseData.Amount = 600.00m;
+        expenseData.NameText = "Testing";
+        expenseData.ID = 0; 
+        expenses.Add(expenseData);
+
 
         LoadExpenses(expenses);
 
@@ -81,12 +82,17 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     }
 
     private void LoadExpenses(List<ExpenseData> expenseDatas) {
+        foreach (KeyValuePair<int, CatagoryData> catagoryData in CatagoryDataDict)
+            ExpenseDatasDict[catagoryData.Key] = new List<ExpenseData>();
         foreach (ExpenseData expenseData in expenseDatas) {
-            if (!ExpenseDatasDict.ContainsKey(expenseData.ID))
-                ExpenseDatasDict[expenseData.ID] = new List<ExpenseData>();
             ExpenseDatasDict[expenseData.ID].Add(expenseData);
         }
     }
+
+    public void AddExpense(ExpenseData newExpenseData) => ExpenseDatasDict[newExpenseData.ID].Add(newExpenseData);
+    public void RemoveExpense(ExpenseData delExpenseData) => ExpenseDatasDict[delExpenseData.ID].Remove(delExpenseData);
+
+    public float GetWidthBasedOffPercentOfScreenWidth(int ID) => ((float)GetExpensesTotal(ID) / (float)BudgetGoal) * Screen.width;
 
     public decimal GetExpensesTotal(int ID) {
         decimal total = 0.00m;
@@ -95,14 +101,6 @@ public class DataManager : MonoBehaviour, ManagerInterface {
                 total += expense.Amount;
         return total;
     }
-
-    public void AddExpense() { }
-
-    public void DeleteExpense() { }
-
-    public float GetWidthBasedOffPercentOfScreenWidth(int ID) => ((float)GetExpensesTotal(ID) / (float)BudgetGoal) * Screen.width;
-
-    
     
     /*
     public List<ExpenseData> GetData() {

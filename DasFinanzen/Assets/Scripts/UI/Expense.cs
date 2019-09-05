@@ -8,7 +8,7 @@ public class Expense : MonoBehaviour {
     private TextMeshProUGUI DateTextMesh = null;
     private TextMeshProUGUI NameTextMesh = null;
     private TextMeshProUGUI ExpenseTextMesh = null;
-    private ExpenseData Data = null;
+    [HideInInspector] public ExpenseData Data = null;
 
     public void Construct(ExpenseData data) {
         DateTextMesh = gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();

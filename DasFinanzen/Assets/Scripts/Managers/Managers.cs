@@ -7,6 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(GraphUIManager))]
 [RequireComponent(typeof(DataManager))]
 [RequireComponent(typeof(ExpenseUIManager))]
+[RequireComponent(typeof(EditExpenseUIManager))]
 //Add new Managers to make them required
 
 public class Managers : MonoBehaviour {
@@ -15,6 +16,7 @@ public class Managers : MonoBehaviour {
     public static ExpenseUIManager ExpenseUI { get; private set; }
     public static ColorBarUIManager ColorBarUI { get; private set; }
     public static GraphUIManager GraphUI { get; private set; }
+    public static EditExpenseUIManager EditExpenseUI { get; private set; }
     //Add More Managers here
 
     private List<ManagerInterface> startSequence;
@@ -27,6 +29,7 @@ public class Managers : MonoBehaviour {
         ExpenseUI = GetComponent<ExpenseUIManager>();
         ColorBarUI = GetComponent<ColorBarUIManager>();
         GraphUI = GetComponent<GraphUIManager>();
+        EditExpenseUI = GetComponent<EditExpenseUIManager>();
         //Add GetComponent for new Managers here
 
         startSequence = new List<ManagerInterface>();
@@ -35,6 +38,7 @@ public class Managers : MonoBehaviour {
         startSequence.Add(ExpenseUI);
         startSequence.Add(ColorBarUI);
         startSequence.Add(GraphUI);
+        startSequence.Add(EditExpenseUI);
         //Add More Managers to the list here
 
         StartCoroutine(StartupManagers());

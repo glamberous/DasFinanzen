@@ -21,7 +21,6 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
         status = ManagerStatus.Started;
     }
 
-    #region ExpensesView
     public void ConstructExpenseView() {
         ExpenseViewTitle.text = Managers.Data.CurrentCatagoryData.NameText;
         ResetExpenseTileData();
@@ -60,12 +59,8 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
     }
 
     public void DeconstructExpenseView() {
-        SaveExpenseDatas();
+        //SaveExpenseDatas();
         ClearExpenses();
-    }
-
-    private void SaveExpenseDatas() {
-        //TODO Finish this method
     }
 
     private void ClearExpenses() {
@@ -73,26 +68,4 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
             Destroy(ExpenseUIs[count]);
         ExpenseUIs = new List<Expense>();
     }
-    #endregion
-
-    #region AddExpenseView
-
-    private ExpenseData ExpenseToAdd = null;
-
-    public void DeconstructAddExpenseView() {
-        Debug.Log("DeconstructExpenseView");
-    }
-
-    public void ConstructAddExpenseView() {
-        Debug.Log("ConstructExpenseView");
-    }
-
-    #endregion
-
-    #region Save/Load
-
-    
-    
-
-    #endregion
 }
