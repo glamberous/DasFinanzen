@@ -17,8 +17,14 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
         Debug.Log("Expense manager starting...");
 
         ExpenseUIData = new TileUIData(ExpenseOriginal.gameObject);
+        Messenger.AddListener(AppEvent.EXPENSES_UPDATED, OnExpensesUpdated);
 
         status = ManagerStatus.Started;
+    }
+
+    private void OnExpensesUpdated() {
+        DeconstructExpenseView();
+        ConstructExpenseView();
     }
 
     public void ConstructExpenseView() {
@@ -59,13 +65,8 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
     }
 
     public void DeconstructExpenseView() {
-        //SaveExpenseDatas();
-        ClearExpenses();
-    }
-
-    private void ClearExpenses() {
-        for (int count = 1; count < ExpenseUIs.Count; count++)
-            Destroy(ExpenseUIs[count]);
+        for (int Count = 1; Count < ExpenseUIs.Count; Count++) 
+            Destroy(ExpenseUIs[Count].gameObject);
         ExpenseUIs = new List<Expense>();
     }
 }
