@@ -28,8 +28,8 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
     }
 
     public void ConstructExpenseView() {
+        Debug.Log("Construct Expense View.");
         ExpenseViewTitle.text = Managers.Data.CurrentCatagoryData.NameText;
-        ResetExpenseTileData();
         if (Managers.Data.CurrentExpenseDatas.Count != 0)
             InitializeRegularExpenseView();
         else
@@ -65,8 +65,12 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
     }
 
     public void DeconstructExpenseView() {
+        Debug.Log("Deconstruct Expense View.");
+        ResetExpenseTileData();
         for (int Count = 1; Count < ExpenseUIs.Count; Count++) 
             Destroy(ExpenseUIs[Count].gameObject);
         ExpenseUIs = new List<Expense>();
     }
+
+    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, OnExpensesUpdated);
 }

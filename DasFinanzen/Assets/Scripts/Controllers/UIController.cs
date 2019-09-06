@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour {
 
     private void Awake() {
         Messenger.AddListener(AppEvent.TOGGLE_EXPENSE_VIEW, OnExpenseViewToggled);
-        Messenger<bool>.AddListener(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, OnEditExpenseClose);
+        Messenger<bool, bool>.AddListener(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, OnEditExpenseClose);
         Messenger<ExpenseData>.AddListener(AppEvent.OPEN_EDIT_EXPENSE_VIEW, OnEditExpenseOpen);
 
         EditExpenseView.SetActive(false);
@@ -18,8 +18,8 @@ public class UIController : MonoBehaviour {
 
     private void OnExpenseViewToggled() {
         if (ExpenseView.activeInHierarchy) {
-            ExpenseView.SetActive(false);
             Managers.ExpenseUI.DeconstructExpenseView();
+            ExpenseView.SetActive(false);
         }
         else {
             Managers.ExpenseUI.ConstructExpenseView();
@@ -27,9 +27,11 @@ public class UIController : MonoBehaviour {
         }
     }
 
-    private void OnEditExpenseClose(bool triggerSave) {
+    private void OnEditExpenseClose(bool triggerSave, bool triggerDelete) {
         if (triggerSave)
             Managers.EditExpenseUI.SaveEditExpense();
+        if (triggerDelete)
+            Managers.EditExpenseUI.DeleteEditExpense();
         EditExpenseView.SetActive(false);
         Managers.EditExpenseUI.DeconstructEditExpenseView();
     }
@@ -41,7 +43,7 @@ public class UIController : MonoBehaviour {
 
     private void OnDestroy() {
         Messenger.RemoveListener(AppEvent.TOGGLE_EXPENSE_VIEW, OnExpenseViewToggled);
-        Messenger<bool>.RemoveListener(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, OnEditExpenseClose);
+        Messenger<bool, bool>.RemoveListener(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, OnEditExpenseClose);
         Messenger<ExpenseData>.RemoveListener(AppEvent.OPEN_EDIT_EXPENSE_VIEW, OnEditExpenseOpen);
     }
 }

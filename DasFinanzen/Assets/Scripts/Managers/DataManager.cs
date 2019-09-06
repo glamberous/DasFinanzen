@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections;
 using System.IO;
 
 public class DataManager : MonoBehaviour, ManagerInterface {
+    // Catagories are loaded from the Unity Inspector, not the save profile.
     [SerializeField] private List<CatagoryData> CatagoryDatas = null;
 
     [HideInInspector] public Dictionary<int, CatagoryData> CatagoryDataDict = new Dictionary<int, CatagoryData>();
@@ -14,7 +16,8 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     [HideInInspector] public CatagoryData CurrentCatagoryData { get => CatagoryDataDict[CurrentID] ?? null; }
 
     [HideInInspector] public decimal BudgetGoal = 1000.00m;
-    
+
+
     public ManagerStatus status { get; private set; }
     private string filename;
 
@@ -22,16 +25,15 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         Debug.Log("Data manager starting...");
 
         filename = Path.Combine(Application.persistentDataPath, "data.fin");
-        Managers.Data.LoadGameState();
+        LoadGameState();
         
-
         status = ManagerStatus.Started;
     }
 
     public void SaveGameState() {
         Dictionary<string, object> gamestate = new Dictionary<string, object>();
-        //gamestate.Add("expenses", Managers.ExpenseUI.GetData());
-        //gamestate.Add("expenseGoal", Managers.ColorBarUI.GetData());
+        gamestate.Add("expenses", ConvertExpensesForSave());
+        gamestate.Add("expenseGoal", BudgetGoal);
 
         FileStream stream = File.Create(filename);
         BinaryFormatter formatter = new BinaryFormatter();
@@ -41,39 +43,34 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     }
 
     public void LoadGameState() {
-        LoadCatagories();
-        
-        List<ExpenseData> expenses = new List<ExpenseData>();
-        
-        ExpenseData expenseData = new ExpenseData();
-        expenseData.Amount = 600.00m;
-        expenseData.NameText = "Testing";
-        expenseData.ID = 0; 
-        expenses.Add(expenseData);
+        if (File.Exists(filename)) {
+            Dictionary<string, object> gamestate;
 
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = File.Open(filename, FileMode.Open);
+            gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
+            stream.Close();
 
-        LoadExpenses(expenses);
+            LoadCatagories();
+            LoadExpenses(gamestate["expenses"] as List<ExpenseData>);
+            LoadGoal((decimal)gamestate["expenseGoal"]);
 
-        //Managers.Expense.LoadData(expenses);
-        //Managers.ColorBar.LoadData(700.00m);
-
-
-        /*
-        if (!File.Exists(filename)) {
-            Debug.Log("No saved game");
-            return;
+            Debug.Log("Save Data was Loaded.");
         }
+        else {
+            Debug.Log("No saved game");
+            LoadCatagories();
+            LoadExpenses(new List<ExpenseData>());
+            LoadGoal(1000.00m);
+            Debug.Log("Default Data was Loaded.");
+        }
+    }
 
-        Dictionary<string, object> gamestate;
-
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = File.Open(filename, FileMode.Open);
-        gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
-        stream.Close();
-
-        Managers.Catagory.UpdateData(gamestate["catagories"] as List<CatagoryData>, gamestate["expenses"] as List<ExpenseData>);
-        */
-        Debug.Log("Data was Loaded.");
+    private List<ExpenseData> ConvertExpensesForSave() {
+        List<ExpenseData> ListToSave = new List<ExpenseData>();
+        foreach (KeyValuePair<int, List<ExpenseData>> expenseDatas in ExpenseDatasDict)
+            ListToSave.AddRange(expenseDatas.Value);
+        return ListToSave;
     }
 
     private void LoadCatagories() {
@@ -89,10 +86,26 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         }
     }
 
-    public void AddExpense(ExpenseData newExpenseData) => ExpenseDatasDict[newExpenseData.ID].Add(newExpenseData);
-    public void RemoveExpense(ExpenseData delExpenseData) => ExpenseDatasDict[delExpenseData.ID].Remove(delExpenseData);
+    private void LoadGoal(decimal goal) => BudgetGoal = goal;
 
-    public float GetWidthBasedOffPercentOfScreenWidth(int ID) => ((float)GetExpensesTotal(ID) / (float)BudgetGoal) * Screen.width;
+    public void AddExpense(ExpenseData newExpenseData) {
+        ExpenseDatasDict[newExpenseData.ID].Add(newExpenseData);
+        Debug.Log("Data Updated.");
+        SaveGameState();
+        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
+    }
+
+    public void RemoveExpense(ExpenseData delExpenseData) {
+        ExpenseDatasDict[delExpenseData.ID].Remove(delExpenseData);
+        Debug.Log("Data Updated.");
+        SaveGameState();
+        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
+    }
+
+    public float GetWidthBasedOffPercentOfScreenWidth(int ID) {
+        float calculation = ((float)GetExpensesTotal(ID) / (float)BudgetGoal) * 337.5f; // TODO - Bug here with needing to reference the Canvas Width, not screen width.
+        return calculation;
+    }
 
     public decimal GetExpensesTotal(int ID) {
         decimal total = 0.00m;
@@ -101,12 +114,4 @@ public class DataManager : MonoBehaviour, ManagerInterface {
                 total += expense.Amount;
         return total;
     }
-    
-    /*
-    public List<ExpenseData> GetData() {
-        List<ExpenseData> expenseDatasToExport = new List<ExpenseData>();
-        foreach (KeyValuePair<int, List<ExpenseData>> expenseDatas in ExpenseDatasDict)
-            expenseDatasToExport.AddRange(expenseDatas.Value);
-        return expenseDatasToExport;
-    }*/
 }

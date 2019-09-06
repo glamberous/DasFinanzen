@@ -8,12 +8,14 @@ public class Expense : MonoBehaviour {
     private TextMeshProUGUI DateTextMesh = null;
     private TextMeshProUGUI NameTextMesh = null;
     private TextMeshProUGUI ExpenseTextMesh = null;
+    private TextMeshProUGUI CurrencySymbol = null;
     [HideInInspector] public ExpenseData Data = null;
 
     public void Construct(ExpenseData data) {
         DateTextMesh = gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         NameTextMesh = gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
         ExpenseTextMesh = gameObject.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
+        CurrencySymbol = ExpenseTextMesh.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         SetExpenseData(data);
     }
 
@@ -22,6 +24,7 @@ public class Expense : MonoBehaviour {
         NameTextMesh.color = newColor;
         DateTextMesh.color = newColor;
         ExpenseTextMesh.color = newColor;
+        CurrencySymbol.color = newColor;
     }
 
     public void SetDate(long date) {
@@ -31,7 +34,7 @@ public class Expense : MonoBehaviour {
 
     public void SetExpenseData(ExpenseData data) {
         Data = data;
-        ExpenseTextMesh.text = data.Amount.ToString("C");
+        ExpenseTextMesh.text = data.Amount.ToString();
         NameTextMesh.text = data.NameText;
         SetDate(data.EpochDate);
         SetColor(Managers.Data.CurrentCatagoryData.ColorCode);

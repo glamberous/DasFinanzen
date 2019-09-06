@@ -17,8 +17,6 @@ public class ColorBarUIManager : MonoBehaviour, ManagerInterface {
         status = ManagerStatus.Started;
     }
 
-    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, UpdateColorBar);
-
     public void InitializeColorBar() {
         int count = 0;
         foreach (KeyValuePair<int, CatagoryData> catagory in Managers.Data.CatagoryDataDict) {
@@ -41,4 +39,6 @@ public class ColorBarUIManager : MonoBehaviour, ManagerInterface {
             tempFloat += colorBar.Value.GetWidth();
         }
     }
+
+    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, UpdateColorBar);
 }

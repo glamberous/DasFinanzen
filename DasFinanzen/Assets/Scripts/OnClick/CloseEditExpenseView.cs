@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class CloseEditExpenseView : MonoBehaviour {
     [SerializeField] private bool TriggerSave = false;
+    [SerializeField] private bool TriggerDelete = false;
 
-    private void OnMouseDown() => Messenger<bool>.Broadcast(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, TriggerSave);
+    private void OnMouseDown() => Messenger<bool, bool>.Broadcast(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, TriggerSave, TriggerDelete);
 }

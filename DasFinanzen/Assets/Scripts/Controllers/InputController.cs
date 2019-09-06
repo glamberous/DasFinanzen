@@ -19,13 +19,14 @@ public class InputController : MonoBehaviour {
                 tempString = tempString.Insert(tempString.Length - 6, ",");
 
             AddExpenseTextProxy.text = tempString;
-        }    
+        }
+        
     }
 
     // Not Taking the value in here because I have a TextMeshPro Proxy in order to display the text properly in the Scene.
     // EditExpenseUI Manager handles this in EditExpensesUI.
-    public void AmountOnEndEdit(string input) => Managers.EditExpenseUI.UpdateEditExpenseAmount();
-    public void NameOnEndEdit(string input) => Managers.EditExpenseUI.UpdateEditExpenseName(input);
+    public void AmountSave(string input) => Managers.EditExpenseUI.UpdateEditExpenseAmount();
+    public void NameSave(string input) => Managers.EditExpenseUI.UpdateEditExpenseName(input);
 
 
 }

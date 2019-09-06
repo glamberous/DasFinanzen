@@ -9,7 +9,7 @@ public class EditExpenseUIManager : MonoBehaviour, ManagerInterface {
     public ManagerStatus status { get; private set; }
     public void Startup() {
         Debug.Log("Edit Expense Manager starting...");
-        //DeleteButton.SetActive(false);
+        DeleteButton.SetActive(false);
 
         status = ManagerStatus.Started;
     }
@@ -29,7 +29,6 @@ public class EditExpenseUIManager : MonoBehaviour, ManagerInterface {
         else
             ConstructEditView(expenseData);
         NamePlaceholder.text = TempExpense.NameText;
-        Debug.Log("ConstructExpenseView");
     }
 
     private void ConstructNewView() {
@@ -42,22 +41,26 @@ public class EditExpenseUIManager : MonoBehaviour, ManagerInterface {
         ExpensePointer = expenseData;
         TempExpense = (ExpenseData)expenseData.Clone();
         AmountInputField.text = ((int)(expenseData.Amount * 100)).ToString();
-        //DeleteButton.SetActive(true);
+        DeleteButton.SetActive(true);
     }
 
-    public void UpdateEditExpenseAmount() => TempExpense.Amount = Convert.ToDecimal(AmountTextProxy.text);
+    public void UpdateEditExpenseAmount() {
+        Debug.Log($"Decimal being saved: {AmountTextProxy.text}");
+        TempExpense.Amount = Convert.ToDecimal(AmountTextProxy.text);
+    }
     public void UpdateEditExpenseName(string input) => TempExpense.NameText = input;
     public void UpdateEditExpenseDate() {
         //TODO later once I have more DateTime functionality finished
     }
 
     public void SaveEditExpense() {
-        if (ExpensePointer != null)
+        if (ExpensePointer != null) {
             ExpensePointer.CopyData(TempExpense);
+            Debug.Log("Data Updated.");
+            Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
+        }
         else
             Managers.Data.AddExpense(TempExpense);
-        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
-        Debug.Log("EditExpense Save Triggered.");
     }
 
     public void DeleteEditExpense() => Managers.Data.RemoveExpense(ExpensePointer);
@@ -66,8 +69,7 @@ public class EditExpenseUIManager : MonoBehaviour, ManagerInterface {
         AmountInputField.text = "";
         ExpensePointer = null;
         TempExpense = null;
-        //DeleteButton.SetActive(false);
-        Debug.Log("DeconstructExpenseView");
+        DeleteButton.SetActive(false);
     }
 
 

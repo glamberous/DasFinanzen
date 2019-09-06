@@ -8,6 +8,7 @@ using System;
 public class Catagory : MonoBehaviour {
     private TextMeshProUGUI NameTextMesh;
     private TextMeshProUGUI TotalTextMesh;
+    private TextMeshProUGUI CurrencySymbol;
     private Image ColorPatchImage;
     [HideInInspector] public CatagoryData Data = null;
 
@@ -21,6 +22,7 @@ public class Catagory : MonoBehaviour {
         ColorPatchImage = gameObject.transform.GetChild(0).gameObject.GetComponent<Image>();
         NameTextMesh = gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
         TotalTextMesh = gameObject.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
+        CurrencySymbol = TotalTextMesh.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
     }
 
     public void SetCatagoryData(CatagoryData data) {
@@ -34,8 +36,9 @@ public class Catagory : MonoBehaviour {
         NameTextMesh.color = newColor;
         TotalTextMesh.color = newColor;
         ColorPatchImage.color = newColor;
+        CurrencySymbol.color = newColor;
     }
 
-    public void UpdateExpensesTotal() => TotalTextMesh.text = Managers.Data.GetExpensesTotal(Data.ID).ToString("C");
+    public void UpdateExpensesTotal() => TotalTextMesh.text = Managers.Data.GetExpensesTotal(Data.ID).ToString();
 }
 
