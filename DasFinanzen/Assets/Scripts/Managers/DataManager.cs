@@ -5,12 +5,14 @@ using System.Collections;
 using System.IO;
 
 public class DataManager : MonoBehaviour, ManagerInterface {
-    // Catagories are loaded from the Unity Inspector, not the save profile.
+    // Catagories are loaded from the Unity Inspector, not the save profile. Gets converted into a Dictionary on App launch.
     [SerializeField] private List<CatagoryData> CatagoryDatas = null;
 
+    // The Data Variables to access during runtime. Catagorized by ID to work with more easily.
     [HideInInspector] public Dictionary<int, CatagoryData> CatagoryDataDict = new Dictionary<int, CatagoryData>();
     [HideInInspector] public Dictionary<int, List<ExpenseData>> ExpenseDatasDict = new Dictionary<int, List<ExpenseData>>();
 
+    // Working variables for "Currently selected" data
     [HideInInspector] public int CurrentID = -1;
     [HideInInspector] public List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasDict[CurrentID] ?? null; }
     [HideInInspector] public CatagoryData CurrentCatagoryData { get => CatagoryDataDict[CurrentID] ?? null; }
@@ -48,9 +50,14 @@ public class DataManager : MonoBehaviour, ManagerInterface {
 
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = File.Open(filename, FileMode.Open);
-            gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
-            stream.Close();
-
+            try {
+                gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
+            } catch {
+                Debug.Log("Unable to Load Profile!");
+                LoadDefaultValues();
+            } finally {
+                stream.Close();
+            }
             LoadCatagories();
             LoadExpenses(gamestate["expenses"] as List<ExpenseData>);
             LoadGoal((decimal)gamestate["expenseGoal"]);
@@ -59,11 +66,15 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         }
         else {
             Debug.Log("No saved game");
-            LoadCatagories();
-            LoadExpenses(new List<ExpenseData>());
-            LoadGoal(1000.00m);
-            Debug.Log("Default Data was Loaded.");
+            LoadDefaultValues();
         }
+    }
+
+    private void LoadDefaultValues() {
+        LoadCatagories();
+        LoadExpenses(new List<ExpenseData>());
+        LoadGoal(1000.00m);
+        Debug.Log("Default Data was Loaded.");
     }
 
     private List<ExpenseData> ConvertExpensesForSave() {
