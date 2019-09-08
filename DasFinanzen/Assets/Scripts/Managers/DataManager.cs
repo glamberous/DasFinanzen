@@ -45,29 +45,29 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     }
 
     public void LoadGameState() {
+        Dictionary<string, object> gamestate = null;
         if (File.Exists(filename)) {
-            Dictionary<string, object> gamestate;
-
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = File.Open(filename, FileMode.Open);
             try {
                 gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
             } catch {
                 Debug.Log("Unable to Load Profile!");
-                LoadDefaultValues();
             } finally {
                 stream.Close();
             }
-            LoadCatagories();
-            LoadExpenses(gamestate["expenses"] as List<ExpenseData>);
-            LoadGoal((decimal)gamestate["expenseGoal"]);
-
-            Debug.Log("Save Data was Loaded.");
         }
-        else {
-            Debug.Log("No saved game");
+        if (gamestate != null)
+            LoadFileValues(gamestate);
+        else
             LoadDefaultValues();
-        }
+    }
+
+    private void LoadFileValues(Dictionary<string, object> gamestate) {
+        LoadCatagories();
+        LoadExpenses(gamestate["expenses"] as List<ExpenseData>);
+        LoadGoal((decimal)gamestate["expenseGoal"]);
+        Debug.Log("Save Data was Loaded.");
     }
 
     private void LoadDefaultValues() {
