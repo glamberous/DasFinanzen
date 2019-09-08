@@ -32,4 +32,13 @@ public class ExpenseData : ICloneable {
         Amount = data.Amount;
         ID = data.ID;
     }
+
+#if UNITY_EDITOR
+    public void LoadTestData(long epochDate, string nameText, decimal amount, int id) {
+        EpochDate = epochDate;
+        NameText = nameText;
+        Amount = amount;
+        ID = id;
+    }
+#endif
 }

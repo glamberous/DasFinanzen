@@ -26,11 +26,13 @@ public class DataManager : MonoBehaviour, ManagerInterface {
     public void Startup() {
         Debug.Log("Data manager starting...");
 
-        filename = Path.Combine(Application.persistentDataPath, "data.fin");
+        SetFilePath();
         LoadGameState();
         
         status = ManagerStatus.Started;
     }
+
+    public void SetFilePath(string customDirectory = null) => filename = customDirectory == null ? Path.Combine(Application.persistentDataPath, "data.fin") : customDirectory;
 
     public void SaveGameState() {
         Dictionary<string, object> gamestate = new Dictionary<string, object>();
@@ -44,23 +46,35 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         Debug.Log("Data was saved.");
     }
 
+    private List<ExpenseData> ConvertExpensesForSave() {
+        List<ExpenseData> ListToSave = new List<ExpenseData>();
+        foreach (KeyValuePair<int, List<ExpenseData>> expenseDatas in ExpenseDatasDict)
+            ListToSave.AddRange(expenseDatas.Value);
+        return ListToSave;
+    }
+
     public void LoadGameState() {
         Dictionary<string, object> gamestate = null;
-        if (File.Exists(filename)) {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = File.Open(filename, FileMode.Open);
-            try {
-                gamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
-            } catch {
-                Debug.Log("Unable to Load Profile!");
-            } finally {
-                stream.Close();
-            }
-        }
+        if (File.Exists(filename))
+            gamestate = GetGamestateFromFile();
         if (gamestate != null)
             LoadFileValues(gamestate);
         else
             LoadDefaultValues();
+    }
+
+    private Dictionary<string, object> GetGamestateFromFile() {
+        Dictionary<string, object> tempGamestate = null;
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream stream = File.Open(filename, FileMode.Open);
+        try {
+            tempGamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
+        } catch {
+            Debug.Log("Unable to Load Profile!");
+        } finally {
+            stream.Close();
+        }
+        return tempGamestate;
     }
 
     private void LoadFileValues(Dictionary<string, object> gamestate) {
@@ -68,20 +82,6 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         LoadExpenses(gamestate["expenses"] as List<ExpenseData>);
         LoadGoal((decimal)gamestate["expenseGoal"]);
         Debug.Log("Save Data was Loaded.");
-    }
-
-    private void LoadDefaultValues() {
-        LoadCatagories();
-        LoadExpenses(new List<ExpenseData>());
-        LoadGoal(1000.00m);
-        Debug.Log("Default Data was Loaded.");
-    }
-
-    private List<ExpenseData> ConvertExpensesForSave() {
-        List<ExpenseData> ListToSave = new List<ExpenseData>();
-        foreach (KeyValuePair<int, List<ExpenseData>> expenseDatas in ExpenseDatasDict)
-            ListToSave.AddRange(expenseDatas.Value);
-        return ListToSave;
     }
 
     private void LoadCatagories() {
@@ -93,11 +93,21 @@ public class DataManager : MonoBehaviour, ManagerInterface {
         foreach (KeyValuePair<int, CatagoryData> catagoryData in CatagoryDataDict)
             ExpenseDatasDict[catagoryData.Key] = new List<ExpenseData>();
         foreach (ExpenseData expenseData in expenseDatas) {
-            ExpenseDatasDict[expenseData.ID].Add(expenseData);
+            if (ExpenseDatasDict.ContainsKey(expenseData.ID))
+                ExpenseDatasDict[expenseData.ID].Add(expenseData);
+            else
+                Debug.Log($"[WARNING] Catagory ID {expenseData.ID} was not found! Expense Data was lost.");
         }
     }
 
     private void LoadGoal(decimal goal) => BudgetGoal = goal;
+
+    private void LoadDefaultValues() {
+        LoadCatagories();
+        LoadExpenses(new List<ExpenseData>());
+        LoadGoal(1000.00m);
+        Debug.Log("Default Data was Loaded.");
+    }
 
     public void AddExpense(ExpenseData newExpenseData) {
         ExpenseDatasDict[newExpenseData.ID].Add(newExpenseData);
@@ -125,4 +135,9 @@ public class DataManager : MonoBehaviour, ManagerInterface {
                 total += expense.Amount;
         return total;
     }
+
+#if UNITY_EDITOR
+    public void SetTestCatagoryData(List<CatagoryData> dataList) => CatagoryDatas = dataList;
+    public string GetFilePath() => filename;
+#endif
 }
