@@ -138,6 +138,5 @@ public class DataManager : MonoBehaviour, ManagerInterface {
 
 #if UNITY_EDITOR
     public void SetTestCatagoryData(List<CatagoryData> dataList) => CatagoryDatas = dataList;
-    public string GetFilePath() => filename;
 #endif
 }

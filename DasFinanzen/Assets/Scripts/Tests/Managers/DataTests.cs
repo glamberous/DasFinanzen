@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.TestTools;
+using System.IO;
 
 //###############################################################################################################
-//#### IMPORTANT NOTE: These tests depend on the data.fin that exists in 
+//#### IMPORTANT NOTE: 
+//#### These tests depend on the files within the Assets/Scripts/Tests/TestData folder.
 //###############################################################################################################
 
 namespace Tests
@@ -33,10 +36,8 @@ namespace Tests
             List<CatagoryData> testCatagoryDataList = new List<CatagoryData>();
             CatagoryData testCatagoryData1 = ScriptableObject.CreateInstance<CatagoryData>();
             CatagoryData testCatagoryData2 = ScriptableObject.CreateInstance<CatagoryData>();
+            File.Delete(Application.dataPath + "/Scripts/Tests/TestData/save_test_data.fin");
         }
-
-        [Test]
-        public void LoadGameState_Can_Find_File() => FileAssert.Exists(MyDataManager.GetFilePath());
 
         [Test]
         public void LoadGameState_Loads_Empty_Profile_When_Invalid_File() {
@@ -54,17 +55,6 @@ namespace Tests
             MyDataManager.LoadGameState();
             Assert.AreEqual(900.00m, MyDataManager.BudgetGoal);
         }
-        
-        [Test]
-        public void SaveGameState_Creates_File() {
-            MyDataManager.LoadGameState();
-            MyDataManager.SetFilePath(Application.dataPath + "/Scripts/Tests/TestData/save_test_data.fin");
-            //ExpenseData testExpenseData = new ExpenseData();
-            //testExpenseData.LoadTestData(epochDate: 0, nameText: "SaveExpenseTest", amount: 0.50m, id: 1);
-            //MyDataManager.AddExpense(testExpenseData);
-            MyDataManager.SaveGameState();
-            FileAssert.Exists(MyDataManager.GetFilePath());
-        } 
         
         [Test]
         public void LoadGameState_Loads_An_Expense() {
@@ -123,16 +113,38 @@ namespace Tests
                     isEmpty = false;
             Assert.IsTrue(isEmpty);
         }
-        /*
 
         [Test]
-        public void SaveGameState_ProperlySavesVariables() {
+        public void SaveGameState_Creates_File() {
+            MyDataManager.LoadGameState();
+            MyDataManager.SetFilePath(Application.dataPath + "/Scripts/Tests/TestData/save_test_data.fin");
+            MyDataManager.SaveGameState();
+            FileAssert.Exists(Application.dataPath + "/Scripts/Tests/TestData/save_test_data.fin");
+        }
 
+        [Test]
+        public void SaveGameState_Data_Retained_After_Save_Then_Reload() {
+            ExpenseData newExpenseData = new ExpenseData();
+            newExpenseData.LoadTestData(0, "Testing Save/Load", 9.99m, 1);
+            MyDataManager.ExpenseDatasDict[newExpenseData.ID].Add(newExpenseData);
+            MyDataManager.SetFilePath(Application.dataPath + "/Scripts/Tests/TestData/save_test_data.fin");
+            MyDataManager.SaveGameState();
+            MyDataManager.LoadGameState();
+            Debug.Log(MyDataManager.ExpenseDatasDict[1].ToString());
+            Assert.AreEqual(9.99m, MyDataManager.ExpenseDatasDict[1]);
         }
 
         [Test]
         public void GetExpensesTotal_ReturnsExpensesTotal() {
-            
+            Assert.IsTrue(true);
+        }
+
+        /*
+        [Test]
+        public void AddExpense_Expense_Addedd() {
+        //ExpenseData testExpenseData = new ExpenseData();
+        //testExpenseData.LoadTestData(epochDate: 0, nameText: "SaveExpenseTest", amount: 0.50m, id: 1);
+        //MyDataManager.AddExpense(testExpenseData);
         }
 
         // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
