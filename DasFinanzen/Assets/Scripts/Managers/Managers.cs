@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CatagoryUIManager))]
-[RequireComponent(typeof(ColorBarUIManager))]
-[RequireComponent(typeof(GraphUIManager))]
-[RequireComponent(typeof(DataManager))]
-[RequireComponent(typeof(ExpenseUIManager))]
-[RequireComponent(typeof(EditExpenseUIManager))]
+[RequireComponent(typeof(CatagoryUIMono))]
+[RequireComponent(typeof(ColorBarUIMono))]
+[RequireComponent(typeof(GraphUIMono))]
+[RequireComponent(typeof(DataMono))]
+[RequireComponent(typeof(ExpenseUIMono))]
+[RequireComponent(typeof(EditExpenseUIMono))]
 //Add new Managers to make them required
 
 public class Managers : MonoBehaviour {
@@ -24,12 +24,12 @@ public class Managers : MonoBehaviour {
     void Awake() {
         DontDestroyOnLoad(gameObject);
 
-        Data = GetComponent<DataManager>();
-        CatagoryUI = GetComponent<CatagoryUIManager>();
-        ExpenseUI = GetComponent<ExpenseUIManager>();
-        ColorBarUI = GetComponent<ColorBarUIManager>();
-        GraphUI = GetComponent<GraphUIManager>();
-        EditExpenseUI = GetComponent<EditExpenseUIManager>();
+        Data = GetComponent<DataMono>().Manager;
+        CatagoryUI = GetComponent<CatagoryUIMono>().Manager;
+        ExpenseUI = GetComponent<ExpenseUIMono>().Manager;
+        ColorBarUI = GetComponent<ColorBarUIMono>().Manager;
+        GraphUI = GetComponent<GraphUIMono>().Manager;
+        EditExpenseUI = GetComponent<EditExpenseUIMono>().Manager;
         //Add GetComponent for new Managers here
 
         startSequence = new List<ManagerInterface>();

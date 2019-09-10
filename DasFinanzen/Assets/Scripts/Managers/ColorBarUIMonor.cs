@@ -2,11 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColorBarUIManager : MonoBehaviour, ManagerInterface {
-    public ManagerStatus status { get; private set; }
-
+public class ColorBarUIMono : MonoBehaviour {
     [SerializeField] private ColorBar OriginalColorBar = null;
+
+    public ColorBarUIManager Manager { get; private set; }
+    private void Awake() {
+        Manager = new ColorBarUIManager();
+        Manager.LoadMonoVariables(OriginalColorBar);
+    }
+}
+
+public class ColorBarUIManager : ManagerInterface {
     private Dictionary<int, ColorBar> ColorBarDict = new Dictionary<int, ColorBar>();
+
+    private ColorBar OriginalColorBar = null;
+
+    internal void LoadMonoVariables(ColorBar originalColorBar) {
+        OriginalColorBar = originalColorBar;
+    }
+
+    public ManagerStatus status { get; private set; }
 
     public void Startup() {
         Debug.Log("ColorBar manager starting...");
@@ -24,7 +39,7 @@ public class ColorBarUIManager : MonoBehaviour, ManagerInterface {
             if (count++ == 0)
                 newBar = OriginalColorBar;
             else 
-                newBar = Instantiate(original: OriginalColorBar, parent: OriginalColorBar.transform.parent.gameObject.transform) as ColorBar;
+                newBar = GameObject.Instantiate(original: OriginalColorBar, parent: OriginalColorBar.transform.parent.gameObject.transform) as ColorBar;
             newBar.Initialize(catagory.Value);
             ColorBarDict[catagory.Value.ID] = newBar;
         }

@@ -4,7 +4,34 @@ using System;
 using UnityEngine;
 using TMPro;
 
-public class EditExpenseUIManager : MonoBehaviour, ManagerInterface {
+public class EditExpenseUIMono : MonoBehaviour {
+    [SerializeField] private TextMeshProUGUI ViewTitle = null;
+    [SerializeField] private TextMeshProUGUI NamePlaceholder = null;
+    [SerializeField] private TMP_InputField AmountInputField = null;
+    [SerializeField] private TextMeshProUGUI AmountTextProxy = null;
+    [SerializeField] private GameObject DeleteButton = null;
+
+    public EditExpenseUIManager Manager { get; private set; }
+    public void Awake() {
+        Manager = new EditExpenseUIManager();
+        Manager.LoadMonoVariables(ViewTitle, NamePlaceholder, AmountInputField, AmountTextProxy, DeleteButton);
+    }
+}
+
+public class EditExpenseUIManager : ManagerInterface {
+    private TextMeshProUGUI ViewTitle = null;
+    private TextMeshProUGUI NamePlaceholder = null;
+    private TMP_InputField AmountInputField = null;
+    private TextMeshProUGUI AmountTextProxy = null;
+    private GameObject DeleteButton = null;
+
+    public void LoadMonoVariables(TextMeshProUGUI viewTitle, TextMeshProUGUI namePlaceholder, TMP_InputField amountInputField, TextMeshProUGUI amountTextProxy, GameObject deleteButton) {
+        ViewTitle = viewTitle;
+        NamePlaceholder = namePlaceholder;
+        AmountInputField = amountInputField;
+        AmountTextProxy = amountTextProxy;
+        DeleteButton = deleteButton;
+    }
 
     public ManagerStatus status { get; private set; }
     public void Startup() {
@@ -13,15 +40,6 @@ public class EditExpenseUIManager : MonoBehaviour, ManagerInterface {
 
         status = ManagerStatus.Started;
     }
-    
-    [SerializeField] private TextMeshProUGUI ViewTitle = null;
-    [SerializeField] private TextMeshProUGUI NamePlaceholder = null;
-    [SerializeField] private TMP_InputField AmountInputField = null;
-    [SerializeField] private TextMeshProUGUI AmountTextProxy = null;
-    [SerializeField] private GameObject DeleteButton = null;
-
-    private ExpenseData ExpensePointer = null;
-    private ExpenseData TempExpense = null;
 
     public void ConstructEditExpenseView(ExpenseData expenseData) {
         if (expenseData == null)
@@ -30,6 +48,9 @@ public class EditExpenseUIManager : MonoBehaviour, ManagerInterface {
             ConstructEditView(expenseData);
         NamePlaceholder.text = TempExpense.NameText;
     }
+
+    private ExpenseData ExpensePointer = null;
+    private ExpenseData TempExpense = null;
 
     private void ConstructNewView() {
         ViewTitle.text = "Add Expense";
@@ -71,6 +92,4 @@ public class EditExpenseUIManager : MonoBehaviour, ManagerInterface {
         TempExpense = null;
         DeleteButton.SetActive(false);
     }
-
-
 }

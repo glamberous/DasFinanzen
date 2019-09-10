@@ -3,13 +3,29 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CatagoryUIManager : MonoBehaviour, ManagerInterface {
-    // Variables for other classes to reference.
-    [HideInInspector] public Dictionary<int, Catagory> CatagoryUIs = new Dictionary<int, Catagory>();
-
+public class CatagoryUIMono : MonoBehaviour {
     // Initialization Variables
     [SerializeField] private Catagory DailyOriginal = null;
     [SerializeField] private Catagory MonthlyOriginal = null;
+
+    public CatagoryUIManager Manager { get; private set; }
+    private void Awake() {
+        Manager = new CatagoryUIManager();
+        Manager.LoadMonoVariables(DailyOriginal, MonthlyOriginal);
+    }
+}
+
+public class CatagoryUIManager : ManagerInterface { 
+    // Variables for other classes to reference.
+    public Dictionary<int, Catagory> CatagoryUIs = new Dictionary<int, Catagory>();
+
+    private Catagory DailyOriginal = null;
+    private Catagory MonthlyOriginal = null;
+
+    internal void LoadMonoVariables(Catagory dailyOriginal, Catagory monthlyOriginal) {
+        DailyOriginal = dailyOriginal;
+        MonthlyOriginal = monthlyOriginal;
+    }
 
     public ManagerStatus status { get; private set; }
     public void Startup() {
@@ -38,7 +54,7 @@ public class CatagoryUIManager : MonoBehaviour, ManagerInterface {
         if (UIData.Count == 0)
             newCatagory = UIData.Original.GetComponent<Catagory>();
         else {
-            newCatagory = Instantiate(original: UIData.Original.GetComponent<Catagory>(), parent: UIData.Parent.transform) as Catagory;
+            newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<Catagory>(), parent: UIData.Parent.transform) as Catagory;
             newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
         }
         newCatagory.Initialize(myCatagoryData);
@@ -50,6 +66,4 @@ public class CatagoryUIManager : MonoBehaviour, ManagerInterface {
         foreach (KeyValuePair<int, Catagory> catagory in CatagoryUIs)
             catagory.Value.UpdateExpensesTotal();
     }
-
-    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, OnExpensesUpdated);
 }
