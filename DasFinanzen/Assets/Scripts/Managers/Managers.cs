@@ -21,7 +21,7 @@ public class Managers : MonoBehaviour {
 
     private List<ManagerInterface> startSequence;
 
-    void Awake() {
+    void Start() {
         DontDestroyOnLoad(gameObject);
 
         Data = GetComponent<DataMono>().Manager;

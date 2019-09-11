@@ -4,13 +4,30 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 
-public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
-    [HideInInspector] public List<Expense> ExpenseUIs = new List<Expense>();
-
+public class ExpenseUIMono : MonoBehaviour {
     // Initialization variables
     [SerializeField] private Expense ExpenseOriginal = null;
     [SerializeField] private TextMeshProUGUI ExpenseViewTitle = null;
+
+    public ExpenseUIManager Manager { get; private set; }
+    public void Awake() {
+        Manager = new ExpenseUIManager();
+        Manager.LoadMonoVariables(ExpenseOriginal, ExpenseViewTitle);
+    }
+}
+
+public class ExpenseUIManager : ManagerInterface {
+    public List<Expense> ExpenseUIs = new List<Expense>();
+
+    // Initialization variables
+    private Expense ExpenseOriginal = null;
+    private TextMeshProUGUI ExpenseViewTitle = null;
     private TileUIData ExpenseUIData = null;
+
+    public void LoadMonoVariables(Expense expenseOriginal, TextMeshProUGUI expenseViewTitle) {
+        ExpenseOriginal = expenseOriginal;
+        ExpenseViewTitle = expenseViewTitle;
+    }
 
     public ManagerStatus status { get; private set; }
     public void Startup() {
@@ -57,7 +74,7 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
         if (ExpenseUIData.Count == 0)
             newExpense = ExpenseOriginal;
         else
-            newExpense = Instantiate(original: ExpenseOriginal, parent: ExpenseUIData.Parent.transform) as Expense;
+            newExpense = GameObject.Instantiate(original: ExpenseOriginal, parent: ExpenseUIData.Parent.transform) as Expense;
         newExpense.transform.localPosition = new Vector3(ExpenseUIData.StartPos.x, ExpenseUIData.StartPos.y - (Constants.CatagoryOffset * ExpenseUIData.Count), ExpenseUIData.StartPos.z);
         newExpense.Construct(myExpenseData);
         ExpenseUIs.Add(newExpense);
@@ -68,9 +85,7 @@ public class ExpenseUIManager : MonoBehaviour, ManagerInterface {
         Debug.Log("Deconstruct Expense View.");
         ResetExpenseTileData();
         for (int Count = 1; Count < ExpenseUIs.Count; Count++) 
-            Destroy(ExpenseUIs[Count].gameObject);
+            GameObject.Destroy(ExpenseUIs[Count].gameObject);
         ExpenseUIs = new List<Expense>();
     }
-
-    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, OnExpensesUpdated);
 }
