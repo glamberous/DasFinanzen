@@ -5,12 +5,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class Catagory : MonoBehaviour {
+public class CatagoryMono : MonoBehaviour {
+    [HideInInspector] public Catagory Instance = null;
+    private void Awake() => Instance = new Catagory(gameObject);
+}
+
+public class Catagory {
+    private GameObject SelfMono;
     private TextMeshProUGUI NameTextMesh;
     private TextMeshProUGUI TotalTextMesh;
     private TextMeshProUGUI CurrencySymbol;
     private Image ColorPatchImage;
-    [HideInInspector] public CatagoryData Data = null;
+    public CatagoryData Data = null;
+
+    public Catagory(GameObject gameObject) => SelfMono = gameObject;
 
     public void Initialize(CatagoryData data) {
         Construct();
@@ -19,9 +27,9 @@ public class Catagory : MonoBehaviour {
     }
 
     public void Construct() {
-        ColorPatchImage = gameObject.transform.GetChild(0).gameObject.GetComponent<Image>();
-        NameTextMesh = gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-        TotalTextMesh = gameObject.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
+        ColorPatchImage = SelfMono.transform.GetChild(0).gameObject.GetComponent<Image>();
+        NameTextMesh = SelfMono.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+        TotalTextMesh = SelfMono.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
         CurrencySymbol = TotalTextMesh.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
     }
 

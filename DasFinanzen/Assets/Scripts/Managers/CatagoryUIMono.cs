@@ -5,24 +5,21 @@ using UnityEngine;
 
 public class CatagoryUIMono : MonoBehaviour {
     // Initialization Variables
-    [SerializeField] private Catagory DailyOriginal = null;
-    [SerializeField] private Catagory MonthlyOriginal = null;
+    [SerializeField] private CatagoryMono DailyOriginal = null;
+    [SerializeField] private CatagoryMono MonthlyOriginal = null;
 
     public CatagoryUIManager Manager { get; private set; }
-    private void Awake() {
-        Manager = new CatagoryUIManager();
-        Manager.LoadMonoVariables(DailyOriginal, MonthlyOriginal);
-    }
-}
+    private void Awake() => Manager = new CatagoryUIManager(DailyOriginal, MonthlyOriginal);
+}   
 
 public class CatagoryUIManager : ManagerInterface { 
     // Variables for other classes to reference.
     public Dictionary<int, Catagory> CatagoryUIs = new Dictionary<int, Catagory>();
 
-    private Catagory DailyOriginal = null;
-    private Catagory MonthlyOriginal = null;
+    private CatagoryMono DailyOriginal = null;
+    private CatagoryMono MonthlyOriginal = null;
 
-    internal void LoadMonoVariables(Catagory dailyOriginal, Catagory monthlyOriginal) {
+    public CatagoryUIManager(CatagoryMono dailyOriginal, CatagoryMono monthlyOriginal) {
         DailyOriginal = dailyOriginal;
         MonthlyOriginal = monthlyOriginal;
     }
@@ -50,16 +47,16 @@ public class CatagoryUIManager : ManagerInterface {
     }
 
     private Catagory InitializeCatagory(CatagoryData myCatagoryData, TileUIData UIData) {
-        Catagory newCatagory;
+        CatagoryMono newCatagory;
         if (UIData.Count == 0)
-            newCatagory = UIData.Original.GetComponent<Catagory>();
+            newCatagory = UIData.Original.GetComponent<CatagoryMono>();
         else {
-            newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<Catagory>(), parent: UIData.Parent.transform) as Catagory;
+            newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<CatagoryMono>(), parent: UIData.Parent.transform) as CatagoryMono;
             newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
         }
-        newCatagory.Initialize(myCatagoryData);
+        newCatagory.Instance.Initialize(myCatagoryData);
         UIData.Count++;
-        return newCatagory;
+        return newCatagory.Instance;
     }
 
     private void OnExpensesUpdated() {

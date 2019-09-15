@@ -6,28 +6,24 @@ public class ColorBarUIMono : MonoBehaviour {
     [SerializeField] private ColorBar OriginalColorBar = null;
 
     public ColorBarUIManager Manager { get; private set; }
-    private void Awake() {
-        Manager = new ColorBarUIManager();
-        Manager.LoadMonoVariables(OriginalColorBar);
-    }
+    private void Awake() => Manager = new ColorBarUIManager(OriginalColorBar);
 }
 
 public class ColorBarUIManager : ManagerInterface {
     private Dictionary<int, ColorBar> ColorBarDict = new Dictionary<int, ColorBar>();
-
     private ColorBar OriginalColorBar = null;
 
-    internal void LoadMonoVariables(ColorBar originalColorBar) {
+    public ColorBarUIManager(ColorBar originalColorBar) {
         OriginalColorBar = originalColorBar;
     }
 
     public ManagerStatus status { get; private set; }
-
     public void Startup() {
         Debug.Log("ColorBar manager starting...");
 
         InitializeColorBar();
         Messenger.AddListener(AppEvent.EXPENSES_UPDATED, UpdateColorBar);
+        Messenger.AddListener(AppEvent.GOAL_UPDATED, UpdateColorBar);
 
         status = ManagerStatus.Started;
     }
@@ -50,10 +46,11 @@ public class ColorBarUIManager : ManagerInterface {
         float tempFloat = 0.00f;
         foreach (KeyValuePair<int, ColorBar> colorBar in ColorBarDict) {
             colorBar.Value.transform.localPosition = new Vector3(tempFloat, 0, 0);
-            colorBar.Value.SetWidth(Managers.Data.GetWidthBasedOffPercentOfScreenWidth(colorBar.Key));
+            colorBar.Value.SetWidth(GetWidthBasedOffPercentOfScreenWidth(colorBar.Key));
             tempFloat += colorBar.Value.GetWidth();
         }
     }
 
-    private void OnDestroy() => Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, UpdateColorBar);
+    // TODO - Bug here with needing to reference the Canvas Width, not screen width.
+    public float GetWidthBasedOffPercentOfScreenWidth(int ID) => ((float)Managers.Data.GetExpensesTotal(ID) / (float)Managers.Data.BudgetGoal) * 337.5f;    
 }

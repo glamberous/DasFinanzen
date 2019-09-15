@@ -12,10 +12,7 @@ public class EditExpenseUIMono : MonoBehaviour {
     [SerializeField] private GameObject DeleteButton = null;
 
     public EditExpenseUIManager Manager { get; private set; }
-    public void Awake() {
-        Manager = new EditExpenseUIManager();
-        Manager.LoadMonoVariables(ViewTitle, NamePlaceholder, AmountInputField, AmountTextProxy, DeleteButton);
-    }
+    public void Awake() => Manager = new EditExpenseUIManager(ViewTitle, NamePlaceholder, AmountInputField, AmountTextProxy, DeleteButton);
 }
 
 public class EditExpenseUIManager : ManagerInterface {
@@ -25,7 +22,10 @@ public class EditExpenseUIManager : ManagerInterface {
     private TextMeshProUGUI AmountTextProxy = null;
     private GameObject DeleteButton = null;
 
-    public void LoadMonoVariables(TextMeshProUGUI viewTitle, TextMeshProUGUI namePlaceholder, TMP_InputField amountInputField, TextMeshProUGUI amountTextProxy, GameObject deleteButton) {
+    private ExpenseData ExpensePointer = null;
+    private ExpenseData TempExpense = null;
+
+    public EditExpenseUIManager(TextMeshProUGUI viewTitle, TextMeshProUGUI namePlaceholder, TMP_InputField amountInputField, TextMeshProUGUI amountTextProxy, GameObject deleteButton) {
         ViewTitle = viewTitle;
         NamePlaceholder = namePlaceholder;
         AmountInputField = amountInputField;
@@ -49,9 +49,6 @@ public class EditExpenseUIManager : ManagerInterface {
         NamePlaceholder.text = TempExpense.NameText;
     }
 
-    private ExpenseData ExpensePointer = null;
-    private ExpenseData TempExpense = null;
-
     private void ConstructNewView() {
         ViewTitle.text = "Add Expense";
         TempExpense = new ExpenseData();
@@ -61,9 +58,11 @@ public class EditExpenseUIManager : ManagerInterface {
         ViewTitle.text = "Edit Expense";
         ExpensePointer = expenseData;
         TempExpense = (ExpenseData)expenseData.Clone();
-        AmountInputField.text = ((int)(expenseData.Amount * 100)).ToString();
+        AmountInputField.text = ConvertAmountForDisplay(TempExpense.Amount);
         DeleteButton.SetActive(true);
     }
+
+    private string ConvertAmountForDisplay(decimal amount) => ((int)(amount * 100)).ToString();
 
     public void UpdateEditExpenseAmount() {
         Debug.Log($"Decimal being saved: {AmountTextProxy.text}");
@@ -75,11 +74,8 @@ public class EditExpenseUIManager : ManagerInterface {
     }
 
     public void SaveEditExpense() {
-        if (ExpensePointer != null) {
-            ExpensePointer.CopyData(TempExpense);
-            Debug.Log("Data Updated.");
-            Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
-        }
+        if (ExpensePointer != null) 
+            Managers.Data.EditExpense(ExpensePointer, TempExpense);
         else
             Managers.Data.AddExpense(TempExpense);
     }

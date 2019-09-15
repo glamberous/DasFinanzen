@@ -6,16 +6,13 @@ public class GraphUIMono : MonoBehaviour {
     //[SerializeField] private GameObject OriginalColorBarObject = null;
 
     public GraphUIManager Manager { get; private set; }
-    private void Awake() {
-        Manager = new GraphUIManager();
-        Manager.LoadMonoVariables();
-    }
+    private void Awake() => Manager = new GraphUIManager();
 }
 
 public class GraphUIManager : ManagerInterface {
     private GameObject OriginalColorBarObject = null;
 
-    public void LoadMonoVariables() {
+    public GraphUIManager() {
 
     }
 

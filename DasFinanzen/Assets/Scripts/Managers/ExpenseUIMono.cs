@@ -10,10 +10,7 @@ public class ExpenseUIMono : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI ExpenseViewTitle = null;
 
     public ExpenseUIManager Manager { get; private set; }
-    public void Awake() {
-        Manager = new ExpenseUIManager();
-        Manager.LoadMonoVariables(ExpenseOriginal, ExpenseViewTitle);
-    }
+    public void Awake() => Manager = new ExpenseUIManager(ExpenseOriginal, ExpenseViewTitle);
 }
 
 public class ExpenseUIManager : ManagerInterface {
@@ -24,7 +21,7 @@ public class ExpenseUIManager : ManagerInterface {
     private TextMeshProUGUI ExpenseViewTitle = null;
     private TileUIData ExpenseUIData = null;
 
-    public void LoadMonoVariables(Expense expenseOriginal, TextMeshProUGUI expenseViewTitle) {
+    public ExpenseUIManager(Expense expenseOriginal, TextMeshProUGUI expenseViewTitle) {
         ExpenseOriginal = expenseOriginal;
         ExpenseViewTitle = expenseViewTitle;
     }

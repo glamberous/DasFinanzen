@@ -9,10 +9,7 @@ public class DataMono : MonoBehaviour {
     [SerializeField] private List<CatagoryData> CatagoryDatas = null;
 
     public DataManager Manager { get; private set; }
-    private void Awake() {
-        Manager = new DataManager();
-        Manager.LoadMonoVariables(CatagoryDatas);
-    }
+    private void Awake() => Manager = new DataManager(CatagoryDatas);
 }
 
 public class DataManager : ManagerInterface {
@@ -22,13 +19,13 @@ public class DataManager : ManagerInterface {
 
     // Working variables for "Currently selected" data
     public int CurrentID = -1;
-    public List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasDict[CurrentID] ?? null; }
-    public CatagoryData CurrentCatagoryData { get => CatagoryDataDict[CurrentID] ?? null; }
+    public List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasDict.ContainsKey(CurrentID) ? ExpenseDatasDict[CurrentID] : null; }
+    public CatagoryData CurrentCatagoryData { get => CatagoryDataDict.ContainsKey(CurrentID) ? CatagoryDataDict[CurrentID] : null; }
 
     public decimal BudgetGoal = 1000.00m;
     private string filename;
 
-    internal void LoadMonoVariables(List<CatagoryData> catagoryDatas) {
+    public DataManager(List<CatagoryData> catagoryDatas) {
         LoadCatagories(catagoryDatas);
     }
 
@@ -121,20 +118,28 @@ public class DataManager : ManagerInterface {
 
     public void AddExpense(ExpenseData newExpenseData) {
         ExpenseDatasDict[newExpenseData.ID].Add(newExpenseData);
-        Debug.Log("Data Updated.");
-        SaveGameState();
-        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
+        ExpensesUpdated();
+    }
+
+    public void EditExpense(ExpenseData oldExpenseData, ExpenseData newExpenseData) {
+        if (oldExpenseData.ID != newExpenseData.ID) {
+            Debug.Log("ERROR: Edit Command is not allowed to change Expense Data ID's. Edit Command was rejected.");
+            return;
+        }
+        oldExpenseData.CopyData(newExpenseData);
+        ExpensesUpdated();
     }
 
     public void RemoveExpense(ExpenseData delExpenseData) {
         ExpenseDatasDict[delExpenseData.ID].Remove(delExpenseData);
-        Debug.Log("Data Updated.");
-        SaveGameState();
-        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
+        ExpensesUpdated();
     }
 
-    public float GetWidthBasedOffPercentOfScreenWidth(int ID) {
-        return ((float)GetExpensesTotal(ID) / (float)BudgetGoal) * 337.5f; // TODO - Bug here with needing to reference the Canvas Width, not screen width.
+    private void ExpensesUpdated() {
+        Debug.Log("Data Updated.");
+        SaveGameState();
+        // Broadcast should always go after SaveGameState so that we ensure all app data is in a valid state before the UI starts updating.
+        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED); 
     }
 
     public decimal GetExpensesTotal(int ID) {
@@ -144,8 +149,4 @@ public class DataManager : ManagerInterface {
                 total += expense.Amount;
         return total;
     }
-
-#if UNITY_EDITOR
-    public void SetTestCatagoryData(List<CatagoryData> dataList) => LoadCatagories(dataList);
-#endif
 }
