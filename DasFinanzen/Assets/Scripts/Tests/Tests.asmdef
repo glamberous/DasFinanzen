@@ -1,7 +1,8 @@
 {
     "name": "Tests",
     "references": [
-        "AppScripts"
+      "AppScripts",
+      "Unity.TextMeshPro"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"

@@ -4,16 +4,16 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 
-public class ExpenseUIMono : MonoBehaviour {
+public class ExpenseManagerBehaviour : MonoBehaviour {
     // Initialization variables
     [SerializeField] private Expense ExpenseOriginal = null;
     [SerializeField] private TextMeshProUGUI ExpenseViewTitle = null;
 
-    public ExpenseUIManager Manager { get; private set; }
-    public void Awake() => Manager = new ExpenseUIManager(ExpenseOriginal, ExpenseViewTitle);
+    public ExpenseManager Manager { get; private set; }
+    public void Awake() => Manager = new ExpenseManager(ExpenseOriginal, ExpenseViewTitle);
 }
 
-public class ExpenseUIManager : ManagerInterface {
+public class ExpenseManager : ManagerInterface {
     public List<Expense> ExpenseUIs = new List<Expense>();
 
     // Initialization variables
@@ -21,7 +21,7 @@ public class ExpenseUIManager : ManagerInterface {
     private TextMeshProUGUI ExpenseViewTitle = null;
     private TileUIData ExpenseUIData = null;
 
-    public ExpenseUIManager(Expense expenseOriginal, TextMeshProUGUI expenseViewTitle) {
+    public ExpenseManager(Expense expenseOriginal, TextMeshProUGUI expenseViewTitle) {
         ExpenseOriginal = expenseOriginal;
         ExpenseViewTitle = expenseViewTitle;
     }

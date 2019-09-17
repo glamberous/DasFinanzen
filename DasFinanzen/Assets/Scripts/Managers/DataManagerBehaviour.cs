@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
 using System.IO;
 
-public class DataMono : MonoBehaviour {
+public class DataManagerBehaviour : MonoBehaviour {
     // Catagories are loaded from the Unity Inspector, not the save profile. Gets converted into a Dictionary on App launch.
     [SerializeField] private List<CatagoryData> CatagoryDatas = null;
 

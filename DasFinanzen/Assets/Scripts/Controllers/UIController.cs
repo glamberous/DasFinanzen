@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UIController : MonoBehaviour {
+    [SerializeField] private GameObject MainView = null;
     [SerializeField] private GameObject ExpenseView = null;
     [SerializeField] private GameObject EditExpenseView = null;
     [SerializeField] private GameObject GraphView = null;
@@ -12,6 +13,7 @@ public class UIController : MonoBehaviour {
         Messenger<bool, bool>.AddListener(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, OnEditExpenseClose);
         Messenger<ExpenseData>.AddListener(AppEvent.OPEN_EDIT_EXPENSE_VIEW, OnEditExpenseOpen);
 
+        MainView.SetActive(true);
         EditExpenseView.SetActive(false);
         ExpenseView.SetActive(false);
     }

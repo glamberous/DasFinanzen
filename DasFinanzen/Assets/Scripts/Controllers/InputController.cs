@@ -7,8 +7,10 @@ using TMPro;
 public class InputController : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI AddExpenseTextProxy = null;
     [SerializeField] private TMP_InputField AddExpenseInputField = null;
+    [SerializeField] private TMP_InputField NameInputField = null;
 
-    public void AmountOnValueChanged(string input) {
+    public void AmountOnValueChanged() {
+        string input = AddExpenseInputField.text;
         if (input.StartsWith("0"))
             AddExpenseInputField.text = input.TrimStart('0');
         else {
@@ -20,13 +22,11 @@ public class InputController : MonoBehaviour {
 
             AddExpenseTextProxy.text = tempString;
         }
-        
     }
 
     // Not Taking the value in here because I have a TextMeshPro Proxy in order to display the text properly in the Scene.
     // EditExpenseUI Manager handles this in EditExpensesUI.
-    public void AmountSave(string input) => Managers.EditExpenseUI.UpdateEditExpenseAmount();
-    public void NameSave(string input) => Managers.EditExpenseUI.UpdateEditExpenseName(input);
-
+    public void AmountSave() => Managers.EditExpenseUI.UpdateEditExpenseAmount();
+    public void NameSave() => Managers.EditExpenseUI.UpdateEditExpenseName(NameInputField.text);
 
 }

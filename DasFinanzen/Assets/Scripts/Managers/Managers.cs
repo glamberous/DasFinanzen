@@ -2,37 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CatagoryUIMono))]
-[RequireComponent(typeof(ColorBarUIMono))]
-[RequireComponent(typeof(GraphUIMono))]
-[RequireComponent(typeof(DataMono))]
-[RequireComponent(typeof(ExpenseUIMono))]
-[RequireComponent(typeof(EditExpenseUIMono))]
+[RequireComponent(typeof(ErrorManagerBehaviour))]
+[RequireComponent(typeof(CatagoryManagerBehaviour))]
+[RequireComponent(typeof(ColorBarManagerBehaviour))]
+[RequireComponent(typeof(GraphManagerBehaviour))]
+[RequireComponent(typeof(DataManagerBehaviour))]
+[RequireComponent(typeof(ExpenseManagerBehaviour))]
+[RequireComponent(typeof(EditExpenseManagerBehaviour))]
 //Add new Managers to make them required
 
 public class Managers : MonoBehaviour {
+    public static ErrorManager Error { get; private set; }
     public static DataManager Data { get; private set; }
-    public static CatagoryUIManager CatagoryUI { get; private set; }
-    public static ExpenseUIManager ExpenseUI { get; private set; }
-    public static ColorBarUIManager ColorBarUI { get; private set; }
-    public static GraphUIManager GraphUI { get; private set; }
-    public static EditExpenseUIManager EditExpenseUI { get; private set; }
+    public static CatagoryManager CatagoryUI { get; private set; }
+    public static ExpenseManager ExpenseUI { get; private set; }
+    public static ColorBarManager ColorBarUI { get; private set; }
+    public static GraphManager GraphUI { get; private set; }
+    public static EditExpenseManager EditExpenseUI { get; private set; }
     //Add More Managers here
 
     private List<ManagerInterface> startSequence;
 
     void Start() {
         DontDestroyOnLoad(gameObject);
-
-        Data = GetComponent<DataMono>().Manager;
-        CatagoryUI = GetComponent<CatagoryUIMono>().Manager;
-        ExpenseUI = GetComponent<ExpenseUIMono>().Manager;
-        ColorBarUI = GetComponent<ColorBarUIMono>().Manager;
-        GraphUI = GetComponent<GraphUIMono>().Manager;
-        EditExpenseUI = GetComponent<EditExpenseUIMono>().Manager;
+        Error = GetComponent<ErrorManagerBehaviour>().Manager;
+        Data = GetComponent<DataManagerBehaviour>().Manager;
+        CatagoryUI = GetComponent<CatagoryManagerBehaviour>().Manager;
+        ExpenseUI = GetComponent<ExpenseManagerBehaviour>().Manager;
+        ColorBarUI = GetComponent<ColorBarManagerBehaviour>().Manager;
+        GraphUI = GetComponent<GraphManagerBehaviour>().Manager;
+        EditExpenseUI = GetComponent<EditExpenseManagerBehaviour>().Manager;
         //Add GetComponent for new Managers here
 
         startSequence = new List<ManagerInterface>();
+        startSequence.Add(Error);
         startSequence.Add(Data);
         startSequence.Add(CatagoryUI);
         startSequence.Add(ExpenseUI);

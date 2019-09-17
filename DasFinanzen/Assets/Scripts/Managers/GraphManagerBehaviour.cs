@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GraphUIMono : MonoBehaviour {
+public class GraphManagerBehaviour : MonoBehaviour {
     //[SerializeField] private GameObject OriginalColorBarObject = null;
 
-    public GraphUIManager Manager { get; private set; }
-    private void Awake() => Manager = new GraphUIManager();
+    public GraphManager Manager { get; private set; }
+    private void Awake() => Manager = new GraphManager();
 }
 
-public class GraphUIManager : ManagerInterface {
+public class GraphManager : ManagerInterface {
     private GameObject OriginalColorBarObject = null;
 
-    public GraphUIManager() {
+    public GraphManager() {
 
     }
 

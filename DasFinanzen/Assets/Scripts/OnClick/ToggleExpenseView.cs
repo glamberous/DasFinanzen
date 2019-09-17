@@ -7,9 +7,9 @@ using UnityEngine.UI;
 
 public class ToggleExpenseView : MonoBehaviour {
     private void OnMouseDown() {
-        Catagory catagory = gameObject.GetComponent<CatagoryMono>()?.Instance;
-        if (catagory != null)
-            Managers.Data.CurrentID = catagory.Data.ID;
+        CatagoryData data = gameObject.GetComponent<CatagoryBehaviour>()?.Instance.Data;
+        if (data != null)
+            Managers.Data.CurrentID = data.ID;
         Messenger.Broadcast(AppEvent.TOGGLE_EXPENSE_VIEW);
     }
 }

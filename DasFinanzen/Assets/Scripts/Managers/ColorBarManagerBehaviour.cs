@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColorBarUIMono : MonoBehaviour {
+public class ColorBarManagerBehaviour : MonoBehaviour {
     [SerializeField] private ColorBar OriginalColorBar = null;
 
-    public ColorBarUIManager Manager { get; private set; }
-    private void Awake() => Manager = new ColorBarUIManager(OriginalColorBar);
+    public ColorBarManager Manager { get; private set; }
+    private void Awake() => Manager = new ColorBarManager(OriginalColorBar);
 }
 
-public class ColorBarUIManager : ManagerInterface {
+public class ColorBarManager : ManagerInterface {
     private Dictionary<int, ColorBar> ColorBarDict = new Dictionary<int, ColorBar>();
     private ColorBar OriginalColorBar = null;
 
-    public ColorBarUIManager(ColorBar originalColorBar) {
+    public ColorBarManager(ColorBar originalColorBar) {
         OriginalColorBar = originalColorBar;
     }
 
@@ -28,7 +28,7 @@ public class ColorBarUIManager : ManagerInterface {
         status = ManagerStatus.Started;
     }
 
-    public void InitializeColorBar() {
+    private void InitializeColorBar() {
         int count = 0;
         foreach (KeyValuePair<int, CatagoryData> catagory in Managers.Data.CatagoryDataDict) {
             ColorBar newBar;
@@ -42,7 +42,7 @@ public class ColorBarUIManager : ManagerInterface {
         UpdateColorBar();
     }
 
-    public void UpdateColorBar() {
+    private void UpdateColorBar() {
         float tempFloat = 0.00f;
         foreach (KeyValuePair<int, ColorBar> colorBar in ColorBarDict) {
             colorBar.Value.transform.localPosition = new Vector3(tempFloat, 0, 0);
@@ -52,5 +52,5 @@ public class ColorBarUIManager : ManagerInterface {
     }
 
     // TODO - Bug here with needing to reference the Canvas Width, not screen width.
-    public float GetWidthBasedOffPercentOfScreenWidth(int ID) => ((float)Managers.Data.GetExpensesTotal(ID) / (float)Managers.Data.BudgetGoal) * 337.5f;    
+    private float GetWidthBasedOffPercentOfScreenWidth(int ID) => ((float)Managers.Data.GetExpensesTotal(ID) / (float)Managers.Data.BudgetGoal) * 337.5f;    
 }

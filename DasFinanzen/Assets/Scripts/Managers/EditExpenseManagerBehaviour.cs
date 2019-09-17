@@ -4,20 +4,20 @@ using System;
 using UnityEngine;
 using TMPro;
 
-public class EditExpenseUIMono : MonoBehaviour {
+public class EditExpenseManagerBehaviour : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI ViewTitle = null;
-    [SerializeField] private TextMeshProUGUI NamePlaceholder = null;
+    [SerializeField] private TMP_InputField NameInputField = null;
     [SerializeField] private TMP_InputField AmountInputField = null;
     [SerializeField] private TextMeshProUGUI AmountTextProxy = null;
     [SerializeField] private GameObject DeleteButton = null;
 
-    public EditExpenseUIManager Manager { get; private set; }
-    public void Awake() => Manager = new EditExpenseUIManager(ViewTitle, NamePlaceholder, AmountInputField, AmountTextProxy, DeleteButton);
+    public EditExpenseManager Manager { get; private set; }
+    public void Awake() => Manager = new EditExpenseManager(ViewTitle, NameInputField, AmountInputField, AmountTextProxy, DeleteButton);
 }
 
-public class EditExpenseUIManager : ManagerInterface {
+public class EditExpenseManager : ManagerInterface {
     private TextMeshProUGUI ViewTitle = null;
-    private TextMeshProUGUI NamePlaceholder = null;
+    private TMP_InputField NameInputField = null;
     private TMP_InputField AmountInputField = null;
     private TextMeshProUGUI AmountTextProxy = null;
     private GameObject DeleteButton = null;
@@ -25,9 +25,9 @@ public class EditExpenseUIManager : ManagerInterface {
     private ExpenseData ExpensePointer = null;
     private ExpenseData TempExpense = null;
 
-    public EditExpenseUIManager(TextMeshProUGUI viewTitle, TextMeshProUGUI namePlaceholder, TMP_InputField amountInputField, TextMeshProUGUI amountTextProxy, GameObject deleteButton) {
+    public EditExpenseManager(TextMeshProUGUI viewTitle, TMP_InputField nameInputField, TMP_InputField amountInputField, TextMeshProUGUI amountTextProxy, GameObject deleteButton) {
         ViewTitle = viewTitle;
-        NamePlaceholder = namePlaceholder;
+        NameInputField = nameInputField;
         AmountInputField = amountInputField;
         AmountTextProxy = amountTextProxy;
         DeleteButton = deleteButton;
@@ -46,28 +46,32 @@ public class EditExpenseUIManager : ManagerInterface {
             ConstructNewView();
         else
             ConstructEditView(expenseData);
-        NamePlaceholder.text = TempExpense.NameText;
     }
 
     private void ConstructNewView() {
         ViewTitle.text = "Add Expense";
         TempExpense = new ExpenseData();
+        NameInputField.text = TempExpense.NameText;
     }
 
     private void ConstructEditView(ExpenseData expenseData) {
         ViewTitle.text = "Edit Expense";
         ExpensePointer = expenseData;
         TempExpense = (ExpenseData)expenseData.Clone();
+        NameInputField.text = TempExpense.NameText;
         AmountInputField.text = ConvertAmountForDisplay(TempExpense.Amount);
         DeleteButton.SetActive(true);
     }
 
-    private string ConvertAmountForDisplay(decimal amount) => ((int)(amount * 100)).ToString();
+    // This formula may look strange but I need to do this because the user input is actually a string that 
+    // looks like an Int which then later gets a decimal forced in between the second and third digit from the right.
+    public string ConvertAmountForDisplay(decimal amount) => ((int)(amount * 100)).ToString();
 
     public void UpdateEditExpenseAmount() {
-        Debug.Log($"Decimal being saved: {AmountTextProxy.text}");
-        TempExpense.Amount = Convert.ToDecimal(AmountTextProxy.text);
+        try { TempExpense.Amount = Convert.ToDecimal(AmountTextProxy.text); } 
+        catch { TempExpense.Amount = 0.00m; }
     }
+
     public void UpdateEditExpenseName(string input) => TempExpense.NameText = input;
     public void UpdateEditExpenseDate() {
         //TODO later once I have more DateTime functionality finished
@@ -88,4 +92,10 @@ public class EditExpenseUIManager : ManagerInterface {
         TempExpense = null;
         DeleteButton.SetActive(false);
     }
+
+#if UNITY_EDITOR
+    public void InitializeTempExpense() => TempExpense = new ExpenseData();
+    public void SetAmountTextProxyText(string input) => AmountTextProxy.text = input;
+    public decimal GetTempExpenseAmount() => TempExpense.Amount;
+#endif
 }
