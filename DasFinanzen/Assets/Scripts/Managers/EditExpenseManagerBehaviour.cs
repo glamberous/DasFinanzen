@@ -67,12 +67,32 @@ public class EditExpenseManager : ManagerInterface {
     // looks like an Int which then later gets a decimal forced in between the second and third digit from the right.
     public string ConvertAmountForDisplay(decimal amount) => ((int)(amount * 100)).ToString();
 
+    // Takes an Int String from the Input Field and turns it into a Currency specific Decimal.
+    public void AmountOnValueChanged() {
+        string input = AmountInputField.text;
+        if (input.StartsWith("0"))
+            AmountInputField.text = RemoveLeadingZero(input);
+        else
+            AmountTextProxy.text = ConvertIntoCurrencyString(input);
+    }
+
+    private string RemoveLeadingZero(string input) => input.TrimStart('0');
+    private string ConvertIntoCurrencyString(string input) {
+        input = input.PadLeft(3, '0');
+        input = input.Insert(input.Length - 2, ".");
+        if (input.Length > 6)
+            input = input.Insert(input.Length - 6, ",");
+        return input;
+    }
+
+    // On Finished Editing
     public void UpdateEditExpenseAmount() {
         try { TempExpense.Amount = Convert.ToDecimal(AmountTextProxy.text); } 
         catch { TempExpense.Amount = 0.00m; }
     }
 
-    public void UpdateEditExpenseName(string input) => TempExpense.NameText = input;
+    // On Finished Editing
+    public void UpdateEditExpenseName() => TempExpense.NameText = NameInputField.text;
     public void UpdateEditExpenseDate() {
         //TODO later once I have more DateTime functionality finished
     }
@@ -94,8 +114,14 @@ public class EditExpenseManager : ManagerInterface {
     }
 
 #if UNITY_EDITOR
+    // Methods for Unit Tests
     public void InitializeTempExpense() => TempExpense = new ExpenseData();
-    public void SetAmountTextProxyText(string input) => AmountTextProxy.text = input;
     public decimal GetTempExpenseAmount() => TempExpense.Amount;
+
+    public string GetAmountInputFieldText() => AmountInputField.text;
+    public void SetAmountInputFieldText(string input) => AmountInputField.text = input;
+    
+    public string GetAmountTextProxyText() => AmountTextProxy.text;
+    public void SetAmountTextProxyText(string input) => AmountTextProxy.text = input;
 #endif
 }

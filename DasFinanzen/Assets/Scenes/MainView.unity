@@ -9736,9 +9736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7485629b8331664ea0e99422c1a2ba8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AddExpenseTextProxy: {fileID: 1844262522}
-  AddExpenseInputField: {fileID: 2104209202}
-  NameInputField: {fileID: 974026345}
 --- !u!4 &1777466930
 Transform:
   m_ObjectHideFlags: 0

@@ -11,14 +11,19 @@ namespace Tests
     {
         EditExpenseManager EditExpense = null;
         GameObject Object1 = null;
+        GameObject Object2 = null;
         TextMeshProUGUI textMesh = null;
+        TMP_InputField inputField = null;
 
         [SetUp]
         public void SetUp() {
             Object1 = new GameObject();
             Object1.AddComponent<TextMeshProUGUI>();
             textMesh = Object1.GetComponent<TextMeshProUGUI>();
-            EditExpense = new EditExpenseManager(null, null, null, textMesh, null);
+            Object2 = new GameObject();
+            Object2.AddComponent<TMP_InputField>();
+            inputField = Object2.GetComponent<TMP_InputField>();
+            EditExpense = new EditExpenseManager(null, null, inputField, textMesh, null);
         }
 
         [TearDown]
@@ -57,6 +62,15 @@ namespace Tests
         }
 
         [Test]
+        public void UpdateEditExpenseAmount_Converts_String_With_Commas() {
+            EditExpense.InitializeTempExpense();
+            EditExpense.SetAmountTextProxyText("4,000.00");
+            EditExpense.UpdateEditExpenseAmount();
+            decimal result = EditExpense.GetTempExpenseAmount();
+            Assert.AreEqual(4000.00m, result);
+        }
+
+        [Test]
         public void UpdateEditExpenseAmount_Alpha_String_Entry() {
             EditExpense.InitializeTempExpense();
             EditExpense.SetAmountTextProxyText("FourtyTwo");
@@ -72,6 +86,38 @@ namespace Tests
             EditExpense.UpdateEditExpenseAmount();
             decimal result = EditExpense.GetTempExpenseAmount();
             Assert.AreEqual(100.00m, result);
+        }
+
+        [Test]
+        public void AmountOnValueChanged_Entering_Zero_Immediately_Removes_The_Zero() {
+            EditExpense.SetAmountInputFieldText("0");
+            EditExpense.AmountOnValueChanged();
+            string result = EditExpense.GetAmountInputFieldText();
+            Assert.AreEqual("", result);
+        }
+
+        [Test]
+        public void AmountOnValueChanged_Dollar_AKA_Checking_Decimal_Point() {
+            EditExpense.SetAmountInputFieldText("100");
+            EditExpense.AmountOnValueChanged();
+            string result = EditExpense.GetAmountTextProxyText();
+            Assert.AreEqual("1.00", result);
+        }
+
+        [Test]
+        public void AmountOnValueChanged_One_Thousand_AKA_Checking_Comma() {
+            EditExpense.SetAmountInputFieldText("100000");
+            EditExpense.AmountOnValueChanged();
+            string result = EditExpense.GetAmountTextProxyText();
+            Assert.AreEqual("1,000.00", result);
+        }
+
+        [Test]
+        public void AmountOnValueChanged_Nothing() {
+            EditExpense.SetAmountInputFieldText("");
+            EditExpense.AmountOnValueChanged();
+            string result = EditExpense.GetAmountTextProxyText();
+            Assert.AreEqual("0.00", result);
         }
     }
 }
