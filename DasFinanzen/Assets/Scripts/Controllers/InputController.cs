@@ -10,5 +10,4 @@ public class InputController : MonoBehaviour {
     public void AmountSave() => Managers.EditExpenseUI.UpdateEditExpenseAmount();
     public void NameSave() => Managers.EditExpenseUI.UpdateEditExpenseName();
     public void AmountOnValueChanged() => Managers.EditExpenseUI.AmountOnValueChanged();
-
 }

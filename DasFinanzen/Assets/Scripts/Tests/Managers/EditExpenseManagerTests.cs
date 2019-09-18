@@ -30,12 +30,13 @@ namespace Tests
         public void TearDown() {
             EditExpense = null;
             Object1 = null;
+            Object2 = null;
             textMesh = null;
+            inputField = null;
         }
 
         [Test]
-        public void ConvertAmountForDisplay_Absurd_Right_Digits()
-        {
+        public void ConvertAmountForDisplay_Absurd_Right_Digits() {
             string result = EditExpense.ConvertAmountForDisplay(0.00000000000001m);
             Assert.AreEqual("0", result);
         }

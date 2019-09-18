@@ -1653,6 +1653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OriginalColorBar: {fileID: 2028519881}
+  MyCanvas: {fileID: 1980440652}
 --- !u!114 &434004933
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class ColorBarManagerBehaviour : MonoBehaviour {
     [SerializeField] private ColorBar OriginalColorBar = null;
+    [SerializeField] private Canvas MyCanvas = null;
 
     public ColorBarManager Manager { get; private set; }
-    private void Awake() => Manager = new ColorBarManager(OriginalColorBar);
+    private void Awake() => Manager = new ColorBarManager(OriginalColorBar, MyCanvas.GetComponent<RectTransform>());
 }
 
 public class ColorBarManager : ManagerInterface {
     private Dictionary<int, ColorBar> ColorBarDict = new Dictionary<int, ColorBar>();
     private ColorBar OriginalColorBar = null;
+    private RectTransform CanvasRect = null;
 
-    public ColorBarManager(ColorBar originalColorBar) {
+    public ColorBarManager(ColorBar originalColorBar, RectTransform canvasRect) {
         OriginalColorBar = originalColorBar;
+        CanvasRect = canvasRect;
     }
 
     public ManagerStatus status { get; private set; }
@@ -51,6 +54,5 @@ public class ColorBarManager : ManagerInterface {
         }
     }
 
-    // TODO - Bug here with needing to reference the Canvas Width, not screen width.
-    private float GetWidthBasedOffPercentOfScreenWidth(int ID) => ((float)Managers.Data.GetExpensesTotal(ID) / (float)Managers.Data.BudgetGoal) * 337.5f;    
+    private float GetWidthBasedOffPercentOfScreenWidth(int ID) => ((float)Managers.Data.GetExpensesTotal(ID) / (float)Managers.Data.BudgetGoal) * CanvasRect.sizeDelta.x;
 }
