@@ -1,20 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MessagePack;
 using System;
 
-[System.Serializable]
+[MessagePackObject]
 public class ExpenseData : ICloneable {
+
+    [Key(0)]
     public long EpochDate;
+    [Key(1)]
     public string NameText;
+    [Key(2)]
     public decimal Amount;
+    [Key(3)]
     public int ID;
 
     public ExpenseData() {
         EpochDate = DateTimeOffset.Now.ToUnixTimeSeconds();
         Amount = 0.00m;
-        ID = Managers.Data == null ? -1 : Managers.Data.CurrentID;
-        NameText = ID == -1 ? "Default" : Managers.Data.CurrentCatagoryData.NameText;
+        //ID = Managers.Data == null ? -1 : Managers.Data.CurrentID;
+        //NameText = ID == -1 ? "Default" : Managers.Data.CurrentCatagoryData.NameText;
+        ID = -1;
+        NameText = "Default";
     }
     
     public object Clone() {

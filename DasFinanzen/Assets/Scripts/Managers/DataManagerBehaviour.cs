@@ -5,116 +5,37 @@ using System.Collections;
 using System.IO;
 
 public class DataManagerBehaviour : MonoBehaviour {
-    // Catagories are loaded from the Unity Inspector, not the save profile. Gets converted into a Dictionary on App launch.
-    [SerializeField] private List<CatagoryData> CatagoryDatas = null;
+    // Add any Data object to this Manager in the editor
+    [SerializeField] private EditorData editorData = null;
 
     public DataManager Manager { get; private set; }
-    private void Awake() => Manager = new DataManager(CatagoryDatas);
+    private void Awake() => Manager = new DataManager(editorData);
 }
 
 public class DataManager : ManagerInterface {
-    // The Data Variables to access during runtime. Catagorized by ID to work with more easily.
-    public Dictionary<int, CatagoryData> CatagoryDataDict = new Dictionary<int, CatagoryData>();
-    public Dictionary<int, List<ExpenseData>> ExpenseDatasDict = new Dictionary<int, List<ExpenseData>>();
-
-    // Working variables for "Currently selected" data
-    public int CurrentID = -1;
-    public List<ExpenseData> CurrentExpenseDatas { get => ExpenseDatasDict.ContainsKey(CurrentID) ? ExpenseDatasDict[CurrentID] : null; }
-    public CatagoryData CurrentCatagoryData { get => CatagoryDataDict.ContainsKey(CurrentID) ? CatagoryDataDict[CurrentID] : null; }
-
-    public decimal BudgetGoal = 1000.00m;
-    private string filename;
-
-    public DataManager(List<CatagoryData> catagoryDatas) {
-        LoadCatagories(catagoryDatas);
-    }
-
-    private void LoadCatagories(List<CatagoryData> catagoryDatas) {
-        foreach (CatagoryData catagoryData in catagoryDatas)
-            CatagoryDataDict[catagoryData.ID] = catagoryData;
-    }
+    public FileData MyFileData { get; private set; } = null;
+    public EditorData MyEditorData { get; private set; } = null;
 
     public ManagerStatus status { get; private set; }
     public void Startup() {
-        Debug.Log("Data manager starting...");
-
-        SetFilePath();
-        LoadGameState();
-
+        Debug.Log("Data Manager starting...");
+        Load();
         status = ManagerStatus.Started;
     }
 
-    public void SetFilePath(string customDirectory = null) {
-        filename = customDirectory == null ? Path.Combine(Application.persistentDataPath, "data.fin") : customDirectory;
-    }
+    public void Save() => SaveLoad.Save(MyFileData);
+    public void Load() => MyFileData = SaveLoad.Load();
+    public DataManager(EditorData editorData) => MyEditorData = editorData;
 
-    public void LoadGameState() {
-        Dictionary<string, object> gamestate = null;
-        if (File.Exists(filename))
-            gamestate = GetGamestateFromFile();
-        if (gamestate != null)
-            LoadFileValues(gamestate);
-        else
-            LoadDefaultValues();
-    }
+    private SaveLoadSystem SaveLoad = new SaveLoadSystem();
 
-    private Dictionary<string, object> GetGamestateFromFile() {
-        Dictionary<string, object> tempGamestate = null;
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = File.Open(filename, FileMode.Open);
-        try {
-            tempGamestate = formatter.Deserialize(stream) as Dictionary<string, object>;
-        } catch {
-            Debug.Log("Unable to Load Profile!");
-        } finally {
-            stream.Close();
-        }
-        return tempGamestate;
-    }
 
-    private void LoadFileValues(Dictionary<string, object> gamestate) {
-        LoadExpenses(gamestate["expenses"] as List<ExpenseData>);
-        LoadGoal((decimal)gamestate["expenseGoal"]);
-        Debug.Log("Save Data was Loaded.");
-    }
 
-    private void LoadExpenses(List<ExpenseData> expenseDatas) {
-        foreach (KeyValuePair<int, CatagoryData> catagoryData in CatagoryDataDict)
-            ExpenseDatasDict[catagoryData.Key] = new List<ExpenseData>();
-        foreach (ExpenseData expenseData in expenseDatas) {
-            if (ExpenseDatasDict.ContainsKey(expenseData.ID))
-                ExpenseDatasDict[expenseData.ID].Add(expenseData);
-            else
-                Debug.Log($"[WARNING] Catagory ID {expenseData.ID} was not found! Expense Data was lost.");
-        }
-    }
 
-    private void LoadGoal(decimal goal) => BudgetGoal = goal;
 
-    private void LoadDefaultValues() {
-        LoadExpenses(new List<ExpenseData>());
-        LoadGoal(1000.00m);
-        Debug.Log("Default Data was Loaded.");
-    }
 
-    public void SaveGameState() {
-        Dictionary<string, object> gamestate = new Dictionary<string, object>();
-        gamestate.Add("expenses", ConvertExpensesForSave());
-        gamestate.Add("expenseGoal", BudgetGoal);
 
-        FileStream stream = File.Create(filename);
-        BinaryFormatter formatter = new BinaryFormatter();
-        formatter.Serialize(stream, gamestate);
-        stream.Close();
-        Debug.Log("Data was saved.");
-    }
 
-    private List<ExpenseData> ConvertExpensesForSave() {
-        List<ExpenseData> ListToSave = new List<ExpenseData>();
-        foreach (KeyValuePair<int, List<ExpenseData>> expenseDatas in ExpenseDatasDict)
-            ListToSave.AddRange(expenseDatas.Value);
-        return ListToSave;
-    }
 
     public void AddExpense(ExpenseData newExpenseData) {
         ExpenseDatasDict[newExpenseData.ID].Add(newExpenseData);
