@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 
+/* TODO
 public class ExpenseManagerBehaviour : MonoBehaviour {
     // Initialization variables
     [SerializeField] private Expense ExpenseOriginal = null;
@@ -86,3 +87,4 @@ public class ExpenseManager : ManagerInterface {
         ExpenseUIs = new List<Expense>();
     }
 }
+*/

@@ -4,6 +4,8 @@ using System;
 using UnityEngine;
 using TMPro;
 
+
+/* TODO
 public class EditExpenseManagerBehaviour : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI ViewTitle = null;
     [SerializeField] private TMP_InputField NameInputField = null;
@@ -125,3 +127,5 @@ public class EditExpenseManager : ManagerInterface {
     public void SetAmountTextProxyText(string input) => AmountTextProxy.text = input;
 #endif
 }
+
+    */

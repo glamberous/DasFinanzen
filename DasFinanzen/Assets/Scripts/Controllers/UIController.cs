@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/* TODO
 public class UIController : MonoBehaviour {
     [SerializeField] private GameObject MainView = null;
     [SerializeField] private GameObject ExpenseView = null;
@@ -48,4 +49,4 @@ public class UIController : MonoBehaviour {
         Messenger<bool, bool>.RemoveListener(AppEvent.CLOSE_EDIT_EXPENSE_VIEW, OnEditExpenseClose);
         Messenger<ExpenseData>.RemoveListener(AppEvent.OPEN_EDIT_EXPENSE_VIEW, OnEditExpenseOpen);
     }
-}
+}*/

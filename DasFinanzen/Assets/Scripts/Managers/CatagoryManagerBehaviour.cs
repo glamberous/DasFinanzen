@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* TODO
 public class CatagoryManagerBehaviour : MonoBehaviour {
     // Initialization Variables
     [SerializeField] private CatagoryBehaviour DailyOriginal = null;
@@ -64,3 +65,4 @@ public class CatagoryManager : ManagerInterface {
             catagory.Value.UpdateExpensesTotal();
     }
 }
+*/

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+ * TODO
 [RequireComponent(typeof(BoxCollider2D))]
-
 public class ToggleExpenseView : MonoBehaviour {
     private void OnMouseDown() {
         CatagoryData data = gameObject.GetComponent<CatagoryBehaviour>()?.Instance.Data;
@@ -12,4 +13,4 @@ public class ToggleExpenseView : MonoBehaviour {
             Managers.Data.CurrentID = data.ID;
         Messenger.Broadcast(AppEvent.TOGGLE_EXPENSE_VIEW);
     }
-}
+}*/

@@ -11,6 +11,7 @@ using System.IO;
 //#### These tests depend on the files within the Assets/Scripts/Tests/TestData folder.
 //###############################################################################################################
 
+/*
 namespace Tests {
     public class DataManagerTests {
         DataManager Data = null;
@@ -302,3 +303,4 @@ namespace Tests {
         }
     }
 }
+*/

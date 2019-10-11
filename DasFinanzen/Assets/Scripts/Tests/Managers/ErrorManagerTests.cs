@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
 using TMPro;
-
+/*
 namespace Tests {
     public class ErrorManagerTests {
         ErrorManager Error = null;
@@ -65,3 +65,4 @@ namespace Tests {
         }
     }
 }
+*/
