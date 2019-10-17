@@ -1,11 +1,42 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
-using MessagePack;
+using Mono.Data.Sqlite;
+using Mono.Data.SqliteClient;
+using System.Data;
+using System.Threading.Tasks;
+using System.Configuration;
+using UI;
 
-public class SaveLoadSystem {
-    public SaveLoadSystem() { SetFilePath(); }
+public interface ISaveLoad {
+    List<CatagoryModel> GetCatagoryModels();
+    List<ExpenseModel> GetExpenseModels(string time = "CurrentTime", int id = -1);
+}
+
+public class SaveLoadSystem_SQLite : ISaveLoad {
+
+    public SaveLoadSystem_SQLite() { SetFilePath(); }
+    public void SetFilePath(string filename = "AppData.db") => filepath = "Data Source=" + Application.persistentDataPath + $"/{filename};Version=3;";
+    private string filepath;
+
+    private string LoadConnectionString(string id = "Default") => ConfigurationManager.ConnectionStrings[id].ConnectionString;
+
+    public List<CatagoryModel> GetCatagoryModels() {
+        /*
+        using (IDbConnection connection = new SqliteConnection() {
+            return connection.Query<CatagoryModel>("SELECT *", null).ToList();
+        } */
+
+        return new List<CatagoryModel>();
+    }
+
+    public List<ExpenseModel> GetExpenseModels(string time = "CurrentTime", int id = -1) {
+
+        return new List<ExpenseModel>();
+    }
+}
+/*
+public class SaveLoadSystem_v1 : ISaveLoad {
+    public SaveLoadSystem_v1() { SetFilePath(); }
 
     private string filepath;
     public void SetFilePath(string customDirectory = null) {
@@ -21,8 +52,7 @@ public class SaveLoadSystem {
             } catch {
                 Debug.Log("Unable to Load Profile!");
             }
-        }
-        else
+        } else
             Debug.Log("File not found.");
         Debug.Log("Loading Default Values.");
         return myData;
@@ -39,4 +69,4 @@ public class SaveLoadSystem {
     public void SaveJSON(FileData fileData) {
 
     }
-}
+}*/

@@ -5,24 +5,21 @@ using UnityEngine.UI;
 
 namespace UI {
     public class ColorBarElement : MonoBehaviour {
-        public int ID { get; private set; } = -1;
+        public int CatagoryID;
+
         private Image ColorBarImage = null;
         private RectTransform BarRect = null;
 
-        public void Initialize(CatagoryData data) {
-            Construct();
-            SetColor(data.ColorCode);
-            ID = data.ID;
-        }
-
-        public void Construct() {
+        public void Awake() {
             BarRect = gameObject.GetComponent<RectTransform>();
             ColorBarImage = gameObject.GetComponent<Image>();
         }
 
-        public void SetColor(string colorCode) => ColorBarImage.color = ColorConverter.HexToColor(colorCode);
-        public void SetWidth(float width) => BarRect.sizeDelta = new Vector2(width, BarRect.sizeDelta.y);
-        public float GetWidth() => BarRect.sizeDelta.x;
+        public void UpdateView(CatagoryModel Model, float width) {
+            CatagoryID = Model.CatagoryID;
+            ColorBarImage.color = ColorConverter.HexToColor(Model.ColorCode);
+            BarRect.sizeDelta = new Vector2(width, BarRect.sizeDelta.y);
+        }
     }
 }
 

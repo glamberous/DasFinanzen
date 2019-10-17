@@ -5,33 +5,25 @@ using System.Collections;
 using System.IO;
 
 public class DataManager : MonoBehaviour {
-    [SerializeField] private List<CatagoryData> CatagoryDatas = null;
-
-    private void Awake() {
-        EditorData editorData = new EditorData();
-        editorData.CatagoryDatas = CatagoryDatas;
-
-        Manager = new DataManagerHumble(editorData);
-    }
+    private void Awake() => Manager = new DataManagerHumble();
     public DataManagerHumble Manager { get; private set; }
 }
 
 public class DataManagerHumble : IManager {
-    public DataManagerHumble(EditorData editorData) => EditorData = editorData;
-    public EditorData EditorData { get; private set; } = null;
-    public FileData FileData { get; private set; } = null;
-
-    private SaveLoadSystem SaveLoad = new SaveLoadSystem();
-    public void Save() => SaveLoad.Save(FileData);
-    public void Load() => FileData = SaveLoad.Load();
+    private ISaveLoad SaveLoad = null;
+    public UI.ModelCollector UIModelCollector = null;
+    // Add other Model Collectors here
 
     public ManagerStatus status { get; private set; }
     public void Startup() {
         Debug.Log("Data Manager starting...");
-        FileData = SaveLoad.Load();
+
+        SaveLoad = new SaveLoadSystem_SQLite();
+        UIModelCollector = new UI.ModelCollector(SaveLoad);
+        // Initiallize Data Collectors here
+
         status = ManagerStatus.Started;
     }
-
 
     /*
 

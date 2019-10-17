@@ -11,16 +11,13 @@ namespace UI {
 
         public void Awake() {
             Views.Add(GetComponent<Catagory_V>());
-            //Views.Add(GetComponent<ColorBar_V>());
+            Views.Add(GetComponent<ColorBar_V>());
             //Views.Add(GetComponent<Remaining_V>());
         }
 
         public IWindow Activate() {
             foreach (IView view in Views)
                 view.Activate();
-
-            Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.AddListener(AppEvent.GOAL_UPDATED, Refresh);
 
             gameObject.SetActive(true);
             return this;
@@ -29,16 +26,8 @@ namespace UI {
         public void Deactivate() {
             gameObject.SetActive(false);
 
-            Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.RemoveListener(AppEvent.GOAL_UPDATED, Refresh);
-
             foreach (IView view in Views)
                 view.Deactivate();
-        }
-
-        public void Refresh() {
-            foreach (IView view in Views)
-                view.Refresh();
         }
     }
 }

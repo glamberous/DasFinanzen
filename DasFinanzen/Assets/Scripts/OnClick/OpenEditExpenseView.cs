@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class OpenEditExpenseView : MonoBehaviour {
     private void OnMouseDown() {
-        ExpenseData expenseData = gameObject.GetComponent<Expense>()?.Data;
+        ExpenseData expenseData = gameObject.GetComponent<ExpenseElement>()?.Data;
         Messenger<ExpenseData>.Broadcast(AppEvent.OPEN_EDIT_EXPENSE_VIEW, expenseData);
     }
 }

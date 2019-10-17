@@ -4,6 +4,6 @@ using UnityEngine;
 
 public static class DailyAverageSpend{
     public static void CalculateBDAS() {
-
+        
     }
 }

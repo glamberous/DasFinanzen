@@ -2,52 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 namespace UI {
     public class Catagory_V : MonoBehaviour, IView {
         [SerializeField] private CatagoryElement DailyOriginal = null;
         [SerializeField] private CatagoryElement MonthlyOriginal = null;
 
-        private Catagory_M Model = null;
-        private Catagory_C Controller = null;
+        private Catagory_Controller Controller = null;
         private Catagory_HumbleView HumbleView = null;
 
-        public void Activate() {
-            Model = new Catagory_M(Managers.Data.FileData, Managers.Data.EditorData);
-            Controller = new Catagory_C(Model);
+        public void Awake() {
+            Controller = new Catagory_Controller();
             HumbleView = new Catagory_HumbleView();
-
-            Model.Catagories = HumbleView.ConstructView(DailyOriginal, MonthlyOriginal, Model.CatagoryDatas, Model.ExpenseDatas, this);
         }
 
-        public void Deactivate() {
-            Model = null;
-            Controller = null;
-            HumbleView = null;
+        public void Activate() {
+            HumbleView.ConstructView(Managers.Data.UIModelCollector.GetCatagory(), DailyOriginal, MonthlyOriginal);
+            Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
         }
 
         public void Refresh() {
-            HumbleView.Refresh(Model.ExpenseDatas);
+            HumbleView.Refresh(Managers.Data.UIModelCollector.GetCatagory());
+        }
+
+        public void Deactivate() {
+            Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
+            HumbleView.DeconstructView();
         }
     }
 
     public class Catagory_HumbleView {
-        public List<CatagoryElement> ConstructView(CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal, List<CatagoryData> catagoryDatas, List<ExpenseData> expenseDatas, Catagory_V view) {
-            List<CatagoryElement> newCatagories = new List<CatagoryElement>();
+        private List<CatagoryElement> CatagoryElements = new List<CatagoryElement>();
+
+        public void ConstructView(Catagory_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
             TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
             TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);
-            foreach (CatagoryData catagoryData in catagoryDatas)
-                if (catagoryData.Reoccurring)
-                    newCatagories.Add(ConstructCatagoryElement(catagoryData, MonthlyUIData));
+            foreach (CatagoryModel catagoryModel in ModelCollection.CatagoryModels)
+                if (catagoryModel.Reoccurring)
+                    CatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData));
                 else
-                    newCatagories.Add(ConstructCatagoryElement(catagoryData, DailyUIData));
+                    CatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData));
             MonthlyUIData.UpdateTileSize();
             DailyUIData.UpdateTileSize();
-            return newCatagories;
+            Refresh(ModelCollection);
         }
 
-        private CatagoryElement ConstructCatagoryElement(CatagoryData myCatagoryData, TileUIData UIData) {
+        private CatagoryElement ConstructCatagoryElement(CatagoryModel myCatagoryModel, TileUIData UIData) {
             CatagoryElement newCatagory;
             if (UIData.Count == 0)
                 newCatagory = UIData.Original.GetComponent<CatagoryElement>();
@@ -55,39 +55,38 @@ namespace UI {
                 newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<CatagoryElement>(), parent: UIData.Parent.transform) as CatagoryElement;
                 newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
             }
-            newCatagory.Initialize(myCatagoryData);
             UIData.Count++;
             return newCatagory;
         }
 
-        public void Refresh(List<ExpenseData> expenseDatas) {
+        public void Refresh(Catagory_ModelCollection modelCollection) {
+            Dictionary<int, decimal> ExpenseTotals = UIDataReformatter.GetExpenseTotals(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
+            Dictionary<int, CatagoryModel> CatagoryModelDict = UIDataReformatter.SortCatagoryModels(modelCollection.CatagoryModels);
 
+            foreach (CatagoryElement catagoryElem in CatagoryElements)
+                catagoryElem.UpdateView(CatagoryModelDict[catagoryElem.CatagoryID], ExpenseTotals[catagoryElem.CatagoryID]);
+        }
+
+        public void DeconstructView() {
+            int count = 0;
+            foreach (CatagoryElement catagoryElement in CatagoryElements) {
+                if (0 == count++)
+                    continue;
+                GameObject.Destroy(catagoryElement.gameObject);
+            }
         }
     }
 
-    public class Catagory_C : IController {
-        public Catagory_C(Catagory_M model) => Model = model;
-        private Catagory_M Model = null;
-
+    public class Catagory_Controller : IController {
         public void Close() => Managers.UI.Pop();
 
         public void OpenCatagory(int id) {
-            Model.CurrentCatagoryID = id;
             Managers.UI.Push(WINDOW.CATAGORY);
         }
     }
 
-    public class Catagory_M : IModel {
-        public Catagory_M(FileData fileData, EditorData editorData) {
-            CatagoryDatas = editorData.CatagoryDatas;
-            CurrentCatagoryID = editorData.CurrentCatagoryID;
-
-            ExpenseDatas = fileData.ExpenseDatas;
-        }
-
-        public List<ExpenseData> ExpenseDatas = null;
-        public List<CatagoryData> CatagoryDatas = null;
-        public int CurrentCatagoryID = -1;
-        public List<CatagoryElement> Catagories = null;
+    public class Catagory_ModelCollection {
+        public List<CatagoryModel> CatagoryModels = new List<CatagoryModel>();
+        public List<ExpenseModel> ExpenseModels = new List<ExpenseModel>();
     }
 }

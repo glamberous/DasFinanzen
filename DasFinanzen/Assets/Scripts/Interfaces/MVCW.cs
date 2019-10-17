@@ -3,11 +3,11 @@
 
 public interface IModel { }
 
-public interface IController { }
+public interface IController {
+    void Close();
+}
 
 public interface IWindow {
-    void Refresh();
-
     IWindow Activate();
     void Deactivate();
 }
