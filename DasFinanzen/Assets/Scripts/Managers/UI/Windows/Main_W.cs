@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UI {
     [RequireComponent(typeof(Catagory_View))]
     [RequireComponent(typeof(ColorBar_View))]
-    [RequireComponent(typeof(Remaining_View))]
+    [RequireComponent(typeof(Goal_View))]
     public class Main_W : MonoBehaviour, IWindow {
         private List<IView> Views = new List<IView>();
 

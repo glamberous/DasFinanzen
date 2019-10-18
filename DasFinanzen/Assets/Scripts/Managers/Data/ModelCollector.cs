@@ -9,22 +9,23 @@ namespace UI {
 
         public Catagory_ModelCollection GetCatagory(string month = "CurrentMonth") {
             Catagory_ModelCollection ModelCollection = new Catagory_ModelCollection();
-            ModelCollection.CatagoryModels = SaveLoad.GetCatagoryModels();
-            ModelCollection.ExpenseModels = SaveLoad.GetExpenseModels();
+            ModelCollection.CatagoryModels = SaveLoad.LoadCatagories();
+            ModelCollection.ExpenseModels = SaveLoad.LoadExpenses();
             return ModelCollection;
         }
 
         public ColorBar_ModelCollection GetColorBar() {
             ColorBar_ModelCollection ModelCollection = new ColorBar_ModelCollection();
-            ModelCollection.CatagoryModels = SaveLoad.GetCatagoryModels();
-            ModelCollection.ExpenseModels = SaveLoad.GetExpenseModels();
-            ModelCollection.Goal = SaveLoad.GetGoal();
+            ModelCollection.CatagoryModels = SaveLoad.LoadCatagories();
+            ModelCollection.ExpenseModels = SaveLoad.LoadExpenses();
+            ModelCollection.Goal = SaveLoad.LoadGoal();
             return new UI.ColorBar_ModelCollection();
         }
 
-        public Remaining_ModelCollection GetRemaining() {
-
-            return new UI.Remaining_ModelCollection();
+        public Goal_ModelCollection GetRemaining() {
+            decimal Goal = SaveLoad.LoadGoal();
+            
+            return new UI.Goal_ModelCollection();
         }
     }
 }

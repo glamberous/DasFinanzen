@@ -85,7 +85,7 @@ namespace UI {
         }
     }
 
-    public class Catagory_ModelCollection {
+    public class Catagory_ModelCollection : IModelCollection {
         public List<CatagoryModel> CatagoryModels = new List<CatagoryModel>();
         public List<ExpenseModel> ExpenseModels = new List<ExpenseModel>();
     }

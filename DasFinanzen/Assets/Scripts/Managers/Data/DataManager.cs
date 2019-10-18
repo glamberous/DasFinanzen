@@ -10,20 +10,25 @@ public class DataManager : MonoBehaviour {
 }
 
 public class DataManagerHumble : IManager {
-    private ISaveLoad SaveLoad = null;
-    public UI.ModelCollector UIModelCollector = null;
-    // Add other Model Collectors here
-
     public ManagerStatus status { get; private set; }
     public void Startup() {
         Debug.Log("Data Manager starting...");
 
-        SaveLoad = new SaveLoadSystem_SQLite();
-        UIModelCollector = new UI.ModelCollector(SaveLoad);
-        // Initiallize Data Collectors here
+        SaveLoad = new SaveLoadSystem();
+        UIModelCollector = new UI.ModelCollector();
+        // Initiallize Data Loaders here
 
         status = ManagerStatus.Started;
     }
+
+    private SaveLoadSystem SaveLoad = null;
+    private FileData FileData = null;
+    public FileDataQueries FileDataQueries { get; private set; } = null;
+    public UI.ModelCollector UIModelCollector { get; private set; } = null;
+    // Add other Model Collectors here
+
+    public void Save() => SaveLoad.SaveFileData(FileData);
+    public void Load() => FileData = SaveLoad.LoadFileData();
 
     /*
 

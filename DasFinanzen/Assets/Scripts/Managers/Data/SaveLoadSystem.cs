@@ -3,43 +3,87 @@ using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using Mono.Data.SqliteClient;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using System.Configuration;
 using UnityEngine;
 using UI;
+using MessagePack;
 
 public interface ISaveLoad {
-    List<CatagoryModel> GetCatagoryModels();
-    List<ExpenseModel> GetExpenseModels(string time = "CurrentTime", int id = -1);
-    decimal GetGoal();
+    FileData LoadFileData();
+    void SaveFileData(FileData fileData); 
+
+
+    //Load
+    List<CatagoryModel> GetCatagories();
+    List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1);
+    GoalModel GetGoal();
+
+    //Save
+    void SaveCatagory(CatagoryModel catagoryModel);
+    void SaveExpense(ExpenseModel expenseModel);
+    void SaveGoal(GoalModel goalModel);
+
+    //Delete
+    void DeleteExpense(ExpenseModel expenseModel);
 }
 
-public class SaveLoadSystem_SQLite : ISaveLoad {
+public class SaveLoadSystem : ISaveLoad {
+    private FileData FileData = null;
 
-    public SaveLoadSystem_SQLite() { SetFilePath(); }
-    public void SetFilePath(string filename = "AppData.db") => filepath = "Data Source=" + Application.persistentDataPath + $"/{filename};Version=3;";
+    public SaveLoadSystem() { SetFilePath(); }
+    public void SetFilePath(string filename = "AppData.fin") => filepath = Application.persistentDataPath + $"/{filename}";
     private string filepath;
 
-    private string LoadConnectionString(string id = "Default") => ConfigurationManager.ConnectionStrings[id].ConnectionString;
+    public FileData LoadFileData() {
+        byte[] rawData = File.ReadAllBytes(filepath);
+        return MessagePackSerializer.Deserialize<FileData>(rawData);
+    }
 
-    public List<CatagoryModel> GetCatagoryModels() {
-        /*
-        using (IDbConnection connection = new SqliteConnection() {
-            return connection.Query<CatagoryModel>("SELECT *", null).ToList();
-        } */
+    public void SaveFileData(FileData fileData) {
 
+    }
+
+    // ############################################## Load ##############################################
+    #region Load
+    public List<CatagoryModel> GetCatagories() {
         return new List<CatagoryModel>();
     }
 
-    public List<ExpenseModel> GetExpenseModels(string time = "CurrentTime", int id = -1) {
-
+    public List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1) {
         return new List<ExpenseModel>();
     }
 
-    public decimal GetGoal() {
-        decimal test = 0.00m;
-        return test;
+    public GoalModel GetGoal() {
+        return new GoalModel();
     }
+
+    #endregion
+
+    // ############################################## Save ##############################################
+    #region Save
+    void SaveCatagory(CatagoryModel catagoryModel) {
+
+    }
+
+    void SaveExpense(ExpenseModel expenseModel) {
+
+    }
+
+    void SaveGoal(GoalModel goalModel) {
+        FileData.Goal = goalModel;
+    }
+
+    #endregion
+
+    // ############################################## Delete ##############################################
+    #region Delete
+    void DeleteExpense(ExpenseModel expenseModel) {
+
+    }
+
+    #endregion
 }
 /*
 public class SaveLoadSystem_v1 : ISaveLoad {

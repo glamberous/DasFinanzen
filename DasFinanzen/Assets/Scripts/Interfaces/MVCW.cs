@@ -1,7 +1,14 @@
 ﻿
 
 
-public interface IModel { }
+public interface IModel {
+    void Save();
+    void Delete();
+}
+
+public interface IModelCollection {
+
+}
 
 public interface IController {
     void Close();
