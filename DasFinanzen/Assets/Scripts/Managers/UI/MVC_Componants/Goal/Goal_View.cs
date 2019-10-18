@@ -16,7 +16,7 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(Managers.Data.UIModelCollector.GetRemaining(), RemainingObject);
+            HumbleView.ConstructView(Managers.Data.UIModelCollector.GetGoal(), RemainingObject);
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
         }
 
@@ -41,8 +41,8 @@ namespace UI {
     }
 
     public class Goal_ModelCollection {
-        GoalModel GoalModel = new GoalModel();
-        List<ExpenseModel> CurrentMonthExpenses = new List<ExpenseModel>();
+        public GoalModel GoalModel = new GoalModel();
+        public List<ExpenseModel> CurrentMonthExpenses = new List<ExpenseModel>();
     }
 }
 

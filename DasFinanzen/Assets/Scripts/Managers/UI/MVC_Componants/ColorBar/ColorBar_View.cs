@@ -48,7 +48,7 @@ namespace UI {
             float fullWidth = 0.00f;
             foreach (ColorBarElement colorBarElement in ColorBarElements) {
                 colorBarElement.transform.localPosition = new Vector3(fullWidth, 0, 0);
-                float currentWidth = ((float)ExpenseTotals[colorBarElement.CatagoryID] / (float)modelCollection.Goal) * ScreenWidth;
+                float currentWidth = ((float)ExpenseTotals[colorBarElement.CatagoryID] / (float)modelCollection.Goal.Amount) * ScreenWidth;
                 colorBarElement.UpdateView(CatagoryModelDict[colorBarElement.CatagoryID], currentWidth + 1);
                 fullWidth += currentWidth;
             }
@@ -67,6 +67,6 @@ namespace UI {
     public class ColorBar_ModelCollection {
         public List<CatagoryModel> CatagoryModels = new List<CatagoryModel>();
         public List<ExpenseModel> ExpenseModels = new List<ExpenseModel>();
-        public decimal Goal = 0.00m;
+        public GoalModel Goal = new GoalModel();
     }
 }

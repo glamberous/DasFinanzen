@@ -15,7 +15,10 @@ public class DataManagerHumble : IManager {
         Debug.Log("Data Manager starting...");
 
         SaveLoad = new SaveLoadSystem();
-        UIModelCollector = new UI.ModelCollector();
+        FileData = SaveLoad.LoadFileData();
+        FileQueries = new FileDataQueries(FileData);
+
+        UIModelCollector = new UI.ModelCollector(FileQueries);
         // Initiallize Data Loaders here
 
         status = ManagerStatus.Started;
@@ -23,7 +26,8 @@ public class DataManagerHumble : IManager {
 
     private SaveLoadSystem SaveLoad = null;
     private FileData FileData = null;
-    public FileDataQueries FileDataQueries { get; private set; } = null;
+    public FileDataQueries FileQueries { get; private set; } = null;
+
     public UI.ModelCollector UIModelCollector { get; private set; } = null;
     // Add other Model Collectors here
 

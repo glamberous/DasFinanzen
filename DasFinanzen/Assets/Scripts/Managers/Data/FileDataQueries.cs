@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IFileDataModels {
+public interface IQueries {
     //Load
     List<CatagoryModel> GetCatagories();
     List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1);
@@ -17,41 +17,41 @@ public interface IFileDataModels {
     void DeleteExpense(ExpenseModel expenseModel);
 }
 
-public class FileDataQueries {
-
-
+public class FileDataQueries : IQueries {
+    public FileDataQueries(FileData fileData) => FileData = fileData;
+    private FileData FileData;
 
     // ############################################## Load ##############################################
-    public static List<CatagoryModel> GetCatagories() {
+    public List<CatagoryModel> GetCatagories() {
 
         return new List<CatagoryModel>();
     }
 
-    public static List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1) {
+    public List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1) {
 
         return new List<ExpenseModel>();
     }
 
-    public static GoalModel GetGoal() {
+    public GoalModel GetGoal() {
 
         return new GoalModel();
     }
 
     //Save
-    public static void SaveCatagory(CatagoryModel catagoryModel) {
+    public void SaveCatagory(CatagoryModel catagoryModel) {
 
     }
 
-    public static void SaveExpense(ExpenseModel expenseModel) {
+    public void SaveExpense(ExpenseModel expenseModel) {
 
     }
 
-    public static void SaveGoal(GoalModel goalModel) {
+    public void SaveGoal(GoalModel goalModel) {
 
     }
 
     //Delete
-    public static void DeleteExpense(ExpenseModel expenseModel) {
+    public void DeleteExpense(ExpenseModel expenseModel) {
 
     }
 }

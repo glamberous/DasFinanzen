@@ -14,7 +14,6 @@ public interface ISaveLoad {
     FileData LoadFileData();
     void SaveFileData(FileData fileData); 
 
-
     //Load
     List<CatagoryModel> GetCatagories();
     List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1);
@@ -63,15 +62,15 @@ public class SaveLoadSystem : ISaveLoad {
 
     // ############################################## Save ##############################################
     #region Save
-    void SaveCatagory(CatagoryModel catagoryModel) {
+    public void SaveCatagory(CatagoryModel catagoryModel) {
 
     }
 
-    void SaveExpense(ExpenseModel expenseModel) {
+    public void SaveExpense(ExpenseModel expenseModel) {
 
     }
 
-    void SaveGoal(GoalModel goalModel) {
+    public void SaveGoal(GoalModel goalModel) {
         FileData.Goal = goalModel;
     }
 
@@ -79,7 +78,7 @@ public class SaveLoadSystem : ISaveLoad {
 
     // ############################################## Delete ##############################################
     #region Delete
-    void DeleteExpense(ExpenseModel expenseModel) {
+    public void DeleteExpense(ExpenseModel expenseModel) {
 
     }
 
