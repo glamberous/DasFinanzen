@@ -5,11 +5,13 @@ using Mono.Data.SqliteClient;
 using System.Data;
 using System.Threading.Tasks;
 using System.Configuration;
+using UnityEngine;
 using UI;
 
 public interface ISaveLoad {
     List<CatagoryModel> GetCatagoryModels();
     List<ExpenseModel> GetExpenseModels(string time = "CurrentTime", int id = -1);
+    decimal GetGoal();
 }
 
 public class SaveLoadSystem_SQLite : ISaveLoad {
@@ -32,6 +34,11 @@ public class SaveLoadSystem_SQLite : ISaveLoad {
     public List<ExpenseModel> GetExpenseModels(string time = "CurrentTime", int id = -1) {
 
         return new List<ExpenseModel>();
+    }
+
+    public decimal GetGoal() {
+        decimal test = 0.00m;
+        return test;
     }
 }
 /*

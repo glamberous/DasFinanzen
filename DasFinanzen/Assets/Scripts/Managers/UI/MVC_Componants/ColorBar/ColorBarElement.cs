@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI {
     public class ColorBarElement : MonoBehaviour {
-        public int CatagoryID;
+        [HideInInspector]public int CatagoryID;
 
         private Image ColorBarImage = null;
         private RectTransform BarRect = null;

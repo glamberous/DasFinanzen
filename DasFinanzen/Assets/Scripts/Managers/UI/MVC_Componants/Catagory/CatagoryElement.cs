@@ -7,7 +7,7 @@ using TMPro;
 namespace UI {
     [RequireComponent(typeof(BoxCollider2D))]
     public class CatagoryElement : MonoBehaviour {
-        public int CatagoryID;
+        [HideInInspector] public int CatagoryID;
 
         private Image ColorPatchImage;
         private TextMeshProUGUI NameTextMesh;

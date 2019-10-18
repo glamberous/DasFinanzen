@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI {
-    public class Catagory_V : MonoBehaviour, IView {
+    public class Catagory_View : MonoBehaviour, IView {
         [SerializeField] private CatagoryElement DailyOriginal = null;
         [SerializeField] private CatagoryElement MonthlyOriginal = null;
 
@@ -60,8 +60,8 @@ namespace UI {
         }
 
         public void Refresh(Catagory_ModelCollection modelCollection) {
-            Dictionary<int, decimal> ExpenseTotals = UIDataReformatter.GetExpenseTotals(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
-            Dictionary<int, CatagoryModel> CatagoryModelDict = UIDataReformatter.SortCatagoryModels(modelCollection.CatagoryModels);
+            Dictionary<int, decimal> ExpenseTotals = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
+            Dictionary<int, CatagoryModel> CatagoryModelDict = DataReformatter.GetCatagoryModelsDict(modelCollection.CatagoryModels);
 
             foreach (CatagoryElement catagoryElem in CatagoryElements)
                 catagoryElem.UpdateView(CatagoryModelDict[catagoryElem.CatagoryID], ExpenseTotals[catagoryElem.CatagoryID]);

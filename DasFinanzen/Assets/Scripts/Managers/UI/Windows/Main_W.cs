@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI {
-    [RequireComponent(typeof(Catagory_V))]
-    [RequireComponent(typeof(ColorBar_V))]
-    [RequireComponent(typeof(Remaining_V))]
+    [RequireComponent(typeof(Catagory_View))]
+    [RequireComponent(typeof(ColorBar_View))]
+    [RequireComponent(typeof(Remaining_View))]
     public class Main_W : MonoBehaviour, IWindow {
         private List<IView> Views = new List<IView>();
 
         public void Awake() {
-            Views.Add(GetComponent<Catagory_V>());
-            Views.Add(GetComponent<ColorBar_V>());
+            Views.Add(GetComponent<Catagory_View>());
+            Views.Add(GetComponent<ColorBar_View>());
             //Views.Add(GetComponent<Remaining_V>());
         }
 

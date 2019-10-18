@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI {
-    public class ColorBar_V : MonoBehaviour, IView {
+    public class ColorBar_View : MonoBehaviour, IView {
         [SerializeField] private ColorBarElement OriginalColorBar = null;
         [SerializeField] private RectTransform CanvasRect = null;
 
@@ -42,8 +42,8 @@ namespace UI {
         }
 
         private void UpdateColorBar(ColorBar_ModelCollection modelCollection) {
-            Dictionary<int, decimal> ExpenseTotals = UIDataReformatter.GetExpenseTotals(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
-            Dictionary<int, CatagoryModel> CatagoryModelDict = UIDataReformatter.SortCatagoryModels(modelCollection.CatagoryModels);
+            Dictionary<int, decimal> ExpenseTotals = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
+            Dictionary<int, CatagoryModel> CatagoryModelDict = DataReformatter.GetCatagoryModelsDict(modelCollection.CatagoryModels);
 
             float fullWidth = 0.00f;
             foreach (ColorBarElement colorBarElement in ColorBarElements) {
