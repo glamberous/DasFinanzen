@@ -13,19 +13,6 @@ using MessagePack;
 public interface ISaveLoad {
     FileData LoadFileData();
     void SaveFileData(FileData fileData); 
-
-    //Load
-    List<CatagoryModel> GetCatagories();
-    List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1);
-    GoalModel GetGoal();
-
-    //Save
-    void SaveCatagory(CatagoryModel catagoryModel);
-    void SaveExpense(ExpenseModel expenseModel);
-    void SaveGoal(GoalModel goalModel);
-
-    //Delete
-    void DeleteExpense(ExpenseModel expenseModel);
 }
 
 public class SaveLoadSystem : ISaveLoad {
@@ -36,53 +23,23 @@ public class SaveLoadSystem : ISaveLoad {
     private string filepath;
 
     public FileData LoadFileData() {
-        byte[] rawData = File.ReadAllBytes(filepath);
-        return MessagePackSerializer.Deserialize<FileData>(rawData);
+        FileData myData = new FileData();
+        if (File.Exists(filepath)) {
+            byte[] serializedData = File.ReadAllBytes(filepath);
+            try {
+                myData = MessagePackSerializer.Deserialize<FileData>(serializedData);
+            } catch {
+                Debug.Log("Unable to Load Profile! \nLoading Default Values.");
+            }
+        } else
+            Debug.Log("File not found. \nLoading Default Values.");
+        return myData;
     }
 
     public void SaveFileData(FileData fileData) {
-
+        byte[] rawData = MessagePackSerializer.Serialize(fileData);
+        File.WriteAllBytes(filepath, rawData);
     }
-
-    // ############################################## Load ##############################################
-    #region Load
-    public List<CatagoryModel> GetCatagories() {
-        return new List<CatagoryModel>();
-    }
-
-    public List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1) {
-        return new List<ExpenseModel>();
-    }
-
-    public GoalModel GetGoal() {
-        return new GoalModel();
-    }
-
-    #endregion
-
-    // ############################################## Save ##############################################
-    #region Save
-    public void SaveCatagory(CatagoryModel catagoryModel) {
-
-    }
-
-    public void SaveExpense(ExpenseModel expenseModel) {
-
-    }
-
-    public void SaveGoal(GoalModel goalModel) {
-        FileData.Goal = goalModel;
-    }
-
-    #endregion
-
-    // ############################################## Delete ##############################################
-    #region Delete
-    public void DeleteExpense(ExpenseModel expenseModel) {
-
-    }
-
-    #endregion
 }
 /*
 public class SaveLoadSystem_v1 : ISaveLoad {

@@ -1,20 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public interface IQueries {
     //Load
-    List<CatagoryModel> GetCatagories();
-    List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1);
-    GoalModel GetGoal();
+    List<CatagoryModel> GetCatagoryModels();
+    List<ExpenseModel> GetExpenseModels(string date = "TimeDate", int id = -1);
+    GoalModel GetGoalModel();
 
     //Save
-    void SaveCatagory(CatagoryModel catagoryModel);
-    void SaveExpense(ExpenseModel expenseModel);
-    void SaveGoal(GoalModel goalModel);
+    void SaveCatagoryModel(CatagoryModel myModel);
+    void SaveExpenseModel(ExpenseModel myModel);
+    void SaveGoalModel(GoalModel myModel);
 
     //Delete
-    void DeleteExpense(ExpenseModel expenseModel);
+    void DeleteExpenseModel(ExpenseModel expenseModel);
 }
 
 public class FileDataQueries : IQueries {
@@ -22,36 +23,48 @@ public class FileDataQueries : IQueries {
     private FileData FileData;
 
     // ############################################## Load ##############################################
-    public List<CatagoryModel> GetCatagories() {
+    #region Load
 
-        return new List<CatagoryModel>();
-    }
+    public GoalModel GetGoalModel() => FileData.GoalModel;
+    public List<CatagoryModel> GetCatagoryModels() => FileData.CatagoryModels;
 
-    public List<ExpenseModel> GetExpenses(string date = "TimeDate", int id = -1) {
-
+    public List<ExpenseModel> GetExpenseModels(Month month, int catagoryID = -1) {
+        if (catagoryID == -1)
+            foreach (ExpenseModel expenseModel in FileData.ExpenseModels)
+                if expenseModel.EpochDate.
+        
         return new List<ExpenseModel>();
     }
 
-    public GoalModel GetGoal() {
+    #endregion
+    // ############################################## Save ##############################################
+    #region Save
 
-        return new GoalModel();
+    public void SaveGoalModel(GoalModel myModel) => FileData.GoalModel = myModel;
+
+    public void SaveCatagoryModel(CatagoryModel myModel) {
+        foreach (CatagoryModel catagoryModel in FileData.CatagoryModels)
+            if (catagoryModel.CatagoryID == myModel.CatagoryID)
+                FileData.CatagoryModels.Remove(catagoryModel);
+        FileData.CatagoryModels.Add(myModel);
     }
 
-    //Save
-    public void SaveCatagory(CatagoryModel catagoryModel) {
-
+    public void SaveExpenseModel(ExpenseModel myModel) {
+        foreach (ExpenseModel expenseModel in FileData.ExpenseModels)
+            if (expenseModel.ExpenseID == myModel.ExpenseID)
+                FileData.ExpenseModels.Remove(expenseModel);
+        FileData.ExpenseModels.Add(myModel);
     }
 
-    public void SaveExpense(ExpenseModel expenseModel) {
+    #endregion
+    // ############################################# Delete #############################################
+    #region Delete
 
+    public void DeleteExpenseModel(ExpenseModel myModel) {
+        foreach (ExpenseModel expenseModel in FileData.ExpenseModels)
+            if (expenseModel.ExpenseID == myModel.ExpenseID)
+                FileData.ExpenseModels.Remove(expenseModel);
     }
 
-    public void SaveGoal(GoalModel goalModel) {
-
-    }
-
-    //Delete
-    public void DeleteExpense(ExpenseModel expenseModel) {
-
-    }
+    #endregion
 }

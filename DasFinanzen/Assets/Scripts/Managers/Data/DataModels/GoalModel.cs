@@ -5,7 +5,7 @@ using MessagePack;
 
 [MessagePackObject]
 public class GoalModel : IModel {
-    public void Save() => Managers.Data.FileQueries.SaveGoal(this);
+    public void Save() => Managers.Data.Queries.SaveGoal(this);
     public void Delete() => Debug.Log("[WARNING] GoalModel.Delete() is not allowed!");
 
     [Key(0)]

@@ -6,11 +6,11 @@ using System.Collections.Generic;
 public class FileData {
 
     [Key(0)]
-    public List<CatagoryModel> CatagoryModels;
+    public List<CatagoryModel> CatagoryModels = new List<CatagoryModel>();
 
     [Key(1)]
-    public List<ExpenseModel> ExpenseModels;
-    
+    public List<ExpenseModel> ExpenseModels = new List<ExpenseModel>();
+
     [Key(2)]
-    public GoalModel Goal;
+    public GoalModel GoalModel = new GoalModel();
 }

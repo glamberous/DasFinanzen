@@ -1,4 +1,5 @@
 ﻿
+using MessagePack;
 
 public class CatagoryModel : IModel {
     public int CatagoryID;
@@ -6,6 +7,6 @@ public class CatagoryModel : IModel {
     public string NameText = "Default";
     public string ColorCode = "FFFFFF";
 
-    public void Save() => Managers.Data.SaveLoad.SaveCatagoryModel(this);
-    public void Delete() => Managers.Data.SaveLoad.DeleteCatagory(this);
+    public void Save() => Managers.Data.Queries.SaveCatagoryModel(this);
+    public void Delete() => Managers.Data.Queries.DeleteCatagory(this);
 }
