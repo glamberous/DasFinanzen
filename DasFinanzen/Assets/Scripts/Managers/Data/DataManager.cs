@@ -18,13 +18,13 @@ public class DataManagerHumble : IManager {
         FileData = SaveLoad.LoadFileData();
         Queries = new FileDataQueries(FileData);
 
-        UIModelCollector = new UI.ModelCollector(Queries);
+        UIModelCollector = new UI.ModelCollector(Queries, Runtime);
         // Initiallize Data Loaders here
 
         status = ManagerStatus.Started;
     }
 
-    public RuntimeData Runtime = new RuntimeData();
+    public RuntimeData Runtime { get; private set; } = new RuntimeData();
 
     private SaveLoadSystem SaveLoad = null;
     public FileData FileData { get; private set; } = null;

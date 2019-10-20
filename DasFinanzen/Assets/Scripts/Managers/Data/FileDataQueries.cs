@@ -6,7 +6,7 @@ using System;
 public interface IQueries {
     //Load
     List<CatagoryModel> GetCatagoryModels();
-    List<ExpenseModel> GetExpenseModels(string date = "TimeDate", int id = -1);
+    List<ExpenseModel> GetExpenseModels(DateTime selectedTime, int id = -1);
     GoalModel GetGoalModel();
 
     //Save
@@ -15,7 +15,9 @@ public interface IQueries {
     void SaveGoalModel(GoalModel myModel);
 
     //Delete
+    void DeleteCatagoryModel(CatagoryModel myModel);
     void DeleteExpenseModel(ExpenseModel expenseModel);
+    void DeleteGoalModel(GoalModel myModel);
 }
 
 public class FileDataQueries : IQueries {
@@ -28,12 +30,24 @@ public class FileDataQueries : IQueries {
     public GoalModel GetGoalModel() => FileData.GoalModel;
     public List<CatagoryModel> GetCatagoryModels() => FileData.CatagoryModels;
 
-    public List<ExpenseModel> GetExpenseModels(Month month, int catagoryID = -1) {
-        if (catagoryID == -1)
-            foreach (ExpenseModel expenseModel in FileData.ExpenseModels)
-                if expenseModel.EpochDate.
-        
-        return new List<ExpenseModel>();
+    public List<ExpenseModel> GetExpenseModels(DateTime selectedTime, int catagoryID = -1) {
+        return catagoryID == -1 ? GetExpenseModels_MonthOnly(selectedTime) : GetExpenseModels_MonthAndCatagoryID(selectedTime, catagoryID);
+    }
+
+    private List<ExpenseModel> GetExpenseModels_MonthOnly(DateTime selectedTime) {
+        List<ExpenseModel> newExpenseModelList = new List<ExpenseModel>();
+        foreach (ExpenseModel expenseModel in FileData.ExpenseModels)
+            if (expenseModel.Date.Month == selectedTime.Month && expenseModel.Date.Year == selectedTime.Year)
+                newExpenseModelList.Add(expenseModel);
+        return newExpenseModelList;
+    }
+
+    private List<ExpenseModel> GetExpenseModels_MonthAndCatagoryID(DateTime selectedTime, int catagoryID) {
+        List<ExpenseModel> newExpenseModelList = new List<ExpenseModel>();
+        foreach (ExpenseModel expenseModel in FileData.ExpenseModels)
+            if (expenseModel.Date.Month == selectedTime.Month && expenseModel.Date.Year == selectedTime.Year && expenseModel.CatagoryID == catagoryID)
+                newExpenseModelList.Add(expenseModel);
+        return newExpenseModelList;
     }
 
     #endregion
@@ -60,11 +74,15 @@ public class FileDataQueries : IQueries {
     // ############################################# Delete #############################################
     #region Delete
 
+    public void DeleteCatagoryModel(CatagoryModel myModel) => Debug.Log("[WARNING] Deleting CatagoryModel is not allowed!");
+
     public void DeleteExpenseModel(ExpenseModel myModel) {
         foreach (ExpenseModel expenseModel in FileData.ExpenseModels)
             if (expenseModel.ExpenseID == myModel.ExpenseID)
                 FileData.ExpenseModels.Remove(expenseModel);
     }
+
+    public void DeleteGoalModel(GoalModel myModel) => Debug.Log("[WARNING] Deleting GoalModel is not allowed!");
 
     #endregion
 }

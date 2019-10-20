@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using TMPro;
 
 namespace UI {
@@ -24,7 +25,7 @@ namespace UI {
         public void UpdateView(ExpenseModel Model) {
             ExpenseTextMesh.text = Model.Amount.ToString();
             NameTextMesh.text = Model.NameText;
-            SetDate(Model.EpochDate);
+            SetDate(Model.Date);
 
             //Need to get SQLite extension so that there's a ForeignKey relationship.
             //SetColor(Model.CatagoryID.ColorCode);
@@ -38,10 +39,7 @@ namespace UI {
             CurrencySymbol.color = newColor;
         }
 
-        private void SetDate(long date) {
-            System.DateTimeOffset newDate = System.DateTimeOffset.FromUnixTimeSeconds(date);
-            DateTextMesh.text = string.Format("{0}/{1}", newDate.Month.ToString(), newDate.Day.ToString());
-        }
+        private void SetDate(DateTime date) => DateTextMesh.text = string.Format("{0}/{1}", date.Month.ToString(), date.Day.ToString());
     }
 }
 

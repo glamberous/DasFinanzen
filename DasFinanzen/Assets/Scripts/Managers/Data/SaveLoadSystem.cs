@@ -1,13 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Mono.Data.Sqlite;
-using Mono.Data.SqliteClient;
-using System.Data;
-using System.IO;
-using System.Threading.Tasks;
-using System.Configuration;
+﻿using System.IO;
 using UnityEngine;
-using UI;
 using MessagePack;
 
 public interface ISaveLoad {

@@ -11,7 +11,7 @@ public interface IModelCollection {
 }
 
 public interface IController {
-    void Close();
+
 }
 
 public interface IWindow {

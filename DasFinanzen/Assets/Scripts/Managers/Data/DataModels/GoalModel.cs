@@ -5,9 +5,9 @@ using MessagePack;
 
 [MessagePackObject]
 public class GoalModel : IModel {
-    public void Save() => Managers.Data.Queries.SaveGoal(this);
-    public void Delete() => Debug.Log("[WARNING] GoalModel.Delete() is not allowed!");
-
     [Key(0)]
     public decimal Amount = 1000.00m;
+
+    public void Save() => Managers.Data.Queries.SaveGoalModel(this);
+    public void Delete() => Managers.Data.Queries.DeleteGoalModel(this);
 }
