@@ -10,16 +10,22 @@ namespace UI {
 
         private ColorBar_HumbleView HumbleView = null;
 
+        public void Awake() {
+            HumbleView = new ColorBar_HumbleView();
+        }
+
         public void Activate() {
-
+            HumbleView.ConstructView(Managers.Data.UIModelCollector.GetColorBar(), OriginalColorBar, CanvasRect.sizeDelta.x);
+            Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
+            Messenger.AddListener(AppEvent.GOAL_UPDATED, Refresh);
         }
 
-        public void Refresh() {
-
-        }
+        public void Refresh() => HumbleView.Refresh(Managers.Data.UIModelCollector.GetColorBar());
 
         public void Deactivate() {
-
+            Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
+            Messenger.RemoveListener(AppEvent.GOAL_UPDATED, Refresh);
+            HumbleView.DeconstructView();
         }
     }
 
@@ -38,10 +44,10 @@ namespace UI {
                 ColorBarElements.Add(newBar);
             }
             ScreenWidth = screenWidth;
-            UpdateColorBar(modelCollection);
+            Refresh(modelCollection);
         }
 
-        private void UpdateColorBar(ColorBar_ModelCollection modelCollection) {
+        public void Refresh(ColorBar_ModelCollection modelCollection) {
             Dictionary<int, decimal> ExpenseTotals = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
             Dictionary<int, CatagoryModel> CatagoryModelDict = DataReformatter.GetCatagoryModelsDict(modelCollection.CatagoryModels);
 

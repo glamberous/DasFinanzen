@@ -4,17 +4,21 @@ using UnityEngine;
 using System;
 
 public interface IQueries {
+
     //Load
+    IDTrackerModel GetIDTrackerModel();
     List<CatagoryModel> GetCatagoryModels();
     List<ExpenseModel> GetExpenseModels(DateTime selectedTime, int id = -1);
     GoalModel GetGoalModel();
 
     //Save
+    void SaveIDTrackerModel(IDTrackerModel myModel);
     void SaveCatagoryModel(CatagoryModel myModel);
     void SaveExpenseModel(ExpenseModel myModel);
     void SaveGoalModel(GoalModel myModel);
 
     //Delete
+    void DeleteIDTrackerModel(IDTrackerModel myModel);
     void DeleteCatagoryModel(CatagoryModel myModel);
     void DeleteExpenseModel(ExpenseModel expenseModel);
     void DeleteGoalModel(GoalModel myModel);
@@ -27,6 +31,7 @@ public class FileDataQueries : IQueries {
     // ############################################## Load ##############################################
     #region Load
 
+    public IDTrackerModel GetIDTrackerModel() => FileData.IDTrackerModel;
     public GoalModel GetGoalModel() => FileData.GoalModel;
     public List<CatagoryModel> GetCatagoryModels() => FileData.CatagoryModels;
 
@@ -54,8 +59,8 @@ public class FileDataQueries : IQueries {
     // ############################################## Save ##############################################
     #region Save
 
-    public void SaveGoalModel(GoalModel myModel) => FileData.GoalModel = myModel;
-
+    public void SaveIDTrackerModel(IDTrackerModel myModel) => FileData.IDTrackerModel = myModel;
+    
     public void SaveCatagoryModel(CatagoryModel myModel) {
         foreach (CatagoryModel catagoryModel in FileData.CatagoryModels)
             if (catagoryModel.CatagoryID == myModel.CatagoryID)
@@ -70,10 +75,13 @@ public class FileDataQueries : IQueries {
         FileData.ExpenseModels.Add(myModel);
     }
 
+    public void SaveGoalModel(GoalModel myModel) => FileData.GoalModel = myModel;
+
     #endregion
     // ############################################# Delete #############################################
     #region Delete
-
+    
+    public void DeleteIDTrackerModel(IDTrackerModel myModel) => Debug.Log("[WARNING] Deleting IDTrackerModel is not allowed!");
     public void DeleteCatagoryModel(CatagoryModel myModel) => Debug.Log("[WARNING] Deleting CatagoryModel is not allowed!");
 
     public void DeleteExpenseModel(ExpenseModel myModel) {

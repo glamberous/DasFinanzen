@@ -21,9 +21,7 @@ namespace UI {
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
         }
 
-        public void Refresh() {
-            HumbleView.Refresh(Managers.Data.UIModelCollector.GetCatagory());
-        }
+        public void Refresh() => HumbleView.RefreshView(Managers.Data.UIModelCollector.GetCatagory());
 
         public void Deactivate() {
             Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
@@ -44,7 +42,7 @@ namespace UI {
                     CatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData));
             MonthlyUIData.UpdateTileSize();
             DailyUIData.UpdateTileSize();
-            Refresh(ModelCollection);
+            RefreshView(ModelCollection);
         }
 
         private CatagoryElement ConstructCatagoryElement(CatagoryModel myCatagoryModel, TileUIData UIData) {
@@ -59,7 +57,7 @@ namespace UI {
             return newCatagory;
         }
 
-        public void Refresh(Catagory_ModelCollection modelCollection) {
+        public void RefreshView(Catagory_ModelCollection modelCollection) {
             Dictionary<int, decimal> ExpenseTotals = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
             Dictionary<int, CatagoryModel> CatagoryModelDict = DataReformatter.GetCatagoryModelsDict(modelCollection.CatagoryModels);
 
@@ -78,9 +76,8 @@ namespace UI {
     }
 
     public class Catagory_Controller : IController {
-        public void Close() => Managers.UI.Pop();
-
-        public void OpenCatagory(int id) {
+        public void CatagoryClicked(int id) {
+            Managers.Data.Runtime.CurrentCatagoryID = id;
             Managers.UI.Push(WINDOW.CATAGORY);
         }
     }

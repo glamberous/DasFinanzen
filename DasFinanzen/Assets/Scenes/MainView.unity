@@ -2408,7 +2408,6 @@ GameObject:
   m_Component:
   - component: {fileID: 398886996}
   - component: {fileID: 398886999}
-  - component: {fileID: 398886998}
   - component: {fileID: 398886997}
   m_Layer: 5
   m_Name: OriginalExpense
@@ -2465,18 +2464,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 300, y: 25}
   m_EdgeRadius: 0
---- !u!114 &398886998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 398886995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12db3853fea72134fb75402d197e5373, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &398886999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4178,7 +4165,6 @@ GameObject:
   - component: {fileID: 705907644}
   - component: {fileID: 705907648}
   - component: {fileID: 705907647}
-  - component: {fileID: 705907646}
   - component: {fileID: 705907645}
   m_Layer: 0
   m_Name: AddExpenseButton
@@ -4232,18 +4218,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 60, y: 60}
   m_EdgeRadius: 0
---- !u!114 &705907646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 705907643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12db3853fea72134fb75402d197e5373, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &705907647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7849,8 +7823,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef97845b824c2a42b3c90e547ceed1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DailyOriginal: {fileID: 0}
-  MonthlyOriginal: {fileID: 0}
+  DailyOriginal: {fileID: 13638022}
+  MonthlyOriginal: {fileID: 1086649056}
 --- !u!1 &1452127971
 GameObject:
   m_ObjectHideFlags: 0
@@ -9328,7 +9302,6 @@ GameObject:
   - component: {fileID: 1842005800}
   - component: {fileID: 1842005799}
   - component: {fileID: 1842005798}
-  - component: {fileID: 1842005797}
   m_Layer: 0
   m_Name: BackArrow
   m_TagString: Untagged
@@ -9355,18 +9328,6 @@ RectTransform:
   m_AnchoredPosition: {x: 25, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1842005797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842005795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccbf6243fcbd42946b853deb8eb8277d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1842005798
 MonoBehaviour:
   m_ObjectHideFlags: 0

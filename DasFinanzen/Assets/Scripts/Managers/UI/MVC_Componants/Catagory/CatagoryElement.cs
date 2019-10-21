@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,13 +7,16 @@ namespace UI {
     [RequireComponent(typeof(BoxCollider2D))]
     public class CatagoryElement : MonoBehaviour {
         [HideInInspector] public int CatagoryID;
+        private Catagory_Controller Controller = null;
 
         private Image ColorPatchImage;
         private TextMeshProUGUI NameTextMesh;
         private TextMeshProUGUI TotalTextMesh;
         private TextMeshProUGUI CurrencySymbol;
+        
+        public void OnMouseDown() => Controller.CatagoryClicked(CatagoryID);
 
-        private void Awake() {
+        public void Awake() {
             ColorPatchImage = gameObject.transform.GetChild(0).gameObject.GetComponent<Image>();
             NameTextMesh = gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
             TotalTextMesh = gameObject.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();

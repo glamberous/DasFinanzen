@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class FileData {
 
     [Key(0)]
-    public IDTracker IDTracker;
+    public IDTrackerModel IDTrackerModel = new IDTrackerModel();
 
     [Key(1)]
     public List<CatagoryModel> CatagoryModels = new List<CatagoryModel>();

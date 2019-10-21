@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿
+
 
 namespace UI {
     public class ModelCollector {
@@ -24,7 +22,7 @@ namespace UI {
             ModelCollection.CatagoryModels = Queries.GetCatagoryModels();
             ModelCollection.ExpenseModels = Queries.GetExpenseModels(Runtime.SelectedTime);
             ModelCollection.Goal = Queries.GetGoalModel();
-            return new UI.ColorBar_ModelCollection();
+            return ModelCollection;
         }
 
         public Goal_ModelCollection GetGoal() {
