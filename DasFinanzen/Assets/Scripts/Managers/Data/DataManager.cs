@@ -8,11 +8,7 @@ public class DataManager : MonoBehaviour {
 
 public class DataManagerHumble : IManager {
     public RuntimeData Runtime { get; private set; } = new RuntimeData();
-    public IDTracker IDTracker { get; private set; } = null;
-    public FileDataQueries Queries { get; private set; } = null;
-
-    public UI.ModelCollector UIModelCollector { get; private set; } = null;
-    // Add other Model Collectors here
+    public FileData FileData { get; private set; } = null;
 
     public void Save() => SaveLoad.SaveFileData(FileData);
     public void Load() => FileData = SaveLoad.LoadFileData();
@@ -23,17 +19,12 @@ public class DataManagerHumble : IManager {
 
         SaveLoad = new SaveLoadSystem();
         FileData = SaveLoad.LoadFileData();
-        Queries = new FileDataQueries(FileData);
-
-        UIModelCollector = new UI.ModelCollector(Queries, Runtime);
-        // Initiallize Data Loaders here
-
-        IDTracker = new IDTracker(FileData.IDTrackerModel);
+        DefaultDataGenerator.CatagoryModels();
 
         status = ManagerStatus.Started;
     }
 
     private SaveLoadSystem SaveLoad = null;
-    private FileData FileData = null;
+
     
 }

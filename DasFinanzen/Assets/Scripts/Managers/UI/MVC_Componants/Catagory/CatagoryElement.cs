@@ -6,15 +6,14 @@ using TMPro;
 namespace UI {
     [RequireComponent(typeof(BoxCollider2D))]
     public class CatagoryElement : MonoBehaviour {
-        [HideInInspector] public int CatagoryID;
-        private Catagory_Controller Controller = null;
+        [HideInInspector] public int CatagoryID = -1;
 
         private Image ColorPatchImage;
         private TextMeshProUGUI NameTextMesh;
         private TextMeshProUGUI TotalTextMesh;
         private TextMeshProUGUI CurrencySymbol;
         
-        public void OnMouseDown() => Controller.CatagoryClicked(CatagoryID);
+        public void OnMouseDown() => Catagory_Controller.CatagoryClicked(CatagoryID);
 
         public void Awake() {
             ColorPatchImage = gameObject.transform.GetChild(0).gameObject.GetComponent<Image>();

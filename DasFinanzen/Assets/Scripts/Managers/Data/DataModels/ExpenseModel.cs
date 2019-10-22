@@ -3,11 +3,8 @@ using MessagePack;
 
 [MessagePackObject]
 public class ExpenseModel : IModel {
-    public void Save() => Managers.Data.Queries.SaveExpenseModel(this);
-    public void Delete() => Managers.Data.Queries.DeleteExpenseModel(this);
-
     [Key(0)]
-    public int ExpenseID { get; private set; } = Managers.Data.IDTracker.CreateNew(IDType.EXPENSE);
+    public int ExpenseID { get; private set; } = IDTracker.CreateNew(IDType.EXPENSE);
 
     [Key(1)]
     public DateTime Date = DateTime.Now;
@@ -20,4 +17,20 @@ public class ExpenseModel : IModel {
 
     [Key(4)]
     public int CatagoryID = Managers.Data.Runtime.CurrentCatagoryID;
+
+    public void Save() {
+        if (IDTracker.IsNew(IDType.EXPENSE, ExpenseID))
+            IDTracker.SaveID(IDType.EXPENSE, ExpenseID);
+        else
+            foreach (ExpenseModel expenseModel in Managers.Data.FileData.ExpenseModels)
+                if (expenseModel.ExpenseID == ExpenseID)
+                    Managers.Data.FileData.ExpenseModels.Remove(expenseModel);
+        Managers.Data.FileData.ExpenseModels.Add(this);
+    }
+
+    public void Delete() {
+        foreach (ExpenseModel expenseModel in Managers.Data.FileData.ExpenseModels)
+            if (expenseModel.ExpenseID == ExpenseID)
+                Managers.Data.FileData.ExpenseModels.Remove(expenseModel);
+    }
 }

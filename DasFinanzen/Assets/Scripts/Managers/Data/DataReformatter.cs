@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace UI {
@@ -25,6 +26,29 @@ namespace UI {
             foreach (ExpenseModel expense in expenseModels)
                 Total += expense.Amount;
             return Total;
+        }
+
+        public static List<ExpenseModel> FilterExpenseModels(List<ExpenseModel> expenseModels, DateTime date, int catagoryID = -1) {
+            if (catagoryID == -1)
+                return FilterByMonth(expenseModels, date);
+            else
+                return FilterByMonthAndCatagoryID(expenseModels, date, catagoryID);
+        }
+
+        private static List<ExpenseModel> FilterByMonth(List<ExpenseModel> expenseModels, DateTime date) {
+            List<ExpenseModel> newExpenseModelList = new List<ExpenseModel>();
+            foreach (ExpenseModel expenseModel in expenseModels)
+                if (expenseModel.Date.Month == date.Month && expenseModel.Date.Year == date.Year)
+                    newExpenseModelList.Add(expenseModel);
+            return newExpenseModelList;
+        }
+
+        private static List<ExpenseModel> FilterByMonthAndCatagoryID(List<ExpenseModel> expenseModels, DateTime date, int catagoryID) {
+            List<ExpenseModel> newExpenseModelList = new List<ExpenseModel>();
+            foreach (ExpenseModel expenseModel in expenseModels)
+                if (expenseModel.Date.Month == date.Month && expenseModel.Date.Year == date.Year && expenseModel.CatagoryID == catagoryID)
+                    newExpenseModelList.Add(expenseModel);
+            return newExpenseModelList;
         }
     }
 }

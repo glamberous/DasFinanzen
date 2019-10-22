@@ -5,44 +5,51 @@ using TMPro;
 
 namespace UI {
     public class Goal_View : MonoBehaviour, IView {
-        [SerializeField] private RemainingElement RemainingObject = null;
+        [SerializeField] private GoalElement GoalObject = null;
 
         private Goal_HumbleView HumbleView = null;
         private Goal_Controller Controller = null;
 
         public void Awake() {
             HumbleView = new Goal_HumbleView();
-            Controller = new Goal_Controller();
         }
 
         public void Activate() {
-            HumbleView.ConstructView(Managers.Data.UIModelCollector.GetGoal(), RemainingObject);
+            HumbleView.ConstructView(new Goal_ModelCollection(), GoalObject);
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
         }
 
-        public void Deactivate() {
-
+        public void Refresh() {
+            HumbleView.RefreshView(new Goal_ModelCollection());
         }
 
-        public void Refresh() {
-
+        public void Deactivate() {
+            Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
+            HumbleView.DeconstructView();
         }
     }
 
     public class Goal_HumbleView {
+        public void ConstructView(Goal_ModelCollection modelCollection, GoalElement goalElement) {
 
-        public void ConstructView(Goal_ModelCollection modelCollection, RemainingElement remainingElement) {
+        }
+
+        public void RefreshView(Goal_ModelCollection modelCollection) {
+
+        }
+
+        public void DeconstructView() {
 
         }
     }
 
     public class Goal_Controller : IController {
-        public void Close() => Managers.UI.Pop();
+
     }
 
     public class Goal_ModelCollection {
-        public GoalModel GoalModel = new GoalModel();
-        public List<ExpenseModel> CurrentMonthExpenses = new List<ExpenseModel>();
+        public GoalModel GoalModel = Managers.Data.FileData.GoalModel;
+        public List<ExpenseModel> ExpenseModels = DataReformatter.FilterExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
     }
 }
 

@@ -21,8 +21,10 @@ public class SaveLoadSystem : ISaveLoad {
             } catch {
                 Debug.Log("Unable to Load Profile! \nLoading Default Values.");
             }
-        } else
+        } else {
             Debug.Log("File not found. \nLoading Default Values.");
+            DefaultDataGenerator.CatagoryModels();
+        }
         return myData;
     }
 

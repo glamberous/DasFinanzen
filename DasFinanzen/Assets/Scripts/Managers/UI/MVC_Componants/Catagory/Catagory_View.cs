@@ -8,20 +8,18 @@ namespace UI {
         [SerializeField] private CatagoryElement DailyOriginal = null;
         [SerializeField] private CatagoryElement MonthlyOriginal = null;
 
-        private Catagory_Controller Controller = null;
         private Catagory_HumbleView HumbleView = null;
 
         public void Awake() {
-            Controller = new Catagory_Controller();
             HumbleView = new Catagory_HumbleView();
         }
 
         public void Activate() {
-            HumbleView.ConstructView(Managers.Data.UIModelCollector.GetCatagory(), DailyOriginal, MonthlyOriginal);
+            HumbleView.ConstructView(new Catagory_ModelCollection(), DailyOriginal, MonthlyOriginal);
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
         }
 
-        public void Refresh() => HumbleView.RefreshView(Managers.Data.UIModelCollector.GetCatagory());
+        public void Refresh() => HumbleView.RefreshView(new Catagory_ModelCollection());
 
         public void Deactivate() {
             Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
@@ -75,15 +73,15 @@ namespace UI {
         }
     }
 
-    public class Catagory_Controller : IController {
-        public void CatagoryClicked(int id) {
+    public static class Catagory_Controller {
+        public static void CatagoryClicked(int id) {
             Managers.Data.Runtime.CurrentCatagoryID = id;
             Managers.UI.Push(WINDOW.CATAGORY);
         }
     }
 
-    public class Catagory_ModelCollection : IModelCollection {
-        public List<CatagoryModel> CatagoryModels = new List<CatagoryModel>();
-        public List<ExpenseModel> ExpenseModels = new List<ExpenseModel>();
+    public class Catagory_ModelCollection {
+        public List<CatagoryModel> CatagoryModels = Managers.Data.FileData.CatagoryModels;
+        public List<ExpenseModel> ExpenseModels = DataReformatter.FilterExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
     }
 }

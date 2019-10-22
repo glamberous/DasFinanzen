@@ -15,12 +15,12 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(Managers.Data.UIModelCollector.GetColorBar(), OriginalColorBar, CanvasRect.sizeDelta.x);
+            HumbleView.ConstructView(new ColorBar_ModelCollection(), OriginalColorBar, CanvasRect.sizeDelta.x);
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(AppEvent.GOAL_UPDATED, Refresh);
         }
 
-        public void Refresh() => HumbleView.Refresh(Managers.Data.UIModelCollector.GetColorBar());
+        public void Refresh() => HumbleView.Refresh(new ColorBar_ModelCollection);
 
         public void Deactivate() {
             Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
@@ -54,7 +54,7 @@ namespace UI {
             float fullWidth = 0.00f;
             foreach (ColorBarElement colorBarElement in ColorBarElements) {
                 colorBarElement.transform.localPosition = new Vector3(fullWidth, 0, 0);
-                float currentWidth = ((float)ExpenseTotals[colorBarElement.CatagoryID] / (float)modelCollection.Goal.Amount) * ScreenWidth;
+                float currentWidth = ((float)ExpenseTotals[colorBarElement.CatagoryID] / (float)modelCollection.GoalModel.Amount) * ScreenWidth;
                 colorBarElement.UpdateView(CatagoryModelDict[colorBarElement.CatagoryID], currentWidth + 1);
                 fullWidth += currentWidth;
             }
@@ -70,9 +70,9 @@ namespace UI {
         }
     }
 
-    public class ColorBar_ModelCollection {
-        public List<CatagoryModel> CatagoryModels = new List<CatagoryModel>();
-        public List<ExpenseModel> ExpenseModels = new List<ExpenseModel>();
-        public GoalModel Goal = new GoalModel();
+    public class ColorBar_ModelCollection : IModelCollection {
+        public List<CatagoryModel> CatagoryModels = Managers.Data.FileData.CatagoryModels;
+        public List<ExpenseModel> ExpenseModels = DataReformatter.FilterExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
+        public GoalModel GoalModel = Managers.Data.FileData.GoalModel;
     }
 }
