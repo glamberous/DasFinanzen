@@ -43,5 +43,6 @@ public class UIManagerHumble : IManager {
         Push(UI.WINDOW.MAIN);
 
         status = ManagerStatus.Started;
+        Debug.Log("UI Manager started.");
     }
 }

@@ -20,10 +20,12 @@ namespace UI {
         }
 
         public IWindow Activate() {
+            // You need to set it active before Activating/Initializing all the views otherwise Awake() doesn't get called.
+            gameObject.SetActive(true);
+
             foreach (IView view in Views)
                 view.Activate();
-
-            gameObject.SetActive(true);
+            
             return this;
         }
 

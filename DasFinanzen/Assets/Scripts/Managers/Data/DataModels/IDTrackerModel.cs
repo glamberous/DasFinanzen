@@ -6,7 +6,7 @@ using UnityEngine;
 public class IDTrackerModel : IModel {
 
     [Key(0)]
-    public int CatagoryID = 0;
+    public int CatagoryID = 0; 
 
     [Key(1)]
     public int ExpenseID = 0;

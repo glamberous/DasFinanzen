@@ -16,7 +16,7 @@ public class ExpenseModel : IModel {
     public decimal Amount = 0.00m;
 
     [Key(4)]
-    public int CatagoryID = Managers.Data.Runtime.CurrentCatagoryID;
+    public int CatagoryID { get; private set; } = Managers.Data.Runtime.CurrentCatagoryID;
 
     public void Save() {
         if (IDTracker.IsNew(IDType.EXPENSE, ExpenseID))

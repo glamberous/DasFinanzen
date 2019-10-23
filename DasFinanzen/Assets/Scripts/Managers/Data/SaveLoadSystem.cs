@@ -23,7 +23,6 @@ public class SaveLoadSystem : ISaveLoad {
             }
         } else {
             Debug.Log("File not found. \nLoading Default Values.");
-            DefaultDataGenerator.CatagoryModels();
         }
         return myData;
     }

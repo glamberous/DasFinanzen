@@ -18,14 +18,16 @@ namespace UI {
             HumbleView.ConstructView(new ColorBar_ModelCollection(), OriginalColorBar, CanvasRect.sizeDelta.x);
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(AppEvent.GOAL_UPDATED, Refresh);
+            Debug.Log("ColorBarView Activated.");
         }
 
-        public void Refresh() => HumbleView.Refresh(new ColorBar_ModelCollection);
+        public void Refresh() => HumbleView.Refresh(new ColorBar_ModelCollection());
 
         public void Deactivate() {
             Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
             Messenger.RemoveListener(AppEvent.GOAL_UPDATED, Refresh);
             HumbleView.DeconstructView();
+            Debug.Log("ColorBarView Deactivated.");
         }
     }
 
@@ -39,8 +41,9 @@ namespace UI {
                 ColorBarElement newBar;
                 if (count++ == 0)
                     newBar = original;
-                else
-                    newBar = GameObject.Instantiate(original: original, parent: original.transform.parent.gameObject.transform) as ColorBarElement;
+                else 
+                    newBar = GameObject.Instantiate<ColorBarElement>(original: original, parent: original.transform.parent.gameObject.transform);
+                newBar.SetID(catagoryModel.CatagoryID);
                 ColorBarElements.Add(newBar);
             }
             ScreenWidth = screenWidth;

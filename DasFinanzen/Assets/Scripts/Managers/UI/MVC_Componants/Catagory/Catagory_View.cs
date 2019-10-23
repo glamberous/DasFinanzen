@@ -17,6 +17,7 @@ namespace UI {
         public void Activate() {
             HumbleView.ConstructView(new Catagory_ModelCollection(), DailyOriginal, MonthlyOriginal);
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
+            Debug.Log("CatagoryView Activated.");
         }
 
         public void Refresh() => HumbleView.RefreshView(new Catagory_ModelCollection());
@@ -24,6 +25,7 @@ namespace UI {
         public void Deactivate() {
             Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
             HumbleView.DeconstructView();
+            Debug.Log("CatagoryView Deactivated.");
         }
     }
 
@@ -34,7 +36,7 @@ namespace UI {
             TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
             TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);
             foreach (CatagoryModel catagoryModel in ModelCollection.CatagoryModels)
-                if (catagoryModel.Reoccurring)
+                if (catagoryModel.Recurring)
                     CatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData));
                 else
                     CatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData));
@@ -47,10 +49,10 @@ namespace UI {
             CatagoryElement newCatagory;
             if (UIData.Count == 0)
                 newCatagory = UIData.Original.GetComponent<CatagoryElement>();
-            else {
+            else 
                 newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<CatagoryElement>(), parent: UIData.Parent.transform) as CatagoryElement;
-                newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
-            }
+            newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
+            newCatagory.SetID(myCatagoryModel.CatagoryID);
             UIData.Count++;
             return newCatagory;
         }

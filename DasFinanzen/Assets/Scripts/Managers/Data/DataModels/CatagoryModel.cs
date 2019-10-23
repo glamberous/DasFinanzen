@@ -8,7 +8,7 @@ public class CatagoryModel : IModel {
     public int CatagoryID { get; private set; } = IDTracker.CreateNew(IDType.CATAGORY);
 
     [Key(1)]
-    public bool Reoccurring = false;
+    public bool Recurring = false;
 
     [Key(2)]
     public string NameText = "Default";
