@@ -49,7 +49,7 @@ namespace UI {
 
     public class Goal_ModelCollection {
         public GoalModel GoalModel = Managers.Data.FileData.GoalModel;
-        public List<ExpenseModel> ExpenseModels = DataReformatter.FilterExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
+        public List<ExpenseModel> ExpenseModels = DataReformatter.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
     }
 }
 

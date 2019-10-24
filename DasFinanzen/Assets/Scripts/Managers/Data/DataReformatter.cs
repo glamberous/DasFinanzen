@@ -28,7 +28,14 @@ namespace UI {
             return Total;
         }
 
-        public static List<ExpenseModel> FilterExpenseModels(List<ExpenseModel> expenseModels, DateTime date, int catagoryID = -1) {
+        public static CatagoryModel GetCurrentCatagoryModel(List<CatagoryModel> catagoryModels, int catagoryID) {
+            foreach (CatagoryModel catagoryModel in catagoryModels)
+                if (catagoryModel.CatagoryID == catagoryID)
+                    return catagoryModel;
+            return null;
+        }
+
+        public static List<ExpenseModel> GetExpenseModels(List<ExpenseModel> expenseModels, DateTime date, int catagoryID = -1) {
             if (catagoryID == -1)
                 return FilterByMonth(expenseModels, date);
             else
