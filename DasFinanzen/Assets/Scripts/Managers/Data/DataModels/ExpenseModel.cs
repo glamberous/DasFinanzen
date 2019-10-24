@@ -18,6 +18,24 @@ public class ExpenseModel : IModel {
     [Key(4)]
     public int CatagoryID { get; private set; } = Managers.Data.Runtime.CurrentCatagoryID;
 
+    [IgnoreMember]
+    public CatagoryModel Catagory {
+        get {
+            if (_Catagory == null) {
+                foreach (CatagoryModel catagoryModel in Managers.Data.FileData.CatagoryModels)
+                    if (CatagoryID == catagoryModel.CatagoryID) {
+                        _Catagory = catagoryModel;
+                        return catagoryModel;
+                    }
+                return null;
+            } else
+                return _Catagory;
+        }
+    }
+
+    [IgnoreMember]
+    private CatagoryModel _Catagory;
+
     public void Save() {
         if (IDTracker.IsNew(IDType.EXPENSE, ExpenseID))
             IDTracker.SaveID(IDType.EXPENSE, ExpenseID);

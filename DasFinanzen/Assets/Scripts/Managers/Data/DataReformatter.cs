@@ -57,6 +57,13 @@ namespace UI {
                     newExpenseModelList.Add(expenseModel);
             return newExpenseModelList;
         }
+
+        public static Dictionary<int, ExpenseModel> GetExpenseModelsDict(List<ExpenseModel> expenseModels) {
+            Dictionary<int, ExpenseModel> ExpenseModelDict = new Dictionary<int, ExpenseModel>();
+            foreach (ExpenseModel expenseModel in expenseModels)
+                ExpenseModelDict[expenseModel.ExpenseID] = expenseModel;
+            return ExpenseModelDict;
+        }
     }
 }
 

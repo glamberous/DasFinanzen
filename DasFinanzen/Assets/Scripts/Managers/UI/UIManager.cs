@@ -27,10 +27,6 @@ public class UIManager : MonoBehaviour {
 }
 
 public class UIManagerHumble : IManager {
-    private Dictionary<UI.WINDOW, GameObject> Windows = null;
-    public UIManagerHumble(Dictionary<UI.WINDOW, GameObject> windows) => Windows = windows;
-
-    private Stack<IWindow> UIStack = new Stack<IWindow>();
     public void Push(UI.WINDOW window) => UIStack.Push(Windows[window].GetComponent<IWindow>().Activate());
     public void Pop() => UIStack.Pop().Deactivate();
 
@@ -45,4 +41,9 @@ public class UIManagerHumble : IManager {
         status = ManagerStatus.Started;
         Debug.Log("UI Manager started.");
     }
+
+    private Dictionary<UI.WINDOW, GameObject> Windows = null;
+    public UIManagerHumble(Dictionary<UI.WINDOW, GameObject> windows) => Windows = windows;
+
+    private Stack<IWindow> UIStack = new Stack<IWindow>();
 }

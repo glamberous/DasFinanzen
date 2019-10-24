@@ -30,47 +30,54 @@ namespace UI {
     }
 
     public class Catagory_HumbleView {
-        private List<CatagoryElement> CatagoryElements = new List<CatagoryElement>();
+        private List<CatagoryElement> RecurringCatagoryElements = new List<CatagoryElement>();
+        private List<CatagoryElement> DailyCatagoryElements = new List<CatagoryElement>();
 
         public void ConstructView(Catagory_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
             TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
             TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);
             foreach (CatagoryModel catagoryModel in ModelCollection.CatagoryModels)
                 if (catagoryModel.Recurring)
-                    CatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData));
+                    RecurringCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData, RecurringCatagoryElements.Count));
                 else
-                    CatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData));
-            MonthlyUIData.UpdateTileSize();
-            DailyUIData.UpdateTileSize();
+                    DailyCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData, DailyCatagoryElements.Count));
+            MonthlyUIData.UpdateTileSize(RecurringCatagoryElements.Count);
+            DailyUIData.UpdateTileSize(DailyCatagoryElements.Count);
             RefreshView(ModelCollection);
         }
 
-        private CatagoryElement ConstructCatagoryElement(CatagoryModel myCatagoryModel, TileUIData UIData) {
+        private CatagoryElement ConstructCatagoryElement(CatagoryModel myCatagoryModel, TileUIData UIData, int count) {
             CatagoryElement newCatagory;
-            if (UIData.Count == 0)
+            if (RecurringCatagoryElements.Count == 0)
                 newCatagory = UIData.Original.GetComponent<CatagoryElement>();
-            else 
+            else
                 newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<CatagoryElement>(), parent: UIData.Parent.transform) as CatagoryElement;
-            newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * UIData.Count), UIData.StartPos.z);
+            newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * count), UIData.StartPos.z);
             newCatagory.SetID(myCatagoryModel.CatagoryID);
-            UIData.Count++;
             return newCatagory;
         }
 
         public void RefreshView(Catagory_ModelCollection modelCollection) {
-            Dictionary<int, decimal> ExpenseTotals = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
+            Dictionary<int, decimal> ExpenseTotalsDict = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
             Dictionary<int, CatagoryModel> CatagoryModelDict = DataReformatter.GetCatagoryModelsDict(modelCollection.CatagoryModels);
 
-            foreach (CatagoryElement catagoryElem in CatagoryElements)
-                catagoryElem.UpdateView(CatagoryModelDict[catagoryElem.CatagoryID], ExpenseTotals[catagoryElem.CatagoryID]);
+            foreach (CatagoryElement catagoryElem in RecurringCatagoryElements)
+                catagoryElem.UpdateView(CatagoryModelDict[catagoryElem.CatagoryID], ExpenseTotalsDict[catagoryElem.CatagoryID]);
+            foreach (CatagoryElement catagoryElem in DailyCatagoryElements)
+                catagoryElem.UpdateView(CatagoryModelDict[catagoryElem.CatagoryID], ExpenseTotalsDict[catagoryElem.CatagoryID]);
         }
 
         public void DeconstructView() {
+            DestroyCatagoryElements(RecurringCatagoryElements);
+            DestroyCatagoryElements(DailyCatagoryElements);
+        }
+
+        private void DestroyCatagoryElements(List<CatagoryElement> catagoryElements) {
             int count = 0;
-            foreach (CatagoryElement catagoryElement in CatagoryElements) {
-                if (0 == count++)
-                    continue;
-                GameObject.Destroy(catagoryElement.gameObject);
+            foreach (CatagoryElement catagoryElement in catagoryElements) {
+                RecurringCatagoryElements.Remove(catagoryElement);
+                if (count++ != 0)
+                    GameObject.Destroy(catagoryElement.gameObject);
             }
         }
     }

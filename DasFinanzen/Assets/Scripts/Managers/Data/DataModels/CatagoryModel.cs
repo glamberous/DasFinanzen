@@ -24,7 +24,6 @@ public class CatagoryModel : IModel {
                 if (catagoryModel.CatagoryID == CatagoryID) 
                     Managers.Data.FileData.CatagoryModels.Remove(catagoryModel);
         Managers.Data.FileData.CatagoryModels.Add(this);
-        
     }
 
     public void Delete() => Debug.Log("[WARNING] Deleting CatagoryModel is not allowed!");

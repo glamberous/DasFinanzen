@@ -10,6 +10,8 @@ namespace UI {
     public class ExpenseElement : MonoBehaviour {
         public int ExpenseID;
 
+        public void SetID(int id) => ExpenseID = id;
+
         private TextMeshProUGUI DateTextMesh = null;
         private TextMeshProUGUI NameTextMesh = null;
         private TextMeshProUGUI ExpenseTextMesh = null;
@@ -26,9 +28,7 @@ namespace UI {
             ExpenseTextMesh.text = Model.Amount.ToString();
             NameTextMesh.text = Model.NameText;
             SetDate(Model.Date);
-
-            //Need to get SQLite extension so that there's a ForeignKey relationship.
-            //SetColor(Model.CatagoryID.ColorCode);
+            SetColor(Model.Catagory.ColorCode);
         }
 
         private void SetColor(string colorCode) {

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,61 +29,103 @@ namespace UI {
     }
 
     public class Expense_HumbleView {
+        private List<ExpenseElement> ExpenseElements = new List<ExpenseElement>();
         private TileUIData ExpenseTileUIData = null;
-        private ExpenseElement Original = null;
 
         public void ConstructView(Expense_ModelCollection modelCollection, ExpenseElement original) {
-            Original = original;
             ExpenseTileUIData = new TileUIData(original.gameObject);
-            if (modelCollection.ExpenseModels.Count != 0)
-                ConstructRegularView();
+            if (modelCollection.ExpenseModels.Count == 0)
+                ConstructEmptyView();
             else
-                InitializeEmptyExpenseView();
+                ConstructRegularView(modelCollection, original);
         }
 
-        private void ConstructRegularView() {
-            foreach (ExpenseData data in Managers.Data.CurrentExpenseDatas)
-                InitializeExpense(data);
-            ExpenseUIData.UpdateTileSize();
+        private void ConstructEmptyView() {
+            ExpenseTileUIData.Parent.SetActive(false);
+            // Probably needs more Code here for unique UI (informative text) when Empty.
         }
 
-        private void InitializeEmptyExpenseView() {
-            ExpenseUIData.Parent.SetActive(false);
-            // Probably needs more Code here for unique UI when Empty.
+        private void ConstructRegularView(Expense_ModelCollection modelCollection, ExpenseElement original) {
+            foreach (ExpenseModel model in modelCollection.ExpenseModels)
+                ExpenseElements.Add(ConstructExpenseElement(model, original));
+            ExpenseTileUIData.UpdateTileSize(ExpenseElements.Count);
         }
 
-        private void InitializeExpense(ExpenseData myExpenseData) {
-            Expense newExpense;
-            if (ExpenseUIData.Count == 0)
-                newExpense = ExpenseOriginal;
+        private ExpenseElement ConstructExpenseElement(ExpenseModel model, ExpenseElement original) {
+            ExpenseElement newExpense;
+            if (ExpenseElements.Count == 0)
+                newExpense = original;
             else
-                newExpense = GameObject.Instantiate(original: ExpenseOriginal, parent: ExpenseUIData.Parent.transform) as Expense;
-            newExpense.transform.localPosition = new Vector3(ExpenseUIData.StartPos.x, ExpenseUIData.StartPos.y - (Constants.CatagoryOffset * ExpenseUIData.Count), ExpenseUIData.StartPos.z);
-            newExpense.Construct(myExpenseData);
-            ExpenseUIs.Add(newExpense);
-            ExpenseUIData.Count++;
+                newExpense = GameObject.Instantiate(original: original, parent: ExpenseTileUIData.Parent.transform) as ExpenseElement;
+            newExpense.transform.localPosition = new Vector3(ExpenseTileUIData.StartPos.x, ExpenseTileUIData.StartPos.y - (Constants.CatagoryOffset * ExpenseElements.Count), ExpenseTileUIData.StartPos.z);
+            newExpense.SetID(model.ExpenseID);
+            newExpense.UpdateView(model);
+            return newExpense;
         }
 
         public void RefreshView(Expense_ModelCollection modelCollection) {
-            if (modelCollection.ExpenseModels.Count != 0)
-                InitializeRegularExpenseView();
-            else
-                Original.gameObject.SetActive(false);
+            if (modelCollection.ExpenseModels.Count == 0)
+                ConstructEmptyView();
+            else {
+                ExpenseTileUIData.Parent.SetActive(true);
+                if (ExpenseElements.Count < modelCollection.ExpenseModels.Count)
+                    AddExpenseElement(modelCollection);
+                else if (ExpenseElements.Count > modelCollection.ExpenseModels.Count)
+                    RemoveExpenseElement(modelCollection);
+                else
+                    RefreshExpenseElements(modelCollection);
+                ExpenseTileUIData.UpdateTileSize(ExpenseElements.Count);
+            }
+        }
+
+        private void AddExpenseElement(Expense_ModelCollection modelCollection) =>
+            ExpenseElements.Add(ConstructExpenseElement(modelCollection.ExpenseModels.Last(), ExpenseElements.First()));
+
+        private void RemoveExpenseElement(Expense_ModelCollection modelCollection) {
+            Dictionary<int, ExpenseModel> ExpenseModelsDict = DataReformatter.GetExpenseModelsDict(modelCollection.ExpenseModels);
+
+            foreach (ExpenseElement expenseElem in ExpenseElements) {
+                if (!ExpenseModelsDict.ContainsKey(expenseElem.ExpenseID)) {
+                    ExpenseElement ExpenseToDelete = expenseElem;
+                    ExpenseElements.Remove(expenseElem);
+                    GameObject.Destroy(ExpenseToDelete);
+                    return;
+                }
+            }
+        }
+
+        private void RefreshExpenseElements(Expense_ModelCollection modelCollection) {
+            Dictionary<int, ExpenseModel> ExpenseModelsDict = DataReformatter.GetExpenseModelsDict(modelCollection.ExpenseModels);
+
+            foreach (ExpenseElement expenseElem in ExpenseElements)
+                expenseElem.UpdateView(ExpenseModelsDict[expenseElem.ExpenseID]);
         }
 
         public void DeconstructView() {
-            ExpenseTileUIData.Count = 0;
             int count = 0;
             foreach (ExpenseElement expenseElement in ExpenseElements) {
-                if (0 == count++)
-                    continue;
-                GameObject.Destroy(expenseElement.gameObject);
+                ExpenseElements.Remove(expenseElement);
+                if (count++ != 0)
+                    GameObject.Destroy(expenseElement.gameObject);
+                }
             }
         }
+
+    public static class Expense_Controller {
+        public static void EditExpenseClicked(int id) {
+            Managers.Data.Runtime.CurrentExpenseID = id;
+            Managers.UI.Push(WINDOW.EXPENSE);
+        }
+        
+        public static void AddExpenseClicked() {
+            Managers.Data.Runtime.CurrentExpenseID = -1;
+            Managers.UI.Push(WINDOW.EXPENSE);
+        }
+
+        public static void Close() => Managers.UI.Pop();
     }
 
     public class Expense_ModelCollection {
-        public CatagoryModel CurrentCatagory = DataReformatter.GetCurrentCatagoryModel(Managers.Data.FileData.CatagoryModels, Managers.Data.Runtime.CurrentCatagoryID);
         public List<ExpenseModel> ExpenseModels = DataReformatter.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime, Managers.Data.Runtime.CurrentCatagoryID);
     }
 }

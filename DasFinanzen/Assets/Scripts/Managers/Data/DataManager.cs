@@ -28,6 +28,4 @@ public class DataManagerHumble : IManager {
     }
 
     private SaveLoadSystem SaveLoad = null;
-
-    
 }
