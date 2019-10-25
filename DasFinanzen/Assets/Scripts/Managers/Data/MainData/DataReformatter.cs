@@ -28,10 +28,17 @@ namespace UI {
             return Total;
         }
 
-        public static CatagoryModel GetCurrentCatagoryModel(List<CatagoryModel> catagoryModels, int catagoryID) {
+        public static CatagoryModel GetCatagoryModel(List<CatagoryModel> catagoryModels, int catagoryID) {
             foreach (CatagoryModel catagoryModel in catagoryModels)
                 if (catagoryModel.CatagoryID == catagoryID)
                     return catagoryModel;
+            return null;
+        }
+
+        public static ExpenseModel GetExpenseModel(List<ExpenseModel> expenseModels, int expenseID) {
+            foreach (ExpenseModel expenseModel in expenseModels)
+                if (expenseModel.ExpenseID == expenseID)
+                    return expenseModel;
             return null;
         }
 

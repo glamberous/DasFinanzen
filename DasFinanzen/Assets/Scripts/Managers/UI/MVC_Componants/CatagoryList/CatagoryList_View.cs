@@ -4,23 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI {
-    public class Catagory_View : MonoBehaviour, IView {
+    public class CatagoryList_View : MonoBehaviour, IView {
         [SerializeField] private CatagoryElement DailyOriginal = null;
         [SerializeField] private CatagoryElement MonthlyOriginal = null;
 
-        private Catagory_HumbleView HumbleView = null;
+        private CatagoryList_HumbleView HumbleView = null;
 
         public void Awake() {
-            HumbleView = new Catagory_HumbleView();
+            HumbleView = new CatagoryList_HumbleView();
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new Catagory_ModelCollection(), DailyOriginal, MonthlyOriginal);
+            HumbleView.ConstructView(new CatagoryList_ModelCollection(), DailyOriginal, MonthlyOriginal);
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
             Debug.Log("CatagoryView Activated.");
         }
 
-        public void Refresh() => HumbleView.RefreshView(new Catagory_ModelCollection());
+        public void Refresh() => HumbleView.RefreshView(new CatagoryList_ModelCollection());
 
         public void Deactivate() {
             Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
@@ -29,11 +29,11 @@ namespace UI {
         }
     }
 
-    public class Catagory_HumbleView {
+    public class CatagoryList_HumbleView {
         private List<CatagoryElement> RecurringCatagoryElements = new List<CatagoryElement>();
         private List<CatagoryElement> DailyCatagoryElements = new List<CatagoryElement>();
 
-        public void ConstructView(Catagory_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
+        public void ConstructView(CatagoryList_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
             TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
             TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);
             foreach (CatagoryModel catagoryModel in ModelCollection.CatagoryModels)
@@ -48,7 +48,7 @@ namespace UI {
 
         private CatagoryElement ConstructCatagoryElement(CatagoryModel myCatagoryModel, TileUIData UIData, int count) {
             CatagoryElement newCatagory;
-            if (RecurringCatagoryElements.Count == 0)
+            if (count == 0)
                 newCatagory = UIData.Original.GetComponent<CatagoryElement>();
             else
                 newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<CatagoryElement>(), parent: UIData.Parent.transform) as CatagoryElement;
@@ -57,7 +57,7 @@ namespace UI {
             return newCatagory;
         }
 
-        public void RefreshView(Catagory_ModelCollection modelCollection) {
+        public void RefreshView(CatagoryList_ModelCollection modelCollection) {
             Dictionary<int, decimal> ExpenseTotalsDict = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
             Dictionary<int, CatagoryModel> CatagoryModelDict = DataReformatter.GetCatagoryModelsDict(modelCollection.CatagoryModels);
 
@@ -82,14 +82,14 @@ namespace UI {
         }
     }
 
-    public static class Catagory_Controller {
+    public static class CatagoryList_Controller {
         public static void CatagoryClicked(int id) {
             Managers.Data.Runtime.CurrentCatagoryID = id;
             Managers.UI.Push(WINDOW.CATAGORY);
         }
     }
 
-    public class Catagory_ModelCollection {
+    public class CatagoryList_ModelCollection {
         public List<CatagoryModel> CatagoryModels = Managers.Data.FileData.CatagoryModels;
         public List<ExpenseModel> ExpenseModels = DataReformatter.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
     }

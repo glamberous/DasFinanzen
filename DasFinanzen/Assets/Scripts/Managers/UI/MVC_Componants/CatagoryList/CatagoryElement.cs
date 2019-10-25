@@ -10,7 +10,7 @@ namespace UI {
 
         public void SetID(int id) => CatagoryID = id;
 
-        public void OnMouseDown() => Catagory_Controller.CatagoryClicked(CatagoryID);
+        public void OnMouseDown() => CatagoryList_Controller.CatagoryClicked(CatagoryID);
 
         private Image ColorPatchImage;
         private TextMeshProUGUI NameTextMesh;

@@ -1,25 +1,24 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI {
-    public class Expense_View : MonoBehaviour, IView {
+    public class ExpenseList_View : MonoBehaviour, IView {
         [SerializeField] private ExpenseElement Original = null;
 
-        private Expense_HumbleView HumbleView = null;
+        private ExpenseList_HumbleView HumbleView = null;
 
         public void Awake() {
-            HumbleView = new Expense_HumbleView();
+            HumbleView = new ExpenseList_HumbleView();
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new Expense_ModelCollection(), Original);
+            HumbleView.ConstructView(new ExpenseList_ModelCollection(), Original);
             Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
             Debug.Log("ExpenseView Activated.");
         }
 
-        public void Refresh() => HumbleView.RefreshView(new Expense_ModelCollection());
+        public void Refresh() => HumbleView.RefreshView(new ExpenseList_ModelCollection());
 
         public void Deactivate() {
             Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
@@ -28,12 +27,11 @@ namespace UI {
         }
     }
 
-    public class Expense_HumbleView {
+    public class ExpenseList_HumbleView {
         private List<ExpenseElement> ExpenseElements = new List<ExpenseElement>();
         private TileUIData ExpenseTileUIData = null;
 
-        public void ConstructView(Expense_ModelCollection modelCollection, ExpenseElement original) {
-            ExpenseTileUIData = new TileUIData(original.gameObject);
+        public void ConstructView(ExpenseList_ModelCollection modelCollection, ExpenseElement original) {
             if (modelCollection.ExpenseModels.Count == 0)
                 ConstructEmptyView();
             else
@@ -45,7 +43,7 @@ namespace UI {
             // Probably needs more Code here for unique UI (informative text) when Empty.
         }
 
-        private void ConstructRegularView(Expense_ModelCollection modelCollection, ExpenseElement original) {
+        private void ConstructRegularView(ExpenseList_ModelCollection modelCollection, ExpenseElement original) {
             foreach (ExpenseModel model in modelCollection.ExpenseModels)
                 ExpenseElements.Add(ConstructExpenseElement(model, original));
             ExpenseTileUIData.UpdateTileSize(ExpenseElements.Count);
@@ -63,7 +61,7 @@ namespace UI {
             return newExpense;
         }
 
-        public void RefreshView(Expense_ModelCollection modelCollection) {
+        public void RefreshView(ExpenseList_ModelCollection modelCollection) {
             if (modelCollection.ExpenseModels.Count == 0)
                 ConstructEmptyView();
             else {
@@ -78,10 +76,10 @@ namespace UI {
             }
         }
 
-        private void AddExpenseElement(Expense_ModelCollection modelCollection) =>
+        private void AddExpenseElement(ExpenseList_ModelCollection modelCollection) =>
             ExpenseElements.Add(ConstructExpenseElement(modelCollection.ExpenseModels.Last(), ExpenseElements.First()));
 
-        private void RemoveExpenseElement(Expense_ModelCollection modelCollection) {
+        private void RemoveExpenseElement(ExpenseList_ModelCollection modelCollection) {
             Dictionary<int, ExpenseModel> ExpenseModelsDict = DataReformatter.GetExpenseModelsDict(modelCollection.ExpenseModels);
 
             foreach (ExpenseElement expenseElem in ExpenseElements) {
@@ -94,7 +92,7 @@ namespace UI {
             }
         }
 
-        private void RefreshExpenseElements(Expense_ModelCollection modelCollection) {
+        private void RefreshExpenseElements(ExpenseList_ModelCollection modelCollection) {
             Dictionary<int, ExpenseModel> ExpenseModelsDict = DataReformatter.GetExpenseModelsDict(modelCollection.ExpenseModels);
 
             foreach (ExpenseElement expenseElem in ExpenseElements)
@@ -111,7 +109,7 @@ namespace UI {
             }
         }
 
-    public static class Expense_Controller {
+    public static class ExpenseList_Controller {
         public static void EditExpenseClicked(int id) {
             Managers.Data.Runtime.CurrentExpenseID = id;
             Managers.UI.Push(WINDOW.EXPENSE);
@@ -125,7 +123,7 @@ namespace UI {
         public static void Close() => Managers.UI.Pop();
     }
 
-    public class Expense_ModelCollection {
+    public class ExpenseList_ModelCollection {
         public List<ExpenseModel> ExpenseModels = DataReformatter.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime, Managers.Data.Runtime.CurrentCatagoryID);
     }
 }

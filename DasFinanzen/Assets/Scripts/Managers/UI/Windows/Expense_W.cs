@@ -3,20 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI {
-    //[RequireComponent(typeof(Header_View))]
-    [RequireComponent(typeof(ColorBar_View))]
-    //[RequireComponent(typeof(Goal_View))]
-    [RequireComponent(typeof(CatagoryList_View))]
-    //[RequireComponent(typeof(Footer_View))]
-    public class Main_W : MonoBehaviour, IWindow {
+    public class Expense_W : MonoBehaviour, IWindow {
         private List<IView> Views = new List<IView>();
 
         public void Awake() {
-            //Views.Add(GetComponent<Header_View());
-            Views.Add(GetComponent<ColorBar_View>());
-            //Views.Add(GetComponent<Goal_View>());
-            Views.Add(GetComponent<CatagoryList_View>());
-            //Views.Add(GetComponent<Footer_View());
+            //Views.Add(GetComponent<ExpenseDataEntry_View>());
         }
 
         public IWindow Activate() {
@@ -25,7 +16,7 @@ namespace UI {
 
             foreach (IView view in Views)
                 view.Activate();
-            
+
             return this;
         }
 
