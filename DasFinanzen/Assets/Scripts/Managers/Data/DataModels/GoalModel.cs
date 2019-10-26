@@ -10,7 +10,7 @@ public class GoalModel : IModel {
 
     public void Save() {
         Managers.Data.FileData.GoalModel = this;
-        Messenger.Broadcast(AppEvent.GOAL_UPDATED);
+        Messenger.Broadcast(UIEvent.GOAL_UPDATED);
     }
 
     public void Delete() => Debug.Log("[WARNING] Deleting GoalModel is not allowed!");

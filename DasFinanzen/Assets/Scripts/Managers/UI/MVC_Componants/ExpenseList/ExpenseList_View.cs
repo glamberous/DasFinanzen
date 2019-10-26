@@ -14,14 +14,14 @@ namespace UI {
 
         public void Activate() {
             HumbleView.ConstructView(new ExpenseList_ModelCollection(), Original);
-            Messenger.AddListener(AppEvent.EXPENSES_UPDATED, Refresh);
+            Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
             Debug.Log("ExpenseView Activated.");
         }
 
         public void Refresh() => HumbleView.RefreshView(new ExpenseList_ModelCollection());
 
         public void Deactivate() {
-            Messenger.RemoveListener(AppEvent.EXPENSES_UPDATED, Refresh);
+            Messenger.RemoveListener(UIEvent.EXPENSES_UPDATED, Refresh);
             HumbleView.DeconstructView();
             Debug.Log("ExpenseView Deactivated.");
         }

@@ -44,13 +44,13 @@ public class ExpenseModel : IModel {
                 if (expenseModel.ExpenseID == ExpenseID)
                     Managers.Data.FileData.ExpenseModels.Remove(expenseModel);
         Managers.Data.FileData.ExpenseModels.Add(this);
-        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
+        Messenger.Broadcast(UIEvent.EXPENSES_UPDATED);
     }
 
     public void Delete() {
         foreach (ExpenseModel expenseModel in Managers.Data.FileData.ExpenseModels)
             if (expenseModel.ExpenseID == ExpenseID)
                 Managers.Data.FileData.ExpenseModels.Remove(expenseModel);
-        Messenger.Broadcast(AppEvent.EXPENSES_UPDATED);
+        Messenger.Broadcast(UIEvent.EXPENSES_UPDATED);
     }
 }
