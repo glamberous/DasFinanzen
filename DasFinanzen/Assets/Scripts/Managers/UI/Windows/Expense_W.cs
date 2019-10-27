@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI {
+    [RequireComponent(typeof(ExpenseModelForm_View))]
     public class Expense_W : MonoBehaviour, IWindow {
         private List<IView> Views = new List<IView>();
 
         public void Awake() {
-            //Views.Add(GetComponent<ExpenseDataEntry_View>());
+            Views.Add(GetComponent<ExpenseModelForm_View>());
         }
 
         public IWindow Activate() {

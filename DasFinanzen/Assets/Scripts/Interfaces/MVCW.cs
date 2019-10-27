@@ -11,7 +11,12 @@ public interface IModelCollection {
 }
 
 public interface IController {
+    void TriggerCommand(int commandID, string input = null);
+}
 
+public interface IControllerElement {
+    void SetController(IController controller);
+    void SetCommandID(int commandID);
 }
 
 public interface IWindow {

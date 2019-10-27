@@ -111,12 +111,12 @@ namespace UI {
 
     public static class ExpenseList_Controller {
         public static void EditExpenseClicked(int id) {
-            Managers.Data.Runtime.CurrentExpenseID = id;
+            Managers.Data.Runtime.TempExpenseModel = DataReformatter.GetExpenseModel(Managers.Data.FileData.ExpenseModels, id);
             Managers.UI.Push(WINDOW.EXPENSE);
         }
         
         public static void AddExpenseClicked() {
-            Managers.Data.Runtime.CurrentExpenseID = -1;
+            Managers.Data.Runtime.TempExpenseModel = new ExpenseModel();
             Managers.UI.Push(WINDOW.EXPENSE);
         }
 

@@ -71,6 +71,12 @@ namespace UI {
                 ExpenseModelDict[expenseModel.ExpenseID] = expenseModel;
             return ExpenseModelDict;
         }
+
+        public static decimal ConvertStringToDecimal(string input) {
+            decimal amount = 0.00m;
+            try { amount = Convert.ToDecimal(input); } catch { Debug.Log("[WARNING][ExpenseModelForm_CurrencyInput] Failed to convert String input to Decimal."); }
+            return amount;
+        }
     }
 }
 

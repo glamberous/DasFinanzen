@@ -44,7 +44,9 @@ namespace UI {
     }
 
     public class Goal_Controller : IController {
+        public void TriggerCommand(int commandID, string input) {
 
+        }
     }
 
     public class Goal_ModelCollection {

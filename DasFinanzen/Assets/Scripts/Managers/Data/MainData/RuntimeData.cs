@@ -7,5 +7,5 @@ public class RuntimeData {
 
     public DateTime SelectedTime = DateTime.Now;
 
-    public int CurrentExpenseID = -1;
+    public ExpenseModel TempExpenseModel = null;
 }
