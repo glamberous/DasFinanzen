@@ -1,0 +1,58 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class #SCRIPTNAME#_View : MonoBehaviour, IView {
+    private #SCRIPTNAME#_HumbleView HumbleView = null;
+
+	public void Awake() {
+		HumbleView = new #SCRIPTNAME#_HumbleView();
+		
+		//#SCRIPTNAME#_Controller Controller = new #SCRIPTNAME#_Controller();
+		//Example.SetController(Controller);
+
+		//Cross reference the Command ID's from the Controller class near the bottom of this page.
+		//Example.SetCommandID(0); 
+	}
+
+	public void Activate() {
+		HumbleView.ConstructView(new #SCRIPTNAME#_ModelCollection());
+		//Add any Listeners needed here.
+		Debug.Log("#SCRIPTNAME#_View Activated.");
+	}
+
+	public void Refresh() => HumbleView.RefreshView(new #SCRIPTNAME#_ModelCollection());
+
+	public void Deactivate() {
+		HumbleView.DeconstructView();
+		//Remove any Listeners needed here.
+		Debug.Log("#SCRIPTNAME#_View Deactivated.");
+	}
+}
+
+public class #SCRIPTNAME#_HumbleView {
+	public void ConstructView(#SCRIPTNAME#_ModelCollection modelCollection) {
+	
+	}
+
+	public void RefreshView(#SCRIPTNAME#_ModelCollection modelCollection) {
+	
+	}
+
+	public void DeconstructView() {
+	
+	}
+}
+
+public class #SCRIPTNAME#_Controller : IController {
+	public void TriggerCommand(int commandID, string input) {
+        switch(commandID) {
+            case 0: break;
+            default: Debug.Log("[WARNING][#SCRIPTNAME#_Controller] CommandID not recognized! "); return;
+        }
+    }
+}
+
+public class #SCRIPTNAME#_ModelCollection {
+	// Put Model Collections Here
+}
