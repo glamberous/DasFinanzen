@@ -25,6 +25,7 @@ namespace UI {
         public void Activate() {
             HumbleView.ConstructView(new CatagoryList_ModelCollection(), DailyOriginal, MonthlyOriginal);
             Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
+            Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
             Debug.Log("CatagoryView Activated.");
         }
 
@@ -32,6 +33,7 @@ namespace UI {
 
         public void Deactivate() {
             Messenger.RemoveListener(UIEvent.EXPENSES_UPDATED, Refresh);
+            Messenger.RemoveListener(UIEvent.MONTH_CHANGED, Refresh);
             HumbleView.DeconstructView();
             Debug.Log("CatagoryView Deactivated.");
         }
