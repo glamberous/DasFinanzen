@@ -44,12 +44,14 @@ public class ExpenseModel : IModel {
             Managers.Data.FileData.ExpenseModels.Remove(modelToDelete);
         }
         Managers.Data.FileData.ExpenseModels.Add(this);
+        Managers.Data.Save();
         Messenger.Broadcast(UIEvent.EXPENSES_UPDATED);
     }
 
     public void Delete() {
         ExpenseModel modelToDelete = UI.DataReformatter.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
         Managers.Data.FileData.ExpenseModels.Remove(modelToDelete);
+        Managers.Data.Save();
         Messenger.Broadcast(UIEvent.EXPENSES_UPDATED);
     }
 }

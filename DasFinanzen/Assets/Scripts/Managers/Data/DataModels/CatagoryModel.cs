@@ -24,6 +24,7 @@ public class CatagoryModel : IModel {
             Managers.Data.FileData.CatagoryModels.Remove(modelToDelete);
         }
         Managers.Data.FileData.CatagoryModels.Add(this);
+        Managers.Data.Save();
         //Messenger.Broadcast(AppEvent.CATAGORIES_UPDATED);
     }
 
