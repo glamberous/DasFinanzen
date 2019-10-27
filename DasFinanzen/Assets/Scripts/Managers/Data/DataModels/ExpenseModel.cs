@@ -39,18 +39,17 @@ public class ExpenseModel : IModel {
     public void Save() {
         if (IDTracker.IsNew(IDType.EXPENSE, ExpenseID))
             IDTracker.SaveID(IDType.EXPENSE, ExpenseID);
-        else
-            foreach (ExpenseModel expenseModel in Managers.Data.FileData.ExpenseModels)
-                if (expenseModel.ExpenseID == ExpenseID)
-                    Managers.Data.FileData.ExpenseModels.Remove(expenseModel);
+        else {
+            ExpenseModel modelToDelete = UI.DataReformatter.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
+            Managers.Data.FileData.ExpenseModels.Remove(modelToDelete);
+        }
         Managers.Data.FileData.ExpenseModels.Add(this);
         Messenger.Broadcast(UIEvent.EXPENSES_UPDATED);
     }
 
     public void Delete() {
-        foreach (ExpenseModel expenseModel in Managers.Data.FileData.ExpenseModels)
-            if (expenseModel.ExpenseID == ExpenseID)
-                Managers.Data.FileData.ExpenseModels.Remove(expenseModel);
+        ExpenseModel modelToDelete = UI.DataReformatter.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
+        Managers.Data.FileData.ExpenseModels.Remove(modelToDelete);
         Messenger.Broadcast(UIEvent.EXPENSES_UPDATED);
     }
 }

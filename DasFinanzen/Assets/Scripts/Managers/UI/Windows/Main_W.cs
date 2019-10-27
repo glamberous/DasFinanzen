@@ -7,7 +7,7 @@ namespace UI {
     [RequireComponent(typeof(ColorBar_View))]
     [RequireComponent(typeof(Goal_View))]
     [RequireComponent(typeof(CatagoryList_View))]
-    //[RequireComponent(typeof(DAS_View))]
+    [RequireComponent(typeof(DAS_View))]
     public class Main_W : MonoBehaviour, IWindow {
         private List<IView> Views = new List<IView>();
 
@@ -16,7 +16,7 @@ namespace UI {
             Views.Add(GetComponent<ColorBar_View>());
             Views.Add(GetComponent<Goal_View>());
             Views.Add(GetComponent<CatagoryList_View>());
-            //Views.Add(GetComponent<DAS_View());
+            Views.Add(GetComponent<DAS_View>());
         }
 
         public IWindow Activate() {

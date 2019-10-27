@@ -7,10 +7,15 @@ using TMPro;
 
 namespace UI {
     [RequireComponent(typeof(BoxCollider2D))]
-    public class ExpenseElement : MonoBehaviour {
-        public int ExpenseID;
+    public class ExpenseElement : MonoBehaviour, IControllerElement {
+        public int ExpenseID { get; private set; } = -1;
+        public void SetExpenseID(int id) => ExpenseID = id;
 
-        public void SetID(int id) => ExpenseID = id;
+        private IController Controller = null;
+        public void SetController(IController controller) => Controller = controller;
+
+        private int CommandID = -1;
+        public void SetCommandID(int commandID) => CommandID = commandID;
 
         private TextMeshProUGUI DateTextMesh = null;
         private TextMeshProUGUI NameTextMesh = null;
@@ -39,7 +44,9 @@ namespace UI {
             CurrencySymbol.color = newColor;
         }
 
-        private void SetDate(DateTime date) => DateTextMesh.text = string.Format("{0}/{1}", date.Month.ToString(), date.Day.ToString());
+        private void SetDate(DateTime date) => DateTextMesh.text = date.ToString("mm/dd");
+
+        public void OnMouseDown() => Controller.TriggerCommand(CommandID, ExpenseID.ToString());
     }
 }
 

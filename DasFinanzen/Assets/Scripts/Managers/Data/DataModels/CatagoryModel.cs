@@ -19,10 +19,10 @@ public class CatagoryModel : IModel {
     public void Save() {
         if (IDTracker.IsNew(IDType.CATAGORY, CatagoryID))
             IDTracker.SaveID(IDType.CATAGORY, CatagoryID);
-        else
-            foreach (CatagoryModel catagoryModel in Managers.Data.FileData.CatagoryModels)
-                if (catagoryModel.CatagoryID == CatagoryID) 
-                    Managers.Data.FileData.CatagoryModels.Remove(catagoryModel);
+        else {
+            CatagoryModel modelToDelete = UI.DataReformatter.GetCatagoryModel(Managers.Data.FileData.CatagoryModels, CatagoryID);
+            Managers.Data.FileData.CatagoryModels.Remove(modelToDelete);
+        }
         Managers.Data.FileData.CatagoryModels.Add(this);
         //Messenger.Broadcast(AppEvent.CATAGORIES_UPDATED);
     }

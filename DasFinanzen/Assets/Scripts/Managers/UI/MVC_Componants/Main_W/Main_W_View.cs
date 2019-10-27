@@ -48,7 +48,7 @@ namespace UI {
         }
 
         public void RefreshView(Main_W_ModelCollection modelCollection) {
-            Month.text = modelCollection.CurrentlySetTime.Month.ToString();
+            Month.text = modelCollection.CurrentlySetTime.ToString("MMMM").ToUpper();
         }
 
         public void DeconstructView() {
@@ -66,13 +66,22 @@ namespace UI {
         }
 
         private void IncrementMonth() {
-            Managers.Data.Runtime.SelectedTime.AddMonths(1);
+            DateTime newDateTime = new DateTime(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month, 1).AddMonths(1);
+            Managers.Data.Runtime.SelectedTime = IfCurrentMonthReturnDateTimeNow(newDateTime);
             Messenger.Broadcast(UIEvent.MONTH_CHANGED);
         }
 
         private void DecrementMonth() {
-            Managers.Data.Runtime.SelectedTime.AddMonths(-1);
+            DateTime newDateTime = new DateTime(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month, 1).AddMonths(-1);
+            Managers.Data.Runtime.SelectedTime = IfCurrentMonthReturnDateTimeNow(newDateTime);
             Messenger.Broadcast(UIEvent.MONTH_CHANGED);
+        }
+
+        private DateTime IfCurrentMonthReturnDateTimeNow(DateTime testDateTime) {
+            if (testDateTime.Year == DateTime.Now.Year && testDateTime.Month == DateTime.Now.Month)
+                return DateTime.Now;
+            else
+                return testDateTime;
         }
     }
 

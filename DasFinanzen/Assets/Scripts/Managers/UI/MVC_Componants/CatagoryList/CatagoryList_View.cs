@@ -13,13 +13,6 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new CatagoryList_HumbleView();
-
-            CatagoryList_Controller Controller = new CatagoryList_Controller();
-            DailyOriginal.SetController(Controller);
-            MonthlyOriginal.SetController(Controller);
-
-            DailyOriginal.SetCommandID(0);
-            MonthlyOriginal.SetCommandID(0);
         }
 
         public void Activate() {
@@ -44,26 +37,29 @@ namespace UI {
         private List<CatagoryElement> DailyCatagoryElements = new List<CatagoryElement>();
 
         public void ConstructView(CatagoryList_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
+            CatagoryList_Controller Controller = new CatagoryList_Controller();
             TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
             TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);
             foreach (CatagoryModel catagoryModel in ModelCollection.CatagoryModels)
                 if (catagoryModel.Recurring)
-                    RecurringCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData, RecurringCatagoryElements.Count));
+                    RecurringCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData, RecurringCatagoryElements.Count, Controller));
                 else
-                    DailyCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData, DailyCatagoryElements.Count));
+                    DailyCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData, DailyCatagoryElements.Count, Controller));
             MonthlyUIData.UpdateTileSize(RecurringCatagoryElements.Count);
             DailyUIData.UpdateTileSize(DailyCatagoryElements.Count);
             RefreshView(ModelCollection);
         }
 
-        private CatagoryElement ConstructCatagoryElement(CatagoryModel myCatagoryModel, TileUIData UIData, int count) {
+        private CatagoryElement ConstructCatagoryElement(CatagoryModel myCatagoryModel, TileUIData UIData, int count, CatagoryList_Controller controller) {
             CatagoryElement newCatagory;
             if (count == 0)
                 newCatagory = UIData.Original.GetComponent<CatagoryElement>();
             else
                 newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<CatagoryElement>(), parent: UIData.Parent.transform) as CatagoryElement;
             newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * count), UIData.StartPos.z);
-            newCatagory.SetID(myCatagoryModel.CatagoryID);
+            newCatagory.SetController(controller);
+            newCatagory.SetCommandID(0);
+            newCatagory.SetCatagoryID(myCatagoryModel.CatagoryID);
             return newCatagory;
         }
 

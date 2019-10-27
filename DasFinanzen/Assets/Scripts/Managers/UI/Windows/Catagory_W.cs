@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI {
-    //[RequireComponent(typeof(Catagory_W_View))]
-    [RequireComponent(typeof(CatagoryList_View))]
+    [RequireComponent(typeof(Catagory_W_View))]
+    [RequireComponent(typeof(ExpenseList_View))]
     public class Catagory_W : MonoBehaviour, IWindow {
         private List<IView> Views = new List<IView>();
 
         public void Awake() {
-            //Views.Add(GetComponent<Catagory_W_View>());
-            Views.Add(GetComponent<CatagoryList_View>());
+            Views.Add(GetComponent<Catagory_W_View>());
+            Views.Add(GetComponent<ExpenseList_View>());
         }
 
         public IWindow Activate() {

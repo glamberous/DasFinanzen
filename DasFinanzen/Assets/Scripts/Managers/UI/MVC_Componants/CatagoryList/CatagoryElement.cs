@@ -13,7 +13,7 @@ namespace UI {
         private int CommandID = -1;
         public void SetCommandID(int commandID) => CommandID = commandID;
 
-        public void SetID(int id) => CatagoryID = id;
+        public void SetCatagoryID(int id) => CatagoryID = id;
         public void OnMouseDown() => Controller.TriggerCommand(CommandID, CatagoryID.ToString());
 
         private Image ColorPatchImage;
