@@ -6,12 +6,10 @@ using TMPro;
 
 namespace UI {
     public class ExpenseModelForm_View : MonoBehaviour, IView {
-        [SerializeField] private TextMeshProUGUI TitleText = null;
         [SerializeField] private TextMeshProUGUI AmountTextDisplay = null;
         [SerializeField] private TextMeshProUGUI NameTextDisplay = null;
         [SerializeField] private TextMeshProUGUI DateTextDisplay = null;
 
-        [SerializeField] private Generic_Button BackButton = null;
         [SerializeField] private Generic_Button SaveExpenseButton = null;
         [SerializeField] private Generic_Button DeleteExpenseButton = null;
         [SerializeField] private Currency_InputField CurrencyInputField = null;
@@ -23,22 +21,19 @@ namespace UI {
             HumbleView = new ExpenseModelForm_HumbleView();
 
             ExpenseModelForm_Controller Controller = new ExpenseModelForm_Controller();
-            BackButton.SetController(Controller);
             SaveExpenseButton.SetController(Controller);
             DeleteExpenseButton.SetController(Controller);
             CurrencyInputField.SetController(Controller);
             StringInputField.SetController(Controller);
 
-            BackButton.SetCommandID(0);
-            SaveExpenseButton.SetCommandID(1);
-            DeleteExpenseButton.SetCommandID(2);
-            CurrencyInputField.SetCommandID(3);
-            StringInputField.SetCommandID(4);
+            SaveExpenseButton.SetCommandID(0);
+            DeleteExpenseButton.SetCommandID(1);
+            CurrencyInputField.SetCommandID(2);
+            StringInputField.SetCommandID(3);
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), TitleText, AmountTextDisplay, NameTextDisplay, DateTextDisplay, DeleteExpenseButton);
-            Refresh();
+            HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), AmountTextDisplay, NameTextDisplay, DateTextDisplay, DeleteExpenseButton);
             Messenger.AddListener(UIEvent.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Activated.");
         }
@@ -57,14 +52,12 @@ namespace UI {
         private TextMeshProUGUI Name = null;
         private TextMeshProUGUI Date = null;
 
-        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, TextMeshProUGUI title, TextMeshProUGUI amount, TextMeshProUGUI name, TextMeshProUGUI date, Generic_Button deleteButton) {
+        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, TextMeshProUGUI amount, TextMeshProUGUI name, TextMeshProUGUI date, Generic_Button deleteButton) {
             Amount = amount;
             Name = name;
             Date = date;
 
-            title.text = IDTracker.IsNew(IDType.EXPENSE, modelCollection.ExpenseModel.ExpenseID) ? "Add Expense" : "Edit Expense";
-            deleteButton.gameObject.SetActive(!IDTracker.IsNew(IDType.EXPENSE, modelCollection.ExpenseModel.ExpenseID));
-
+            deleteButton.gameObject.SetActive(IDTracker.IsNew(IDType.EXPENSE, modelCollection.ExpenseModel.ExpenseID));
             RefreshView(modelCollection);
         }
 
@@ -82,18 +75,12 @@ namespace UI {
     public class ExpenseModelForm_Controller : IController { 
         public void TriggerCommand(int commandID, string input = null) {
             switch (commandID) {
-                case 0: BackButton(); break;
-                case 1: SaveExpense(); break;
-                case 2: DeleteExpense(); break;
-                case 3: SetAmount(input); break;
-                case 4: SetName(input); break;
+                case 0: SaveExpense(); break;
+                case 1: DeleteExpense(); break;
+                case 2: SetAmount(input); break;
+                case 3: SetName(input); break;
                 default: Debug.Log("[WARNING][ExpenseModelForm_Controller] CommandID not recognized! ");  return;
             }
-        }
-
-        private void BackButton() {
-            Managers.Data.Runtime.TempExpenseModel = null;
-            Managers.UI.Pop();
         }
 
         private void SaveExpense() {

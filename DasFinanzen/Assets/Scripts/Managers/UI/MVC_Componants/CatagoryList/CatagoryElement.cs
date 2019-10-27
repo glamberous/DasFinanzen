@@ -5,12 +5,16 @@ using TMPro;
 
 namespace UI {
     [RequireComponent(typeof(BoxCollider2D))]
-    public class CatagoryElement : MonoBehaviour {
+    public class CatagoryElement : MonoBehaviour, IControllerElement {
         [HideInInspector] public int CatagoryID { get; private set; } = -1;
+        private IController Controller = null;
+        public void SetController(IController controller) => Controller = controller;
+
+        private int CommandID = -1;
+        public void SetCommandID(int commandID) => CommandID = commandID;
 
         public void SetID(int id) => CatagoryID = id;
-
-        public void OnMouseDown() => CatagoryList_Controller.CatagoryClicked(CatagoryID);
+        public void OnMouseDown() => Controller.TriggerCommand(CommandID, CatagoryID.ToString());
 
         private Image ColorPatchImage;
         private TextMeshProUGUI NameTextMesh;

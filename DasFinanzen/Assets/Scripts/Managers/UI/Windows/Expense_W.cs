@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI {
+    [RequireComponent(typeof(Expense_W_View))]
     [RequireComponent(typeof(ExpenseModelForm_View))]
     public class Expense_W : MonoBehaviour, IWindow {
         private List<IView> Views = new List<IView>();
 
         public void Awake() {
+            Views.Add(GetComponent<Expense_W_View>());
             Views.Add(GetComponent<ExpenseModelForm_View>());
         }
 
         public IWindow Activate() {
-            // You need to set it active before Activating/Initializing all the views otherwise Awake() doesn't get called.
+            //SetActive must be true before Activating/Initializing all the views otherwise Awake() doesn't get called.
             gameObject.SetActive(true);
 
             foreach (IView view in Views)

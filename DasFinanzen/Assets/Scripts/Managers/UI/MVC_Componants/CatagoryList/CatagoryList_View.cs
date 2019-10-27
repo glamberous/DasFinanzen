@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace UI {
     public class CatagoryList_View : MonoBehaviour, IView {
@@ -12,6 +13,13 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new CatagoryList_HumbleView();
+
+            CatagoryList_Controller Controller = new CatagoryList_Controller();
+            DailyOriginal.SetController(Controller);
+            MonthlyOriginal.SetController(Controller);
+
+            DailyOriginal.SetCommandID(0);
+            MonthlyOriginal.SetCommandID(0);
         }
 
         public void Activate() {
@@ -82,8 +90,15 @@ namespace UI {
         }
     }
 
-    public static class CatagoryList_Controller {
-        public static void CatagoryClicked(int id) {
+    public class CatagoryList_Controller : IController {
+        public void TriggerCommand(int commandID, string input) {
+            switch(commandID) {
+                case 0: CatagoryClicked(Convert.ToInt32(input)); break;
+                default: Debug.Log("[WARNING][CatagoryList_Controller] CommandID not recognized! "); return;
+            }
+        }
+
+        private void CatagoryClicked(int id) {
             Managers.Data.Runtime.CurrentCatagoryID = id;
             Managers.UI.Push(WINDOW.CATAGORY);
         }
