@@ -1,24 +1,16 @@
 ﻿using System;
-using MessagePack;
 
-[MessagePackObject]
 public class ExpenseModel : IModel {
-    [Key(0)]
-    public int ExpenseID { get; private set; } = IDTracker.CreateNew(IDType.EXPENSE);
+    public int ExpenseID { get; private set; } = -1;
 
-    [Key(1)]
     public DateTime Date = DateTime.Now;
 
-    [Key(2)]
     public string NameText = "New Expense";
 
-    [Key(3)]
     public decimal Amount = 0.00m;
 
-    [Key(4)]
     public int CatagoryID { get; private set; } = Managers.Data.Runtime.CurrentCatagoryID;
 
-    [IgnoreMember]
     public CatagoryModel Catagory {
         get {
             if (_Catagory == null) {
@@ -33,12 +25,13 @@ public class ExpenseModel : IModel {
         }
     }
 
-    [IgnoreMember]
     private CatagoryModel _Catagory;
 
     public void Save() {
-        if (IDTracker.IsNew(IDType.EXPENSE, ExpenseID))
-            IDTracker.SaveID(IDType.EXPENSE, ExpenseID);
+        if (ExpenseID == -1) {
+            ExpenseID = IDTracker.CreateNew(IDType.CATAGORY);
+            IDTracker.SaveID(IDType.EXPENSE, CatagoryID);
+        } 
         else {
             ExpenseModel modelToDelete = UI.DataReformatter.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
             Managers.Data.FileData.ExpenseModels.Remove(modelToDelete);

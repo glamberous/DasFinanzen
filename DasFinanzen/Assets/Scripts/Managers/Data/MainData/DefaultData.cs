@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class DefaultDataGenerator {
-    public static void CatagoryModels() {
+    public static void LoadAll() {
+        LoadCatagoryModels();
+    }
+
+    private static void LoadCatagoryModels() {
         if (Managers.Data.FileData.CatagoryModels.Count == 0) {
             CatagoryModel Catagory1 = new CatagoryModel();
             Catagory1.ColorCode = "e06c75";

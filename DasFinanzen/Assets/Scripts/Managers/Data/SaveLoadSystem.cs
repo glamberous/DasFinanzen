@@ -1,47 +1,55 @@
 ﻿using System.IO;
 using UnityEngine;
-using MessagePack;
-using MessagePack.Formatters;
+using MsgPack.Serialization;
+using System;
 
 public interface ISaveLoad {
-    FileData LoadFileData();
-    void SaveFileData(FileData fileData); 
+    void LoadFileData();
+    void SaveFileData(); 
 }
 
 public class SaveLoadSystem : ISaveLoad {
+    public SaveLoadSystem() {
+        SetFilePath();
+    }
+
+    public FileData FileData { get; private set; } = null;
+
     public void SetFilePath(string filename = "AppData.fin") => filepath = Application.persistentDataPath + $"/{filename}";
     private string filepath;
 
-    public SaveLoadSystem() {
-        SetFilePath();
-
-        var resolver = MessagePack.Resolvers.CompositeResolver.Create(
-        Array.Empty<IMessagePackFormatter>(),
-        new IFormatterResolver[]
-        {
-            MessagePack.Resolvers.GeneratedResolver.Instance,
-            MessagePack.Resolvers.StandardResolver.Instance,
-        });
-            var options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
-    }
-
-    public FileData LoadFileData() {
-        FileData myData = new FileData();
+    private MessagePackSerializer serializer = MessagePackSerializer.Get<FileData>();
+    
+    public void LoadFileData() {
+        bool DataSuccessfullyLoaded = false;
         if (File.Exists(filepath)) {
-            byte[] serializedData = File.ReadAllBytes(filepath);
-            try {
-                myData = MessagePackSerializer.Deserialize<FileData>(serializedData);
-            } catch {
-                Debug.Log("Unable to Load Profile! \nLoading Default Values.");
+            using (FileStream fileStream = new FileStream(filepath, FileMode.Open)) {
+                try {
+                    FileData = serializer.Unpack(fileStream) as FileData;
+                    DataSuccessfullyLoaded = true;
+                    Debug.Log(filepath + ": Successfully Loaded!");
+                } catch {
+                    Debug.Log(filepath + ": Unnable to Load!");
+                }
             }
-        } else {
-            Debug.Log("File not found. \nLoading Default Values.");
+        } else
+            Debug.Log(filepath + ": File not found!");
+
+        if (!DataSuccessfullyLoaded) {
+            Debug.Log("Loading Default Values into Save Profile...");
+            FileData = new FileData();
+            DefaultDataGenerator.LoadAll();
         }
-        return myData;
     }
 
-    public void SaveFileData(FileData fileData) {
-        byte[] rawData = MessagePackSerializer.Serialize(fileData);
-        File.WriteAllBytes(filepath, rawData);
+    public void SaveFileData() {
+        using (FileStream fileStream = new FileStream(filepath, FileMode.Create)) {
+            try {
+                serializer.Pack(fileStream, FileData);
+                Debug.Log(filepath + ": Successfully Saved!");
+            } catch {
+                Debug.Log(filepath + ": [ERROR] An Error ocurred during saving!");
+            }
+        }
     }
 }

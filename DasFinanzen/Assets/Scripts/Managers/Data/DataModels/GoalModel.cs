@@ -1,11 +1,9 @@
 ﻿
-using MessagePack;
 using UnityEngine;
+using MsgPack.Serialization;
 
-[MessagePackObject]
-public class GoalModel : IModel {
+public class GoalModel : IModel  {
 
-    [Key(0)]
     public decimal Amount = 1000.00m;
 
     public void Save() {

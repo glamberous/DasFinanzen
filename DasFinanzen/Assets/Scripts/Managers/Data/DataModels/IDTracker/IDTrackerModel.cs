@@ -1,14 +1,11 @@
 ﻿
-using MessagePack;
 using UnityEngine;
+using MsgPack.Serialization;
 
-[MessagePackObject]
 public class IDTrackerModel : IModel {
 
-    [Key(0)]
-    public int CatagoryID = 0; 
+    public int CatagoryID = 0;
 
-    [Key(1)]
     public int ExpenseID = 0;
 
     public void Save() => Managers.Data.FileData.IDTrackerModel = this;
