@@ -59,20 +59,14 @@ namespace UI {
     public class Main_W_Controller : IController {
         public void TriggerCommand(int commandID, string input) {
             switch (commandID) {
-                case 0: DecrementMonth(); break;
-                case 1: IncrementMonth(); break;
+                case 0: AddMonth(-1); break;
+                case 1: AddMonth(1); break;
                 default: Debug.Log("[WARNING][Main_W_Controller] CommandID not recognized! "); return;
             }
         }
 
-        private void IncrementMonth() {
-            DateTime newDateTime = new DateTime(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month, 1).AddMonths(1);
-            Managers.Data.Runtime.SelectedTime = IfCurrentMonthReturnDateTimeNow(newDateTime);
-            Messenger.Broadcast(UIEvent.MONTH_CHANGED);
-        }
-
-        private void DecrementMonth() {
-            DateTime newDateTime = new DateTime(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month, 1).AddMonths(-1);
+        private void AddMonth(int num) {
+            DateTime newDateTime = new DateTime(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month, 1).AddMonths(num);
             Managers.Data.Runtime.SelectedTime = IfCurrentMonthReturnDateTimeNow(newDateTime);
             Messenger.Broadcast(UIEvent.MONTH_CHANGED);
         }

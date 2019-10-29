@@ -69,7 +69,10 @@ namespace UI {
     internal static class DailyAverageSpendCalculator {
         public static decimal Before(DAS_ModelCollection modelCollection) {
             decimal totalSpentInMonth = DataReformatter.GetExpensesTotal(modelCollection.ExpenseModels);
-            return totalSpentInMonth / modelCollection.CurrentlySetTime.Day;
+            if (modelCollection.CurrentlySetTime.Month < DateTime.Now.Month && modelCollection.CurrentlySetTime.Year <= DateTime.Now.Year)
+                return totalSpentInMonth / DateTime.DaysInMonth(modelCollection.CurrentlySetTime.Year, modelCollection.CurrentlySetTime.Month);
+            else
+                return totalSpentInMonth / modelCollection.CurrentlySetTime.Day;
         }
 
         public static decimal After(DAS_ModelCollection modelCollection) {

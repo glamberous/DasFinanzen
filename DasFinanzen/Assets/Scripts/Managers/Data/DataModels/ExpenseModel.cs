@@ -3,7 +3,7 @@
 public class ExpenseModel : IModel {
     public int ExpenseID { get; private set; } = -1;
 
-    public DateTime Date = DateTime.Now;
+    public DateTime Date = Managers.Data.Runtime.SelectedTime;
 
     public string NameText = "New Expense";
 

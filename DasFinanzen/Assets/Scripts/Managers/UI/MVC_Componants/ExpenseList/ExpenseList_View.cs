@@ -11,10 +11,11 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new ExpenseList_HumbleView();
+            HumbleView.SetOriginalExpenseElement(Original);
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new ExpenseList_ModelCollection(), Original);
+            HumbleView.ConstructView(new ExpenseList_ModelCollection());
             Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
             Debug.Log("ExpenseView Activated.");
@@ -31,14 +32,17 @@ namespace UI {
     }
 
     public class ExpenseList_HumbleView {
-        private ExpenseElement Original = null;
         private List<ExpenseElement> ExpenseElements = new List<ExpenseElement>();
-        private TileUIData ExpenseTileUIData = null;
         private ExpenseList_Controller Controller = new ExpenseList_Controller();
+        private ExpenseElement Original = null;
+        private TileUIData ExpenseTileUIData = null;
 
-        public void ConstructView(ExpenseList_ModelCollection modelCollection, ExpenseElement original) {
+        public void SetOriginalExpenseElement(ExpenseElement original) {
             Original = original;
             ExpenseTileUIData = new TileUIData(original.gameObject);
+        }
+
+        public void ConstructView(ExpenseList_ModelCollection modelCollection) {
             if (modelCollection.ExpenseModels.Count == 0)
                 ConstructEmptyView();
             else
@@ -51,6 +55,7 @@ namespace UI {
         }
 
         private void ConstructRegularView(ExpenseList_ModelCollection modelCollection) {
+            ExpenseTileUIData.Parent.SetActive(true);
             ExpenseList_Controller Controller = new ExpenseList_Controller();
             foreach (ExpenseModel model in modelCollection.ExpenseModels)
                 ExpenseElements.Add(ConstructExpenseElement(model));
