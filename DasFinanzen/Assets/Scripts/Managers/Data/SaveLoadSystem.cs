@@ -29,16 +29,17 @@ public class SaveLoadSystem : ISaveLoad {
                     DataSuccessfullyLoaded = true;
                     Debug.Log(filepath + ": Successfully Loaded!");
                 } catch {
-                    Debug.Log(filepath + ": Unnable to Load!");
+                    Debug.Log(filepath + ": [ERROR] File Failed to Load!");
                 }
             }
         } else
-            Debug.Log(filepath + ": File not found!");
+            Debug.Log(filepath + ": [WARNING] File not found!");
 
         if (!DataSuccessfullyLoaded) {
             Debug.Log("Loading Default Values into Save Profile...");
             FileData = new FileData();
             DefaultDataGenerator.LoadAll();
+            Debug.Log("Default Values have been Loaded.");
         }
     }
 
@@ -48,7 +49,7 @@ public class SaveLoadSystem : ISaveLoad {
                 serializer.Pack(fileStream, FileData);
                 Debug.Log(filepath + ": Successfully Saved!");
             } catch {
-                Debug.Log(filepath + ": [ERROR] An Error ocurred during saving!");
+                Debug.Log(filepath + ": [ERROR] File Failed to Save!");
             }
         }
     }
