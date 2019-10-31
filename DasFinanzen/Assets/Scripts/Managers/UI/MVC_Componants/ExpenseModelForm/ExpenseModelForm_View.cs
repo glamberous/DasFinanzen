@@ -56,7 +56,7 @@ namespace UI {
             Date = date;
 
             modelCollection.ExpenseModel.NameText = modelCollection.ExpenseModel.Catagory.NameText;
-            deleteButton.gameObject.SetActive(IDTracker.IsNew(IDType.EXPENSE, modelCollection.ExpenseModel.ExpenseID));
+            deleteButton.gameObject.SetActive(modelCollection.ExpenseModel.ExpenseID != -1);
             RefreshView(modelCollection);
         }
 

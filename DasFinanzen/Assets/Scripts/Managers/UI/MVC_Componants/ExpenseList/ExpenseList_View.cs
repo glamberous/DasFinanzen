@@ -56,7 +56,6 @@ namespace UI {
 
         private void ConstructRegularView(ExpenseList_ModelCollection modelCollection) {
             ExpenseTileUIData.Parent.SetActive(true);
-            ExpenseList_Controller Controller = new ExpenseList_Controller();
             foreach (ExpenseModel model in modelCollection.ExpenseModels)
                 ExpenseElements.Add(ConstructExpenseElement(model));
             ExpenseTileUIData.UpdateTileSize(ExpenseElements.Count);
@@ -77,40 +76,8 @@ namespace UI {
         }
 
         public void RefreshView(ExpenseList_ModelCollection modelCollection) {
-            if (modelCollection.ExpenseModels.Count == 0)
-                ConstructEmptyView();
-            else {
-                ExpenseTileUIData.Parent.SetActive(true);
-                if (ExpenseElements.Count < modelCollection.ExpenseModels.Count)
-                    AddExpenseElement(modelCollection);
-                else if (ExpenseElements.Count > modelCollection.ExpenseModels.Count)
-                    RemoveExpenseElement(modelCollection);
-                else
-                    RefreshExpenseElements(modelCollection);
-                ExpenseTileUIData.UpdateTileSize(ExpenseElements.Count);
-            }
-        }
-
-        private void AddExpenseElement(ExpenseList_ModelCollection modelCollection) =>
-            ExpenseElements.Add(ConstructExpenseElement(modelCollection.ExpenseModels.Last()));
-
-        private void RemoveExpenseElement(ExpenseList_ModelCollection modelCollection) {
-            Dictionary<int, ExpenseModel> ExpenseModelsDict = DataReformatter.GetExpenseModelsDict(modelCollection.ExpenseModels);
-
-            foreach (ExpenseElement expenseElem in ExpenseElements) {
-                if (!ExpenseModelsDict.ContainsKey(expenseElem.ExpenseID)) {
-                    ExpenseElement ExpenseToDelete = expenseElem;
-                    ExpenseElements.Remove(expenseElem);
-                    GameObject.Destroy(ExpenseToDelete);
-                }
-            }
-        }
-
-        private void RefreshExpenseElements(ExpenseList_ModelCollection modelCollection) {
-            Dictionary<int, ExpenseModel> ExpenseModelsDict = DataReformatter.GetExpenseModelsDict(modelCollection.ExpenseModels);
-
-            foreach (ExpenseElement expenseElem in ExpenseElements)
-                expenseElem.UpdateView(ExpenseModelsDict[expenseElem.ExpenseID]);
+            DeconstructView();
+            ConstructRegularView(modelCollection);
         }
 
         public void DeconstructView() {

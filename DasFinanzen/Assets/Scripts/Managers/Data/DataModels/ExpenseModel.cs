@@ -30,8 +30,8 @@ public class ExpenseModel : IModel {
 
     public void Save() {
         if (ExpenseID == -1) {
-            ExpenseID = IDTracker.CreateNew(IDType.CATAGORY);
-            IDTracker.SaveID(IDType.EXPENSE, CatagoryID);
+            ExpenseID = IDTracker.CreateNew(IDType.EXPENSE);
+            IDTracker.SaveID(IDType.EXPENSE, ExpenseID);
         } 
         else {
             ExpenseModel modelToDelete = UI.DataQueries.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
