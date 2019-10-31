@@ -44,7 +44,7 @@ namespace UI {
             CurrencySymbol.color = newColor;
         }
 
-        private void SetDate(DateTime date) => DateTextMesh.text = date.ToString("mm/dd");
+        private void SetDate(DateTime date) => DateTextMesh.text = date.ToString("MM/dd");
 
         public void OnMouseDown() => Controller.TriggerCommand(CommandID, ExpenseID.ToString());
     }

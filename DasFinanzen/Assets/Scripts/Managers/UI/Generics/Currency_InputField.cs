@@ -6,7 +6,7 @@ using TMPro;
 
 namespace UI {
     [RequireComponent(typeof(TMP_InputField))]
-    public class Currency_InputField : MonoBehaviour, IControllerElement {
+    public class Currency_InputField : MonoBehaviour, IInputField {
         [SerializeField] private TextMeshProUGUI TextDisplay = null;
         
         private TMP_InputField TextInput = null;
@@ -34,6 +34,7 @@ namespace UI {
             return input;
         }
 
+        public void SetDisplayText(string input) => TextDisplay.text = input;
         public void OnEndEdit() => Controller.TriggerCommand(CommandID, TextDisplay.text);
     }
 }

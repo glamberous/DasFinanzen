@@ -104,6 +104,6 @@ namespace UI {
 
     public class CatagoryList_ModelCollection {
         public List<CatagoryModel> CatagoryModels = Managers.Data.FileData.CatagoryModels;
-        public List<ExpenseModel> ExpenseModels = DataReformatter.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
+        public List<ExpenseModel> ExpenseModels = DataQueries.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
     }
 }

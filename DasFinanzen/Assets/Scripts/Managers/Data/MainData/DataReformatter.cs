@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace UI {
@@ -28,43 +29,6 @@ namespace UI {
             return Total;
         }
 
-        public static CatagoryModel GetCatagoryModel(List<CatagoryModel> catagoryModels, int catagoryID) {
-            foreach (CatagoryModel catagoryModel in catagoryModels)
-                if (catagoryModel.CatagoryID == catagoryID)
-                    return catagoryModel;
-            return null;
-        }
-
-        public static ExpenseModel GetExpenseModel(List<ExpenseModel> expenseModels, int expenseID) {
-            foreach (ExpenseModel expenseModel in expenseModels)
-                if (expenseModel.ExpenseID == expenseID)
-                    return expenseModel;
-            return null;
-        }
-
-        public static List<ExpenseModel> GetExpenseModels(List<ExpenseModel> expenseModels, DateTime date, int catagoryID = -1) {
-            if (catagoryID == -1)
-                return FilterByMonth(expenseModels, date);
-            else
-                return FilterByMonthAndCatagoryID(expenseModels, date, catagoryID);
-        }
-
-        private static List<ExpenseModel> FilterByMonth(List<ExpenseModel> expenseModels, DateTime date) {
-            List<ExpenseModel> newExpenseModelList = new List<ExpenseModel>();
-            foreach (ExpenseModel expenseModel in expenseModels)
-                if (expenseModel.Date.Month == date.Month && expenseModel.Date.Year == date.Year)
-                    newExpenseModelList.Add(expenseModel);
-            return newExpenseModelList;
-        }
-
-        private static List<ExpenseModel> FilterByMonthAndCatagoryID(List<ExpenseModel> expenseModels, DateTime date, int catagoryID) {
-            List<ExpenseModel> newExpenseModelList = new List<ExpenseModel>();
-            foreach (ExpenseModel expenseModel in expenseModels)
-                if (expenseModel.Date.Month == date.Month && expenseModel.Date.Year == date.Year && expenseModel.CatagoryID == catagoryID)
-                    newExpenseModelList.Add(expenseModel);
-            return newExpenseModelList;
-        }
-
         public static Dictionary<int, ExpenseModel> GetExpenseModelsDict(List<ExpenseModel> expenseModels) {
             Dictionary<int, ExpenseModel> ExpenseModelDict = new Dictionary<int, ExpenseModel>();
             foreach (ExpenseModel expenseModel in expenseModels)
@@ -74,7 +38,8 @@ namespace UI {
 
         public static decimal ConvertStringToDecimal(string input) {
             decimal amount = 0.00m;
-            try { amount = Convert.ToDecimal(input); } catch { Debug.Log("[WARNING] Failed to convert String input to Decimal."); }
+            try { amount = Convert.ToDecimal(input); } 
+            catch { Debug.Log("[WARNING] Failed to convert String input to Decimal."); }
             return amount;
         }
     }

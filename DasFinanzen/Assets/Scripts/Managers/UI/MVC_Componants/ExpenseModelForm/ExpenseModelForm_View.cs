@@ -6,9 +6,7 @@ using TMPro;
 
 namespace UI {
     public class ExpenseModelForm_View : MonoBehaviour, IView {
-        [SerializeField] private TextMeshProUGUI AmountTextDisplay = null;
-        [SerializeField] private TextMeshProUGUI NameTextDisplay = null;
-        [SerializeField] private TextMeshProUGUI DateTextDisplay = null;
+        [SerializeField] private TextMeshProUGUI DateTextDisplay = null; // TODO Need to build a custom Date_InputField like the other fields.
 
         [SerializeField] private Generic_Button SaveExpenseButton = null;
         [SerializeField] private Generic_Button DeleteExpenseButton = null;
@@ -33,7 +31,7 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), AmountTextDisplay, NameTextDisplay, DateTextDisplay, DeleteExpenseButton);
+            HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), CurrencyInputField, StringInputField, DateTextDisplay, DeleteExpenseButton);
             Messenger.AddListener(UIEvent.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Activated.");
         }
@@ -48,23 +46,24 @@ namespace UI {
     }
 
     public class ExpenseModelForm_HumbleView {
-        private TextMeshProUGUI Amount = null;
-        private TextMeshProUGUI Name = null;
-        private TextMeshProUGUI Date = null;
+        private Currency_InputField AmountInput = null;
+        private String_InputField NameInput = null;
+        private TextMeshProUGUI Date = null; // Problably eed too build a custom InputField Script for this too.
 
-        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, TextMeshProUGUI amount, TextMeshProUGUI name, TextMeshProUGUI date, Generic_Button deleteButton) {
-            Amount = amount;
-            Name = name;
+        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, Currency_InputField amountInput, String_InputField nameInput, TextMeshProUGUI date, Generic_Button deleteButton) {
+            AmountInput = amountInput;
+            NameInput = nameInput;
             Date = date;
 
+            modelCollection.ExpenseModel.NameText = modelCollection.ExpenseModel.Catagory.NameText;
             deleteButton.gameObject.SetActive(IDTracker.IsNew(IDType.EXPENSE, modelCollection.ExpenseModel.ExpenseID));
             RefreshView(modelCollection);
         }
 
         public void RefreshView(ExpenseModelForm_ModelCollection modelCollection) {
-            Amount.text = modelCollection.ExpenseModel.Amount.ToString();
-            Name.text = modelCollection.ExpenseModel.NameText;
-            Date.text = modelCollection.ExpenseModel.Date.ToString("mm/dd");
+            AmountInput.SetDisplayText(modelCollection.ExpenseModel.Amount.ToString());
+            NameInput.SetDisplayText(modelCollection.ExpenseModel.NameText);
+            Date.text = modelCollection.ExpenseModel.Date.ToString("MM/dd");
         }
 
         public void DeconstructView() {

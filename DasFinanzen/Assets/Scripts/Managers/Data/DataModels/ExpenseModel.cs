@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class ExpenseModel : IModel {
     public int ExpenseID { get; private set; } = -1;
@@ -33,7 +34,7 @@ public class ExpenseModel : IModel {
             IDTracker.SaveID(IDType.EXPENSE, CatagoryID);
         } 
         else {
-            ExpenseModel modelToDelete = UI.DataReformatter.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
+            ExpenseModel modelToDelete = UI.DataQueries.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
             Managers.Data.FileData.ExpenseModels.Remove(modelToDelete);
         }
         Managers.Data.FileData.ExpenseModels.Add(this);
@@ -42,7 +43,7 @@ public class ExpenseModel : IModel {
     }
 
     public void Delete() {
-        ExpenseModel modelToDelete = UI.DataReformatter.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
+        ExpenseModel modelToDelete = UI.DataQueries.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
         Managers.Data.FileData.ExpenseModels.Remove(modelToDelete);
         Managers.Data.Save();
         Messenger.Broadcast(UIEvent.EXPENSES_UPDATED);

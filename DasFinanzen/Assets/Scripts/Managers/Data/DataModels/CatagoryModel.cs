@@ -17,7 +17,7 @@ public class CatagoryModel : IModel {
             IDTracker.SaveID(IDType.CATAGORY, CatagoryID);
         } 
         else {
-            CatagoryModel modelToDelete = UI.DataReformatter.GetCatagoryModel(Managers.Data.FileData.CatagoryModels, CatagoryID);
+            CatagoryModel modelToDelete = UI.DataQueries.GetCatagoryModel(Managers.Data.FileData.CatagoryModels, CatagoryID);
             Managers.Data.FileData.CatagoryModels.Remove(modelToDelete);
         }
         Managers.Data.FileData.CatagoryModels.Add(this);

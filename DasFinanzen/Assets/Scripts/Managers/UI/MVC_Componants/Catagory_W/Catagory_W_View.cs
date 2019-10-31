@@ -73,6 +73,6 @@ namespace UI {
 
     public class Catagory_W_ModelCollection {
         // Put Model Collections Here
-        public CatagoryModel SelectedCatagory = DataReformatter.GetCatagoryModel(Managers.Data.FileData.CatagoryModels, Managers.Data.Runtime.CurrentCatagoryID);
+        public CatagoryModel SelectedCatagory = DataQueries.GetCatagoryModel(Managers.Data.FileData.CatagoryModels, Managers.Data.Runtime.CurrentCatagoryID);
     }
 }

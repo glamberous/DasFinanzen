@@ -19,6 +19,10 @@ public interface IControllerElement {
     void SetCommandID(int commandID);
 }
 
+public interface IInputField : IControllerElement {
+    void SetDisplayText(string input);
+}
+
 public interface IWindow {
     IWindow Activate();
     void Deactivate();

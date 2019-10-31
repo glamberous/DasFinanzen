@@ -102,7 +102,6 @@ namespace UI {
                     ExpenseElement ExpenseToDelete = expenseElem;
                     ExpenseElements.Remove(expenseElem);
                     GameObject.Destroy(ExpenseToDelete);
-                    return;
                 }
             }
         }
@@ -132,12 +131,12 @@ namespace UI {
         }
 
         private void ExpenseClicked(int id) {
-            Managers.Data.Runtime.TempExpenseModel = DataReformatter.GetExpenseModel(Managers.Data.FileData.ExpenseModels, id);
+            Managers.Data.Runtime.TempExpenseModel = DataQueries.GetExpenseModel(Managers.Data.FileData.ExpenseModels, id);
             Managers.UI.Push(WINDOW.EXPENSE);
         }
     }
 
     public class ExpenseList_ModelCollection {
-        public List<ExpenseModel> ExpenseModels = DataReformatter.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime, Managers.Data.Runtime.CurrentCatagoryID);
+        public List<ExpenseModel> ExpenseModels = DataQueries.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime, Managers.Data.Runtime.CurrentCatagoryID);
     }
 }

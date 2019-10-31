@@ -18,6 +18,7 @@ namespace UI {
             HumbleView.ConstructView(new ColorBar_ModelCollection(), OriginalColorBar, CanvasRect.sizeDelta.x);
             Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(UIEvent.GOAL_UPDATED, Refresh);
+            Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
             Debug.Log("ColorBarView Activated.");
         }
 
@@ -26,6 +27,7 @@ namespace UI {
         public void Deactivate() {
             Messenger.RemoveListener(UIEvent.EXPENSES_UPDATED, Refresh);
             Messenger.RemoveListener(UIEvent.GOAL_UPDATED, Refresh);
+            Messenger.RemoveListener(UIEvent.MONTH_CHANGED, Refresh);
             HumbleView.DeconstructView();
             Debug.Log("ColorBarView Deactivated.");
         }
@@ -58,7 +60,7 @@ namespace UI {
             foreach (ColorBarElement colorBarElement in ColorBarElements) {
                 colorBarElement.transform.localPosition = new Vector3(fullWidth, 0, 0);
                 float currentWidth = ((float)ExpenseTotals[colorBarElement.CatagoryID] / (float)modelCollection.GoalModel.Amount) * ScreenWidth;
-                colorBarElement.UpdateView(CatagoryModelDict[colorBarElement.CatagoryID], currentWidth + 1);
+                colorBarElement.UpdateView(CatagoryModelDict[colorBarElement.CatagoryID], currentWidth);
                 fullWidth += currentWidth;
             }
         }
@@ -75,7 +77,7 @@ namespace UI {
 
     public class ColorBar_ModelCollection : IModelCollection {
         public List<CatagoryModel> CatagoryModels = Managers.Data.FileData.CatagoryModels;
-        public List<ExpenseModel> ExpenseModels = DataReformatter.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
-        public GoalModel GoalModel = Managers.Data.FileData.GoalModel;
+        public List<ExpenseModel> ExpenseModels = DataQueries.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
+        public GoalModel GoalModel = DataQueries.GetGoalModel(Managers.Data.FileData.GoalModels, Managers.Data.Runtime.SelectedTime);
     }
 }
