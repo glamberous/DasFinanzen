@@ -27,16 +27,14 @@ public class UIManager : MonoBehaviour {
 }
 
 public class UIManagerHumble : IManager {
-    private float ZLayerTracker = 0f;
-
     public void Push(UI.WINDOW window) {
         UIStack.Push(Windows[window].GetComponent<IWindow>().Activate());
-        UIStack.Peek().SetZLayer(ZLayerTracker);
-        ZLayerTracker += 100f;
+        UIStack.Peek().SetZLayer(LayerTracker.Increment());
     }
+
     public void Pop() {
         UIStack.Pop().Deactivate();
-        ZLayerTracker -= 100f;
+        LayerTracker.Decrement();
     }
 
     public ManagerStatus status { get; private set; } 
