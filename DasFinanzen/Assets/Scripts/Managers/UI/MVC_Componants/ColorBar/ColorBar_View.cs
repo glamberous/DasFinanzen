@@ -60,6 +60,8 @@ namespace UI {
             foreach (ColorBarElement colorBarElement in ColorBarElements) {
                 colorBarElement.transform.localPosition = new Vector3(fullWidth, 0, 0);
                 float currentWidth = ((float)ExpenseTotals[colorBarElement.CatagoryID] / (float)modelCollection.GoalModel.Amount) * ScreenWidth;
+                // Fixes a float inaccuracy bug where a sliver of color for catagories that have no expenses was showing.
+                currentWidth = currentWidth >= 1 ? currentWidth : 0;
                 colorBarElement.UpdateView(CatagoryModelDict[colorBarElement.CatagoryID], currentWidth);
                 fullWidth += currentWidth;
             }

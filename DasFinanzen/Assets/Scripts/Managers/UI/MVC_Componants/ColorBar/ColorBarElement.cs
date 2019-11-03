@@ -17,10 +17,7 @@ namespace UI {
         }
 
         public void UpdateView(CatagoryModel Model, float width) {
-            // Fixes a float inaccuracy bug where a sliver of color for catagories that have no expenses was showing.
-            width = width >= 1 ? width : 0;
             BarRect.sizeDelta = new Vector2(width, BarRect.sizeDelta.y);
-
             ColorBarImage.color = ColorConverter.HexToColor(Model.ColorCode);
         }
     }
