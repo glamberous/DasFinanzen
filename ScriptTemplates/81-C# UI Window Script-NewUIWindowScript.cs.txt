@@ -5,8 +5,11 @@ using UnityEngine;
 //[RequireComponent(typeof(Example_View))]
 public class #SCRIPTNAME#_W : MonoBehaviour, IWindow {
     private List<IView> Views = new List<IView>();
+	private RectTransform LayerSortObject = null;
 
     public void Awake() {
+		LayerSortObject = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
+
 		//Add Views to the View List here.
         //Views.Add(GetComponent<Example_View>());
     }
@@ -27,4 +30,6 @@ public class #SCRIPTNAME#_W : MonoBehaviour, IWindow {
         foreach (IView view in Views)
             view.Deactivate();
     }
+
+	public void SetZLayer(float input) => LayerSortObject.localPosition = new Vector3(LayerSortObject.localPosition.x, LayerSortObject.localPosition.y, input);
 }

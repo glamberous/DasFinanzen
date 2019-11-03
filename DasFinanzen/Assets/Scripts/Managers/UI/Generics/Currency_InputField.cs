@@ -31,11 +31,11 @@ namespace UI {
             input = input.Insert(input.Length - 2, ".");
             if (input.Length > 6)
                 input = input.Insert(input.Length - 6, ",");
-            return input;
+            return "$" + input;
         }
 
-        public void SetDisplayText(string input) => TextDisplay.text = input;
-        public void OnEndEdit() => Controller.TriggerCommand(CommandID, TextDisplay.text);
+        public void SetDisplayText(string input) => TextDisplay.text = "$" + input;
+        public void OnEndEdit() => Controller.TriggerCommand(CommandID, TextDisplay.text.Remove(0, 1));
     }
 }
 

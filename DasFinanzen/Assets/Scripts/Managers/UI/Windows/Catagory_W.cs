@@ -8,8 +8,11 @@ namespace UI {
     [RequireComponent(typeof(ExpenseList_View))]
     public class Catagory_W : MonoBehaviour, IWindow {
         private List<IView> Views = new List<IView>();
+        private RectTransform LayerSortObject = null;
 
         public void Awake() {
+            LayerSortObject = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
+
             Views.Add(GetComponent<Catagory_W_View>());
             Views.Add(GetComponent<ExpenseList_View>());
         }
@@ -30,5 +33,7 @@ namespace UI {
             foreach (IView view in Views)
                 view.Deactivate();
         }
+
+        public void SetZLayer(float input) => LayerSortObject.localPosition = new Vector3(LayerSortObject.localPosition.x, LayerSortObject.localPosition.y, input);
     }
 }

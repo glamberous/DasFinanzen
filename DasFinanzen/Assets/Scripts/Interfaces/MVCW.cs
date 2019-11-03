@@ -26,6 +26,7 @@ public interface IInputField : IControllerElement {
 public interface IWindow {
     IWindow Activate();
     void Deactivate();
+    void SetZLayer(float input);
 }
 
 public interface IView {

@@ -20,17 +20,15 @@ namespace UI {
         private TextMeshProUGUI DateTextMesh = null;
         private TextMeshProUGUI NameTextMesh = null;
         private TextMeshProUGUI ExpenseTextMesh = null;
-        private TextMeshProUGUI CurrencySymbol = null;
 
         public void Awake() {
             DateTextMesh = gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
             NameTextMesh = gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
             ExpenseTextMesh = gameObject.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
-            CurrencySymbol = ExpenseTextMesh.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         }
 
         public void UpdateView(ExpenseModel Model) {
-            ExpenseTextMesh.text = Model.Amount.ToString();
+            ExpenseTextMesh.text = "$" + Model.Amount.ToString();
             NameTextMesh.text = Model.NameText;
             SetDate(Model.Date);
             SetColor(Model.Catagory.ColorCode);
@@ -41,7 +39,6 @@ namespace UI {
             NameTextMesh.color = newColor;
             DateTextMesh.color = newColor;
             ExpenseTextMesh.color = newColor;
-            CurrencySymbol.color = newColor;
         }
 
         private void SetDate(DateTime date) => DateTextMesh.text = date.ToString("MM/dd");

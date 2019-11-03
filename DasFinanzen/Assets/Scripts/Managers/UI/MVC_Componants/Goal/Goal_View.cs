@@ -22,6 +22,7 @@ namespace UI {
             HumbleView.ConstructView(new Goal_ModelCollection(), RemainingText);
             Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(UIEvent.GOAL_UPDATED, Refresh);
+            Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
         }
 
         public void Refresh() {
@@ -31,6 +32,7 @@ namespace UI {
         public void Deactivate() {
             Messenger.RemoveListener(UIEvent.EXPENSES_UPDATED, Refresh);
             Messenger.RemoveListener(UIEvent.GOAL_UPDATED, Refresh);
+            Messenger.RemoveListener(UIEvent.MONTH_CHANGED, Refresh);
             HumbleView.DeconstructView();
         }
     }
