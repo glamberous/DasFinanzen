@@ -16,18 +16,18 @@ namespace UI {
 
         public void Activate() {
             HumbleView.ConstructView(new ColorBar_ModelCollection(), OriginalColorBar, CanvasRect.sizeDelta.x);
-            Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.AddListener(UIEvent.GOAL_UPDATED, Refresh);
-            Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
+            Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
+            Messenger.AddListener(Events.GOAL_UPDATED, Refresh);
+            Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
             Debug.Log("ColorBarView Activated.");
         }
 
         public void Refresh() => HumbleView.Refresh(new ColorBar_ModelCollection());
 
         public void Deactivate() {
-            Messenger.RemoveListener(UIEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.RemoveListener(UIEvent.GOAL_UPDATED, Refresh);
-            Messenger.RemoveListener(UIEvent.MONTH_CHANGED, Refresh);
+            Messenger.RemoveListener(Events.EXPENSES_UPDATED, Refresh);
+            Messenger.RemoveListener(Events.GOAL_UPDATED, Refresh);
+            Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
             HumbleView.DeconstructView();
             Debug.Log("ColorBarView Deactivated.");
         }

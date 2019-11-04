@@ -32,7 +32,7 @@ namespace UI {
 
         public void Activate() {
             HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), CurrencyInputField, StringInputField, DateTextDisplay, DeleteExpenseButton);
-            Messenger.AddListener(UIEvent.TEMP_EXPENSE_UPDATED, Refresh);
+            Messenger.AddListener(Events.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Activated.");
         }
 
@@ -40,7 +40,7 @@ namespace UI {
 
         public void Deactivate() {
             HumbleView.DeconstructView();
-            Messenger.RemoveListener(UIEvent.TEMP_EXPENSE_UPDATED, Refresh);
+            Messenger.RemoveListener(Events.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Deactivated.");
         }
     }
@@ -78,7 +78,7 @@ namespace UI {
                 case 1: DeleteExpense(); break;
                 case 2: SetAmount(input); break;
                 case 3: SetName(input); break;
-                default: Debug.Log("[WARNING][ExpenseModelForm_Controller] CommandID not recognized! ");  return;
+                default: Debug.Log($"[WARNING][ExpenseModelForm_Controller] CommandID {commandID} not recognized! ");  return;
             }
         }
 
@@ -96,12 +96,12 @@ namespace UI {
 
         private void SetAmount(string input) {
             Managers.Data.Runtime.TempExpenseModel.Amount = DataReformatter.ConvertStringToDecimal(input);
-            Messenger.Broadcast(UIEvent.TEMP_EXPENSE_UPDATED);
+            Messenger.Broadcast(Events.TEMP_EXPENSE_UPDATED);
         }
 
         private void SetName(string input) {
             Managers.Data.Runtime.TempExpenseModel.NameText = input;
-            Messenger.Broadcast(UIEvent.TEMP_EXPENSE_UPDATED);
+            Messenger.Broadcast(Events.TEMP_EXPENSE_UPDATED);
         }
     }
 

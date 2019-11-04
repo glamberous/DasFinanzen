@@ -43,7 +43,7 @@ namespace UI {
 
         private void SetDate(DateTime date) => DateTextMesh.text = date.ToString("MM/dd");
 
-        public void OnMouseDown() => Controller.TriggerCommand(CommandID, ExpenseID.ToString());
+        public void OnMouseDown() =>  Controller.TriggerCommand(CommandID, ExpenseID.ToString());
     }
 }
 

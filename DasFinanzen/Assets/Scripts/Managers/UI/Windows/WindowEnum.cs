@@ -1,7 +1,7 @@
 ﻿
 namespace UI {
     public enum WINDOW {
-        ERROR,
+        DIALOGUE,
         MAIN,
         CATAGORY,
         EXPENSE,

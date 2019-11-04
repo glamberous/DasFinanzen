@@ -8,4 +8,6 @@ public class RuntimeData {
     public DateTime SelectedTime = DateTime.Now;
 
     public ExpenseModel TempExpenseModel = null;
+
+    public int DialogueWindowKey = 0;
 }

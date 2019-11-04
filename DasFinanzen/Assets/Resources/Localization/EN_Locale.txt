@@ -1,0 +1,74 @@
+[0]
+An Error has occurred.
+
+[1]
+JANUARY
+
+[2]
+FEBRUARY
+
+[3]
+MARCH
+
+[4]
+APRIL
+
+[5]
+MAY
+
+[6]
+JUNE
+
+[7]
+JULY
+
+[8]
+AUGUST
+
+[9]
+SEPTEMBER
+
+[10]
+OCTOBER
+
+[11]
+NOVEMBER
+
+[12]
+DECEMBER
+
+[13]
+PREV
+
+[14]
+NEXT
+
+[15]
+Total Remaining
+
+[16]
+Day to Day
+
+[17]
+Monthly Reccurring
+
+[18]
+Spent
+
+[19]
+Planned
+
+[20]
+Remaining
+
+[21]
+Edit Expense
+
+[22]
+Amount
+
+[23]
+Add Expense
+
+[24]
+Transactions

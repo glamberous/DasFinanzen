@@ -7,7 +7,9 @@ using TMPro;
 namespace UI {
     public class Main_W_View : MonoBehaviour, IView {
         [SerializeField] TextMeshProUGUI MonthText = null;
+        [SerializeField] TextMeshProUGUI PreviousText = null;
         [SerializeField] Generic_Button PreviousButton = null;
+        [SerializeField] TextMeshProUGUI NextText = null;
         [SerializeField] Generic_Button NextButton = null;
 
     private Main_W_HumbleView HumbleView = null;
@@ -25,8 +27,8 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new Main_W_ModelCollection(), MonthText);
-            Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
+            HumbleView.ConstructView(new Main_W_ModelCollection(), MonthText, PreviousText, NextText);
+            Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
             Debug.Log("Main_W_View Activated.");
         }
 
@@ -34,21 +36,29 @@ namespace UI {
 
         public void Deactivate() {
             HumbleView.DeconstructView();
-            Messenger.RemoveListener(UIEvent.MONTH_CHANGED, Refresh);
+            Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
             Debug.Log("Main_W_View Deactivated.");
         }
     }
 
     public class Main_W_HumbleView {
         private TextMeshProUGUI Month = null;
+        private TextMeshProUGUI Prev = null;
+        private TextMeshProUGUI Next = null;
 
-        public void ConstructView(Main_W_ModelCollection modelCollection, TextMeshProUGUI monthText) {
+        public void ConstructView(Main_W_ModelCollection modelCollection, TextMeshProUGUI monthText, TextMeshProUGUI prevText, TextMeshProUGUI nextText) {
             Month = monthText;
+            Prev = prevText;
+            Next = nextText;
             RefreshView(modelCollection);
         }
 
         public void RefreshView(Main_W_ModelCollection modelCollection) {
-            Month.text = modelCollection.CurrentlySetTime.ToString("MMMM").ToUpper();
+            // Normally Months wouldn't line up exactly with the string keys, so the + 0 is just to remind myself of that in the future.
+            Month.text = modelCollection.Strings[modelCollection.CurrentlySetTime.Month + 0]; 
+
+            Prev.text = modelCollection.Strings[13];
+            Next.text = modelCollection.Strings[14];
         }
 
         public void DeconstructView() {
@@ -61,14 +71,14 @@ namespace UI {
             switch (commandID) {
                 case 0: AddMonth(-1); break;
                 case 1: AddMonth(1); break;
-                default: Debug.Log("[WARNING][Main_W_Controller] CommandID not recognized! "); return;
+                default: Debug.Log($"[WARNING][Main_W_Controller] CommandID {commandID} not recognized! "); return;
             }
         }
 
         private void AddMonth(int num) {
             DateTime newDateTime = new DateTime(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month, 1).AddMonths(num);
             Managers.Data.Runtime.SelectedTime = IfCurrentMonthReturnDateTimeNow(newDateTime);
-            Messenger.Broadcast(UIEvent.MONTH_CHANGED);
+            Messenger.Broadcast(Events.MONTH_CHANGED);
         }
 
         private DateTime IfCurrentMonthReturnDateTimeNow(DateTime testDateTime) {
@@ -81,5 +91,6 @@ namespace UI {
 
     public class Main_W_ModelCollection {
         public DateTime CurrentlySetTime = Managers.Data.Runtime.SelectedTime;
+        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 } );
     }
 }

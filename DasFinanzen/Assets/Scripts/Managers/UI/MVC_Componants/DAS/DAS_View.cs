@@ -24,9 +24,9 @@ namespace UI {
         public void Activate() {
             HumbleView.ConstructView(new DAS_ModelCollection(), BDAS, ADAS);
             //Add any Listeners needed here.
-            Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.AddListener(UIEvent.GOAL_UPDATED, Refresh);
-            Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
+            Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
+            Messenger.AddListener(Events.GOAL_UPDATED, Refresh);
+            Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
             Debug.Log("DAS_View Activated.");
         }
 
@@ -35,9 +35,9 @@ namespace UI {
         public void Deactivate() {
             HumbleView.DeconstructView();
             //Remove any Listeners needed here.
-            Messenger.RemoveListener(UIEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.RemoveListener(UIEvent.GOAL_UPDATED, Refresh);
-            Messenger.RemoveListener(UIEvent.MONTH_CHANGED, Refresh);
+            Messenger.RemoveListener(Events.EXPENSES_UPDATED, Refresh);
+            Messenger.RemoveListener(Events.GOAL_UPDATED, Refresh);
+            Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
             Debug.Log("DAS_View Deactivated.");
         }
     }

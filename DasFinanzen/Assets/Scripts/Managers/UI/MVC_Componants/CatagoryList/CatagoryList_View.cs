@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 namespace UI {
     public class CatagoryList_View : MonoBehaviour, IView {
+        [SerializeField] private TextMeshProUGUI DailyText = null;
         [SerializeField] private CatagoryElement DailyOriginal = null;
+        [SerializeField] private TextMeshProUGUI MonthlyText = null;
         [SerializeField] private CatagoryElement MonthlyOriginal = null;
+        [SerializeField] private TextMeshProUGUI SpentText1 = null;
+        [SerializeField] private TextMeshProUGUI SpentText2 = null;
 
         private CatagoryList_HumbleView HumbleView = null;
 
@@ -16,17 +21,19 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new CatagoryList_ModelCollection(), DailyOriginal, MonthlyOriginal);
-            Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
+            HumbleView.ConstructView(new CatagoryList_ModelCollection(), DailyOriginal, MonthlyOriginal, DailyText, MonthlyText, SpentText1, SpentText2);
+            Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
+            Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
+            Messenger.AddListener(Localization.Events.LOCALE_CHANGED, Refresh);
             Debug.Log("CatagoryView Activated.");
         }
 
         public void Refresh() => HumbleView.RefreshView(new CatagoryList_ModelCollection());
 
         public void Deactivate() {
-            Messenger.RemoveListener(UIEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.RemoveListener(UIEvent.MONTH_CHANGED, Refresh);
+            Messenger.RemoveListener(Events.EXPENSES_UPDATED, Refresh);
+            Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
+            Messenger.RemoveListener(Localization.Events.LOCALE_CHANGED, Refresh);
             HumbleView.DeconstructView();
             Debug.Log("CatagoryView Deactivated.");
         }
@@ -35,8 +42,17 @@ namespace UI {
     public class CatagoryList_HumbleView {
         private List<CatagoryElement> RecurringCatagoryElements = new List<CatagoryElement>();
         private List<CatagoryElement> DailyCatagoryElements = new List<CatagoryElement>();
+        private TextMeshProUGUI Daily = null;
+        private TextMeshProUGUI Monthly = null;
+        private TextMeshProUGUI Spent1 = null;
+        private TextMeshProUGUI Spent2 = null;
 
-        public void ConstructView(CatagoryList_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
+        public void ConstructView(CatagoryList_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal, TextMeshProUGUI dailyHeader, TextMeshProUGUI monthlyHeader, TextMeshProUGUI spentText1, TextMeshProUGUI spentText2) {
+            Daily = dailyHeader;
+            Monthly = monthlyHeader;
+            Spent1 = spentText1;
+            Spent2 = spentText2;
+
             CatagoryList_Controller Controller = new CatagoryList_Controller();
             TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
             TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);
@@ -64,6 +80,11 @@ namespace UI {
         }
 
         public void RefreshView(CatagoryList_ModelCollection modelCollection) {
+            Daily.text = modelCollection.Strings[16];
+            Monthly.text = modelCollection.Strings[17];
+            Spent1.text = modelCollection.Strings[18];
+            Spent2.text = modelCollection.Strings[18];
+
             Dictionary<int, decimal> ExpenseTotalsDict = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
             Dictionary<int, CatagoryModel> CatagoryModelDict = DataReformatter.GetCatagoryModelsDict(modelCollection.CatagoryModels);
 
@@ -105,5 +126,6 @@ namespace UI {
     public class CatagoryList_ModelCollection {
         public List<CatagoryModel> CatagoryModels = Managers.Data.FileData.CatagoryModels;
         public List<ExpenseModel> ExpenseModels = DataQueries.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
+        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 16, 17, 18 });
     }
 }

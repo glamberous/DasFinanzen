@@ -5,8 +5,9 @@ using TMPro;
 
 namespace UI {
     public class Goal_View : MonoBehaviour, IView {
+        [SerializeField] private TextMeshProUGUI AmountText = null;
         [SerializeField] private TextMeshProUGUI RemainingText = null;
-        [SerializeField] private Generic_Button GoalWindowTrigger = null;
+        [SerializeField] private Generic_Button GoalWindowButton = null;
 
         private Goal_HumbleView HumbleView = null;
 
@@ -14,15 +15,16 @@ namespace UI {
             HumbleView = new Goal_HumbleView();
 
             Goal_Controller Controller = new Goal_Controller();
-            GoalWindowTrigger.SetController(Controller);
-            GoalWindowTrigger.SetCommandID(0);
+            GoalWindowButton.SetController(Controller);
+            GoalWindowButton.SetCommandID(0);
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new Goal_ModelCollection(), RemainingText);
-            Messenger.AddListener(UIEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.AddListener(UIEvent.GOAL_UPDATED, Refresh);
-            Messenger.AddListener(UIEvent.MONTH_CHANGED, Refresh);
+            HumbleView.ConstructView(new Goal_ModelCollection(), AmountText, RemainingText);
+            Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
+            Messenger.AddListener(Events.GOAL_UPDATED, Refresh);
+            Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
+            Messenger.AddListener(Localization.Events.LOCALE_CHANGED, Refresh);
         }
 
         public void Refresh() {
@@ -30,24 +32,29 @@ namespace UI {
         }
 
         public void Deactivate() {
-            Messenger.RemoveListener(UIEvent.EXPENSES_UPDATED, Refresh);
-            Messenger.RemoveListener(UIEvent.GOAL_UPDATED, Refresh);
-            Messenger.RemoveListener(UIEvent.MONTH_CHANGED, Refresh);
+            Messenger.RemoveListener(Events.EXPENSES_UPDATED, Refresh);
+            Messenger.RemoveListener(Events.GOAL_UPDATED, Refresh);
+            Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
+            Messenger.RemoveListener(Localization.Events.LOCALE_CHANGED, Refresh);
             HumbleView.DeconstructView();
         }
     }
 
     public class Goal_HumbleView {
+        private TextMeshProUGUI Amount = null;
         private TextMeshProUGUI Remaining = null;
 
-        public void ConstructView(Goal_ModelCollection modelCollection, TextMeshProUGUI remainingText) {
+        public void ConstructView(Goal_ModelCollection modelCollection, TextMeshProUGUI amountText, TextMeshProUGUI remainingText) {
+            Amount = amountText;
             Remaining = remainingText;
             RefreshView(modelCollection);
         }
 
         public void RefreshView(Goal_ModelCollection modelCollection) {
+            Remaining.text = modelCollection.Strings[15];
+
             decimal RemainingAmount = modelCollection.GoalModel.Amount - DataReformatter.GetExpensesTotal(modelCollection.ExpenseModels);
-            Remaining.text = RemainingAmount.ToString();
+            Amount.text = "$" + RemainingAmount.ToString();
         }
 
         public void DeconstructView() {
@@ -59,7 +66,7 @@ namespace UI {
         public void TriggerCommand(int commandID, string input) {
             switch(commandID) {
                 case 0: TriggerGoalWindow(); break;
-                default: Debug.Log("[WARNING][Goal_Controller] CommandID not recognized! "); return;
+                default: Debug.Log($"[WARNING][Goal_Controller] CommandID {commandID} not recognized! "); return;
             }
         }
 
@@ -69,6 +76,7 @@ namespace UI {
     public class Goal_ModelCollection {
         public GoalModel GoalModel = DataQueries.GetGoalModel(Managers.Data.FileData.GoalModels, Managers.Data.Runtime.SelectedTime);
         public List<ExpenseModel> ExpenseModels = DataQueries.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
+        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 15 });
     }
 }
 

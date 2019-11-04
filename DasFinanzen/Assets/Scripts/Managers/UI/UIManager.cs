@@ -5,7 +5,7 @@ using UI;
 
 public class UIManager : MonoBehaviour {
     // Add any UI Views to this manager in the Editor.
-    [SerializeField] private GameObject ErrorWindow = null;
+    [SerializeField] private GameObject DialogueWindow = null;
     [SerializeField] private GameObject MainWindow = null;
     [SerializeField] private GameObject CatagoryWindow = null;
     [SerializeField] private GameObject ExpenseWindow = null;
@@ -14,7 +14,7 @@ public class UIManager : MonoBehaviour {
 
     private void Awake() { // TODO change key's to Enums
         Dictionary<UI.WINDOW, GameObject> Windows = new Dictionary<UI.WINDOW, GameObject>();
-        //Windows[UI.WINDOW.ERROR] = ErrorWindow;
+        Windows[UI.WINDOW.DIALOGUE] = DialogueWindow;
         Windows[UI.WINDOW.MAIN] = MainWindow;
         Windows[UI.WINDOW.CATAGORY] = CatagoryWindow;
         Windows[UI.WINDOW.EXPENSE] = ExpenseWindow;
@@ -28,7 +28,12 @@ public class UIManager : MonoBehaviour {
 
 public class UIManagerHumble : IManager {
     public void Push(UI.WINDOW window) {
-        UIStack.Push(Windows[window].GetComponent<IWindow>().Activate());
+        if (Windows.ContainsKey(window))
+            UIStack.Push(Windows[window].GetComponent<IWindow>().Activate());
+        else {
+            Managers.Data.Runtime.DialogueWindowKey = 0;
+            UIStack.Push(Windows[UI.WINDOW.DIALOGUE].GetComponent<IWindow>().Activate());
+        }
         UIStack.Peek().SetZLayer(LayerTracker.Increment());
     }
 

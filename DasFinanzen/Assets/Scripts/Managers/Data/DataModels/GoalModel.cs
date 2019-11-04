@@ -14,7 +14,7 @@ public class GoalModel : IModel  {
                 Managers.Data.FileData.GoalModels.Remove(goalModel);
         Managers.Data.FileData.GoalModels.Add(this);
         Managers.Data.Save();
-        Messenger.Broadcast(UIEvent.GOAL_UPDATED, MessengerMode.DONT_REQUIRE_LISTENER);
+        Messenger.Broadcast(UI.Events.GOAL_UPDATED, MessengerMode.DONT_REQUIRE_LISTENER);
     }
 
     public void Delete() => Debug.Log("[WARNING] Deleting GoalModel is not allowed!");
