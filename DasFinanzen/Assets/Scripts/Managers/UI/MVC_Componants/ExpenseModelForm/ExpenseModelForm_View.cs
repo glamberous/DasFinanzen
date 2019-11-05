@@ -7,6 +7,7 @@ using TMPro;
 namespace UI {
     public class ExpenseModelForm_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI DateTextDisplay = null; // TODO Need to build a custom Date_InputField like the other fields.
+        [SerializeField] private TextMeshProUGUI AmountTitle = null;
 
         [SerializeField] private Generic_Button SaveExpenseButton = null;
         [SerializeField] private Generic_Button DeleteExpenseButton = null;
@@ -17,6 +18,7 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new ExpenseModelForm_HumbleView();
+            HumbleView.Awake(AmountTitle, CurrencyInputField, StringInputField, DateTextDisplay);
 
             ExpenseModelForm_Controller Controller = new ExpenseModelForm_Controller();
             SaveExpenseButton.SetController(Controller);
@@ -31,7 +33,7 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), CurrencyInputField, StringInputField, DateTextDisplay, DeleteExpenseButton);
+            HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), DeleteExpenseButton);
             Messenger.AddListener(Events.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Activated.");
         }
@@ -46,15 +48,19 @@ namespace UI {
     }
 
     public class ExpenseModelForm_HumbleView {
+        private TextMeshProUGUI AmountTitle = null;
         private Currency_InputField AmountInput = null;
         private String_InputField NameInput = null;
         private TextMeshProUGUI Date = null; // Problably eed too build a custom InputField Script for this too.
 
-        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, Currency_InputField amountInput, String_InputField nameInput, TextMeshProUGUI date, Generic_Button deleteButton) {
+        public void Awake(TextMeshProUGUI amountTitle, Currency_InputField amountInput, String_InputField nameInput, TextMeshProUGUI date) {
+            AmountTitle = amountTitle;
             AmountInput = amountInput;
             NameInput = nameInput;
             Date = date;
+        }
 
+        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, Generic_Button deleteButton) {
             modelCollection.ExpenseModel.NameText = modelCollection.ExpenseModel.Catagory.NameText;
             deleteButton.gameObject.SetActive(modelCollection.ExpenseModel.ExpenseID != -1);
             RefreshView(modelCollection);
@@ -64,6 +70,7 @@ namespace UI {
             AmountInput.SetDisplayText(modelCollection.ExpenseModel.Amount.ToString());
             NameInput.SetDisplayText(modelCollection.ExpenseModel.NameText);
             Date.text = modelCollection.ExpenseModel.Date.ToString("MM/dd");
+            AmountTitle.text = modelCollection.Strings[22];
         }
 
         public void DeconstructView() {
@@ -107,6 +114,7 @@ namespace UI {
 
     public class ExpenseModelForm_ModelCollection {
         public ExpenseModel ExpenseModel = Managers.Data.Runtime.TempExpenseModel;
+        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 22 });
     }
 }
 

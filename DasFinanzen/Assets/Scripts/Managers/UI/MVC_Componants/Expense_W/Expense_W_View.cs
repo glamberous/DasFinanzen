@@ -13,6 +13,7 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new Expense_W_HumbleView();
+            HumbleView.Awake(TitleText);
 
             Expense_W_Controller Controller = new Expense_W_Controller();
             BackButton.SetController(Controller);
@@ -20,11 +21,13 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new Expense_W_ModelCollection(), TitleText, BackButton);
+            HumbleView.ConstructView(new Expense_W_ModelCollection());
             Debug.Log("Expense_W_View Activated.");
         }
 
-        public void Refresh() { }
+        public void Refresh() {
+            HumbleView.RefreshView(new Expense_W_ModelCollection());
+        }
 
         public void Deactivate() {
             Debug.Log("Expense_W_View Deactivated.");
@@ -32,8 +35,22 @@ namespace UI {
     }
 
     public class Expense_W_HumbleView {
-        public void ConstructView(Expense_W_ModelCollection modelCollection, TextMeshProUGUI title, Generic_Button deleteButton) {
-            title.text = IDTracker.IsNew(IDType.EXPENSE, modelCollection.ExpenseModel.ExpenseID) ? "Add Expense" : "Edit Expense";
+        private TextMeshProUGUI PageTitle = null;
+
+        public void Awake(TextMeshProUGUI title) {
+            PageTitle = title;
+        }
+
+        public void ConstructView(Expense_W_ModelCollection modelCollection) {
+            RefreshView(modelCollection);
+        }
+
+        public void RefreshView(Expense_W_ModelCollection modelCollection) {
+            PageTitle.text = IDTracker.IsNew(modelCollection.ExpenseModel.ExpenseID) ? modelCollection.Strings[23] : modelCollection.Strings[21];
+        }
+
+        public void DeconstructView() {
+
         }
     }
 
@@ -53,6 +70,7 @@ namespace UI {
 
     public class Expense_W_ModelCollection {
         public ExpenseModel ExpenseModel = Managers.Data.Runtime.TempExpenseModel;
+        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 21, 23 });
     }
 }
 

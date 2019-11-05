@@ -6,14 +6,16 @@ using TMPro;
 
 namespace UI {
     public class DAS_View : MonoBehaviour, IView {
-        [SerializeField] private TextMeshProUGUI BDAS = null;
-        [SerializeField] private TextMeshProUGUI ADAS = null;
+        [SerializeField] private TextMeshProUGUI BDASTitle = null;
+        [SerializeField] private TextMeshProUGUI BDASAmount = null;
+        [SerializeField] private TextMeshProUGUI ADASTitle = null;
+        [SerializeField] private TextMeshProUGUI ADASAmount = null;
 
         private DAS_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new DAS_HumbleView();
-
+            HumbleView.Awake(BDASAmount, ADASAmount);
             //DAS_Controller Controller = new DAS_Controller();
             //Example.SetController(Controller);
 
@@ -22,7 +24,7 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new DAS_ModelCollection(), BDAS, ADAS);
+            HumbleView.ConstructView(new DAS_ModelCollection());
             //Add any Listeners needed here.
             Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(Events.GOAL_UPDATED, Refresh);
@@ -46,10 +48,12 @@ namespace UI {
         private TextMeshProUGUI BDAS = null;
         private TextMeshProUGUI ADAS = null;
 
-        public void ConstructView(DAS_ModelCollection modelCollection, TextMeshProUGUI bdas, TextMeshProUGUI adas) {
+        public void Awake(TextMeshProUGUI bdas, TextMeshProUGUI adas) {
             BDAS = bdas;
             ADAS = adas;
+        }
 
+        public void ConstructView(DAS_ModelCollection modelCollection) {
             RefreshView(modelCollection);
         }
 

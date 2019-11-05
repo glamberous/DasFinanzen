@@ -12,10 +12,11 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new ColorBar_HumbleView();
+            HumbleView.Awake(CanvasRect.sizeDelta.x);
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new ColorBar_ModelCollection(), OriginalColorBar, CanvasRect.sizeDelta.x);
+            HumbleView.ConstructView(new ColorBar_ModelCollection(), OriginalColorBar);
             Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(Events.GOAL_UPDATED, Refresh);
             Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
@@ -37,7 +38,11 @@ namespace UI {
         private List<ColorBarElement> ColorBarElements = new List<ColorBarElement>();
         private float ScreenWidth;
 
-        public void ConstructView(ColorBar_ModelCollection modelCollection, ColorBarElement original, float screenWidth) {
+        public void Awake(float screenWidth) {
+            ScreenWidth = screenWidth;
+        }
+
+        public void ConstructView(ColorBar_ModelCollection modelCollection, ColorBarElement original) {
             int count = 0;
             foreach (CatagoryModel catagoryModel in modelCollection.CatagoryModels) {
                 ColorBarElement newBar;
@@ -48,7 +53,6 @@ namespace UI {
                 newBar.SetID(catagoryModel.CatagoryID);
                 ColorBarElements.Add(newBar);
             }
-            ScreenWidth = screenWidth;
             Refresh(modelCollection);
         }
 

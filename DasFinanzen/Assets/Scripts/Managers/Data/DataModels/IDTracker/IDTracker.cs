@@ -7,17 +7,13 @@ public static class IDTracker {
         switch(type) {
             case IDType.CATAGORY:   return Managers.Data.FileData.IDTrackerModel.CatagoryID + 1;
             case IDType.EXPENSE:    return Managers.Data.FileData.IDTrackerModel.ExpenseID + 1;
-            default:                return -1;
+            default:
+                Debug.Log($"[ERROR] Unable to assign a new {type.ToString()} ID");
+                return -1;
         }
     }
 
-    public static bool IsNew(IDType type, int id) {
-        switch(type) {
-            case IDType.CATAGORY:   return Managers.Data.FileData.IDTrackerModel.CatagoryID < id;
-            case IDType.EXPENSE:    return Managers.Data.FileData.IDTrackerModel.ExpenseID < id;
-            default:                return false;
-        }
-    }
+    public static bool IsNew(int id) => id == -1;
 
     public static void SaveID(IDType type, int id) {
         switch (type) {

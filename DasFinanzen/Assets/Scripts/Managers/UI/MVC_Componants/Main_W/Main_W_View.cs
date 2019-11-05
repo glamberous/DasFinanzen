@@ -16,6 +16,7 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new Main_W_HumbleView();
+            HumbleView.Awake(MonthText, PreviousText, NextText);
 
             Main_W_Controller Controller = new Main_W_Controller();
             PreviousButton.SetController(Controller);
@@ -27,7 +28,7 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new Main_W_ModelCollection(), MonthText, PreviousText, NextText);
+            HumbleView.ConstructView(new Main_W_ModelCollection());
             Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
             Debug.Log("Main_W_View Activated.");
         }
@@ -46,10 +47,13 @@ namespace UI {
         private TextMeshProUGUI Prev = null;
         private TextMeshProUGUI Next = null;
 
-        public void ConstructView(Main_W_ModelCollection modelCollection, TextMeshProUGUI monthText, TextMeshProUGUI prevText, TextMeshProUGUI nextText) {
+        public void Awake(TextMeshProUGUI monthText, TextMeshProUGUI prevText, TextMeshProUGUI nextText) {
             Month = monthText;
             Prev = prevText;
             Next = nextText;
+        }
+
+        public void ConstructView(Main_W_ModelCollection modelCollection) {
             RefreshView(modelCollection);
         }
 

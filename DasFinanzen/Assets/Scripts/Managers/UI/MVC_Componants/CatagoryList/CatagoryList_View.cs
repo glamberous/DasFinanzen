@@ -18,10 +18,11 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new CatagoryList_HumbleView();
+            HumbleView.Awake(DailyText, MonthlyText, SpentText1, SpentText2);
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new CatagoryList_ModelCollection(), DailyOriginal, MonthlyOriginal, DailyText, MonthlyText, SpentText1, SpentText2);
+            HumbleView.ConstructView(new CatagoryList_ModelCollection(), DailyOriginal, MonthlyOriginal);
             Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
             Messenger.AddListener(Localization.Events.LOCALE_CHANGED, Refresh);
@@ -47,12 +48,14 @@ namespace UI {
         private TextMeshProUGUI Spent1 = null;
         private TextMeshProUGUI Spent2 = null;
 
-        public void ConstructView(CatagoryList_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal, TextMeshProUGUI dailyHeader, TextMeshProUGUI monthlyHeader, TextMeshProUGUI spentText1, TextMeshProUGUI spentText2) {
+        public void Awake(TextMeshProUGUI dailyHeader, TextMeshProUGUI monthlyHeader, TextMeshProUGUI spentText1, TextMeshProUGUI spentText2) {
             Daily = dailyHeader;
             Monthly = monthlyHeader;
             Spent1 = spentText1;
             Spent2 = spentText2;
+        }
 
+        public void ConstructView(CatagoryList_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
             CatagoryList_Controller Controller = new CatagoryList_Controller();
             TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
             TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);

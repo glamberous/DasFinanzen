@@ -13,6 +13,7 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new Goal_HumbleView();
+            HumbleView.Awake(AmountText, RemainingText);
 
             Goal_Controller Controller = new Goal_Controller();
             GoalWindowButton.SetController(Controller);
@@ -20,7 +21,7 @@ namespace UI {
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new Goal_ModelCollection(), AmountText, RemainingText);
+            HumbleView.ConstructView(new Goal_ModelCollection());
             Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(Events.GOAL_UPDATED, Refresh);
             Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
@@ -44,9 +45,12 @@ namespace UI {
         private TextMeshProUGUI Amount = null;
         private TextMeshProUGUI Remaining = null;
 
-        public void ConstructView(Goal_ModelCollection modelCollection, TextMeshProUGUI amountText, TextMeshProUGUI remainingText) {
+        public void Awake(TextMeshProUGUI amountText, TextMeshProUGUI remainingText) {
             Amount = amountText;
             Remaining = remainingText;
+        }
+
+        public void ConstructView(Goal_ModelCollection modelCollection) {
             RefreshView(modelCollection);
         }
 
