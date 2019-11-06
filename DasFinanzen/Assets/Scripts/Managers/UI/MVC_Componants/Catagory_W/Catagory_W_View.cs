@@ -6,8 +6,8 @@ using TMPro;
 namespace UI {
     public class Catagory_W_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI TitleText = null;
-        [SerializeField] private Generic_Button BackButton = null;
-        [SerializeField] private Generic_Button AddExpense = null;
+        [SerializeField] private Button BackButton = null;
+        [SerializeField] private Button AddExpense = null;
 
     private Catagory_W_HumbleView HumbleView = null;
         public void Awake() {

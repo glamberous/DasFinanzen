@@ -4,17 +4,12 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace UI {
-    [RequireComponent(typeof(BoxCollider2D))]
-    public class CatagoryElement : MonoBehaviour, IControllerElement {
+    public class CatagoryElement : Button {
         [HideInInspector] public int CatagoryID { get; private set; } = -1;
-        private IController Controller = null;
-        public void SetController(IController controller) => Controller = controller;
-
-        private int CommandID = -1;
-        public void SetCommandID(int commandID) => CommandID = commandID;
-
         public void SetCatagoryID(int id) => CatagoryID = id;
-        public void OnMouseDown() => Controller.TriggerCommand(CommandID, CatagoryID.ToString());
+
+        // Inherited from Generic_Button
+        public override void OnMouseDown() => Controller.TriggerCommand(CommandID, CatagoryID.ToString());
 
         private Image ColorPatchImage;
         private TextMeshProUGUI NameTextMesh;

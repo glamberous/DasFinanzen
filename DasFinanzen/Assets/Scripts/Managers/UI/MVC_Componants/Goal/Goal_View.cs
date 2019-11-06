@@ -7,7 +7,7 @@ namespace UI {
     public class Goal_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI AmountText = null;
         [SerializeField] private TextMeshProUGUI RemainingText = null;
-        [SerializeField] private Generic_Button GoalWindowButton = null;
+        [SerializeField] private Button GoalWindowButton = null;
 
         private Goal_HumbleView HumbleView = null;
 

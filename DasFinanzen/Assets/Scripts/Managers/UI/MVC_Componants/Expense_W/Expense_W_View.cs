@@ -7,7 +7,7 @@ using TMPro;
 namespace UI {
     public class Expense_W_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI TitleText = null;
-        [SerializeField] private Generic_Button BackButton = null;
+        [SerializeField] private Button BackButton = null;
 
         private Expense_W_HumbleView HumbleView = null;
 

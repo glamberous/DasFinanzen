@@ -1,25 +1,14 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI {
-    [RequireComponent(typeof(Main_W_View))]
-    [RequireComponent(typeof(ColorBar_View))]
-    [RequireComponent(typeof(Goal_View))]
-    [RequireComponent(typeof(CatagoryList_View))]
-    [RequireComponent(typeof(DAS_View))]
-    public class Main_W : MonoBehaviour, IWindow {
-        private List<IView> Views = new List<IView>();
+    public class Window : MonoBehaviour, IWindow {
+        private IView[] Views = null;
         private RectTransform LayerSortObject = null;
 
         public void Awake() {
             LayerSortObject = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
-
-            Views.Add(GetComponent<Main_W_View>());
-            Views.Add(GetComponent<ColorBar_View>());
-            Views.Add(GetComponent<Goal_View>());
-            Views.Add(GetComponent<CatagoryList_View>());
-            Views.Add(GetComponent<DAS_View>());
+            Views = GetComponentsInChildren<IView>();
         }
 
         public IWindow Activate() {
@@ -28,7 +17,7 @@ namespace UI {
 
             foreach (IView view in Views)
                 view.Activate();
-            
+
             return this;
         }
 
@@ -41,5 +30,5 @@ namespace UI {
 
         public void SetZLayer(float input) => LayerSortObject.localPosition = new Vector3(LayerSortObject.localPosition.x, LayerSortObject.localPosition.y, input);
     }
-}
 
+}

@@ -9,8 +9,8 @@ namespace UI {
         [SerializeField] private TextMeshProUGUI DateTextDisplay = null; // TODO Need to build a custom Date_InputField like the other fields.
         [SerializeField] private TextMeshProUGUI AmountTitle = null;
 
-        [SerializeField] private Generic_Button SaveExpenseButton = null;
-        [SerializeField] private Generic_Button DeleteExpenseButton = null;
+        [SerializeField] private Button SaveExpenseButton = null;
+        [SerializeField] private Button DeleteExpenseButton = null;
         [SerializeField] private Currency_InputField CurrencyInputField = null;
         [SerializeField] private String_InputField StringInputField = null;
 
@@ -51,7 +51,7 @@ namespace UI {
         private TextMeshProUGUI AmountTitle = null;
         private Currency_InputField AmountInput = null;
         private String_InputField NameInput = null;
-        private TextMeshProUGUI Date = null; // Problably eed too build a custom InputField Script for this too.
+        private TextMeshProUGUI Date = null; // Problably need too build a custom InputField Script for this too.
 
         public void Awake(TextMeshProUGUI amountTitle, Currency_InputField amountInput, String_InputField nameInput, TextMeshProUGUI date) {
             AmountTitle = amountTitle;
@@ -60,7 +60,7 @@ namespace UI {
             Date = date;
         }
 
-        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, Generic_Button deleteButton) {
+        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, Button deleteButton) {
             modelCollection.ExpenseModel.NameText = modelCollection.ExpenseModel.Catagory.NameText;
             deleteButton.gameObject.SetActive(modelCollection.ExpenseModel.ExpenseID != -1);
             RefreshView(modelCollection);

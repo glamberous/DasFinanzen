@@ -8,9 +8,9 @@ namespace UI {
     public class Main_W_View : MonoBehaviour, IView {
         [SerializeField] TextMeshProUGUI MonthText = null;
         [SerializeField] TextMeshProUGUI PreviousText = null;
-        [SerializeField] Generic_Button PreviousButton = null;
+        [SerializeField] Button PreviousButton = null;
         [SerializeField] TextMeshProUGUI NextText = null;
-        [SerializeField] Generic_Button NextButton = null;
+        [SerializeField] Button NextButton = null;
 
     private Main_W_HumbleView HumbleView = null;
 

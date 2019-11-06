@@ -6,16 +6,12 @@ using System;
 using TMPro;
 
 namespace UI {
-    [RequireComponent(typeof(BoxCollider2D))]
-    public class ExpenseElement : MonoBehaviour, IControllerElement {
-        public int ExpenseID { get; private set; } = -1;
+    public class ExpenseElement : Button {
+        [HideInInspector] public int ExpenseID { get; private set; } = -1;
         public void SetExpenseID(int id) => ExpenseID = id;
 
-        private IController Controller = null;
-        public void SetController(IController controller) => Controller = controller;
-
-        private int CommandID = -1;
-        public void SetCommandID(int commandID) => CommandID = commandID;
+        // Inherited from Generic_Button
+        public override void OnMouseDown() => Controller.TriggerCommand(CommandID, ExpenseID.ToString());
 
         private TextMeshProUGUI DateTextMesh = null;
         private TextMeshProUGUI NameTextMesh = null;
@@ -42,8 +38,6 @@ namespace UI {
         }
 
         private void SetDate(DateTime date) => DateTextMesh.text = date.ToString("MM/dd");
-
-        public void OnMouseDown() =>  Controller.TriggerCommand(CommandID, ExpenseID.ToString());
     }
 }
 
