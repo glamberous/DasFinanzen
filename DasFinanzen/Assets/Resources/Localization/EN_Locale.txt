@@ -72,3 +72,6 @@ Add Expense
 
 [24]
 Transactions
+
+[25]
+Edit Goal

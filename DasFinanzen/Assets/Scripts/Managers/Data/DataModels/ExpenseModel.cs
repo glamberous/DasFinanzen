@@ -34,8 +34,8 @@ public class ExpenseModel : IModel {
             IDTracker.SaveID(IDType.EXPENSE, ExpenseID);
         } 
         else {
-            ExpenseModel modelToDelete = UI.DataQueries.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
-            Managers.Data.FileData.ExpenseModels.Remove(modelToDelete);
+            ExpenseModel modelToRemove = UI.DataQueries.GetExpenseModel(Managers.Data.FileData.ExpenseModels, ExpenseID);
+            Managers.Data.FileData.ExpenseModels.Remove(modelToRemove);
         }
         Managers.Data.FileData.ExpenseModels.Add(this);
         Managers.Data.Save();

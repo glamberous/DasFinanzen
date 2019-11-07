@@ -34,7 +34,6 @@ namespace UI {
 
         public void Activate() {
             HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), DeleteExpenseButton);
-            Messenger.AddListener(Events.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Activated.");
         }
 
@@ -42,7 +41,6 @@ namespace UI {
 
         public void Deactivate() {
             HumbleView.DeconstructView();
-            Messenger.RemoveListener(Events.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Deactivated.");
         }
     }
@@ -103,12 +101,10 @@ namespace UI {
 
         private void SetAmount(string input) {
             Managers.Data.Runtime.TempExpenseModel.Amount = DataReformatter.ConvertStringToDecimal(input);
-            Messenger.Broadcast(Events.TEMP_EXPENSE_UPDATED);
         }
 
         private void SetName(string input) {
             Managers.Data.Runtime.TempExpenseModel.NameText = input;
-            Messenger.Broadcast(Events.TEMP_EXPENSE_UPDATED);
         }
     }
 

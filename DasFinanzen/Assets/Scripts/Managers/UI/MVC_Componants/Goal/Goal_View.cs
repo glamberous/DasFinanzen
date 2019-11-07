@@ -74,7 +74,10 @@ namespace UI {
             }
         }
 
-        private void TriggerGoalWindow() => Managers.UI.Push(WINDOW.GOAL);
+        private void TriggerGoalWindow() {
+            Managers.Data.Runtime.TempGoalModel = DataQueries.GetGoalModel(Managers.Data.FileData.GoalModels, Managers.Data.Runtime.SelectedTime);
+            Managers.UI.Push(WINDOW.EDIT_GOAL);
+        }
     }
 
     public class Goal_ModelCollection {

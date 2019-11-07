@@ -6,6 +6,6 @@ namespace UI {
         CATAGORY,
         EXPENSE,
         GRAPH,
-        GOAL,
+        EDIT_GOAL,
     }
 }

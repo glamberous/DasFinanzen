@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject MainWindow = null;
     [SerializeField] private GameObject CatagoryWindow = null;
     [SerializeField] private GameObject ExpenseWindow = null;
+    [SerializeField] private GameObject EditGoalWindow = null;
     //[SerializeField] private GraphUIView GraphView = null;
     // Add new views here
 
@@ -18,6 +19,7 @@ public class UIManager : MonoBehaviour {
         Windows[UI.WINDOW.MAIN] = MainWindow;
         Windows[UI.WINDOW.CATAGORY] = CatagoryWindow;
         Windows[UI.WINDOW.EXPENSE] = ExpenseWindow;
+        Windows[UI.WINDOW.EDIT_GOAL] = EditGoalWindow;
         //Windows["Graph"] = GraphWindow;
         // Add new views here
 
@@ -27,6 +29,8 @@ public class UIManager : MonoBehaviour {
 }
 
 public class UIManagerHumble : IManager {
+    private int SortingOrder = 0;
+
     public void Push(UI.WINDOW window) {
         if (Windows.ContainsKey(window))
             UIStack.Push(Windows[window].GetComponent<IWindow>().Activate());
@@ -34,12 +38,12 @@ public class UIManagerHumble : IManager {
             Managers.Data.Runtime.DialogueWindowKey = 0;
             UIStack.Push(Windows[UI.WINDOW.DIALOGUE].GetComponent<IWindow>().Activate());
         }
-        UIStack.Peek().SetZLayer(LayerTracker.Increment());
+        UIStack.Peek().SetLayer(SortingOrder++);
     }
 
     public void Pop() {
         UIStack.Pop().Deactivate();
-        LayerTracker.Decrement();
+        SortingOrder--;
     }
 
     public ManagerStatus status { get; private set; } 
