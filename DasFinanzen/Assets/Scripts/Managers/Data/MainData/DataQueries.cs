@@ -45,13 +45,12 @@ namespace UI {
             return new ExpenseModel();
         }
 
-        public static GoalModel GetGoalModel(List<GoalModel> goalModels, DateTime selectedTime) {
+        public static GoalModel GetGoalModel(List<GoalModel> goalModels, DateTime selectedTime, bool returnNullIfNotFound = false) {
             string dateKey = string.Format($"{selectedTime.Year}_{selectedTime.Month}");
             foreach (GoalModel goalModel in goalModels)
                 if (goalModel.DateKey == dateKey)
                     return goalModel;
-            Debug.Log($"[WARNING] Queried GoalModel (Key: {dateKey}) was not found!");
-            return CreateNewGoalModel();
+            return returnNullIfNotFound ? null : CreateNewGoalModel();
         }
 
         private static GoalModel CreateNewGoalModel() {
@@ -59,6 +58,7 @@ namespace UI {
             newGoalModel.Amount = Managers.Data.FileData.GoalModels.Count > 0 ? Managers.Data.FileData.GoalModels.Last().Amount : 1000.00m;
             newGoalModel.DateKey = string.Format($"{Managers.Data.Runtime.SelectedTime.Year}_{Managers.Data.Runtime.SelectedTime.Month}");
             newGoalModel.Save();
+            Debug.Log($"New GoalModel with Key {newGoalModel.DateKey} was saved.");
             return newGoalModel;
         }
     }

@@ -9,8 +9,7 @@ public class GoalModel : IModel  {
     public string DateKey = "DEFAULT";
 
     public void Save() {
-        GoalModel ModelToRemove = UI.DataQueries.GetGoalModel(Managers.Data.FileData.GoalModels, Managers.Data.Runtime.SelectedTime);
-        Managers.Data.FileData.GoalModels.Remove(ModelToRemove);
+        Managers.Data.FileData.GoalModels.Remove(UI.DataQueries.GetGoalModel(Managers.Data.FileData.GoalModels, Managers.Data.Runtime.SelectedTime, returnNullIfNotFound: true));
         Managers.Data.FileData.GoalModels.Add(this);
         Managers.Data.Save();
         Messenger.Broadcast(UI.Events.GOAL_UPDATED, MessengerMode.DONT_REQUIRE_LISTENER);
