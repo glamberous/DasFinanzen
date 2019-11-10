@@ -7,5 +7,6 @@ namespace UI {
         EXPENSE,
         GRAPH,
         EDIT_GOAL,
+        EDIT_DATE,
     }
 }

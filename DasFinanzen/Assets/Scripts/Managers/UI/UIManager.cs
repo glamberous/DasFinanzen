@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject CatagoryWindow = null;
     [SerializeField] private GameObject ExpenseWindow = null;
     [SerializeField] private GameObject EditGoalWindow = null;
+    [SerializeField] private GameObject EditDateWindow = null;
     //[SerializeField] private GraphUIView GraphView = null;
     // Add new views here
 
@@ -20,6 +21,7 @@ public class UIManager : MonoBehaviour {
         Windows[UI.WINDOW.CATAGORY] = CatagoryWindow;
         Windows[UI.WINDOW.EXPENSE] = ExpenseWindow;
         Windows[UI.WINDOW.EDIT_GOAL] = EditGoalWindow;
+        Windows[UI.WINDOW.EDIT_DATE] = EditDateWindow;
         //Windows["Graph"] = GraphWindow;
         // Add new views here
 
@@ -37,6 +39,7 @@ public class UIManagerHumble : IManager {
         else {
             Managers.Data.Runtime.DialogueWindowKey = 0;
             UIStack.Push(Windows[UI.WINDOW.DIALOGUE].GetComponent<IWindow>().Activate());
+            Debug.Log($"[ERROR] Unnable to find Window {window.ToString()}.");
         }
         UIStack.Peek().SetLayer(SortingOrder++);
     }

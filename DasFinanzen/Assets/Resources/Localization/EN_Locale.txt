@@ -75,3 +75,6 @@ Transactions
 
 [25]
 Edit Goal
+
+[26]
+Edit Date
