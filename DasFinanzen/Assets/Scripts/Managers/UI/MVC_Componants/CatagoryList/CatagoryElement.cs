@@ -9,7 +9,7 @@ namespace UI {
         public void SetCatagoryID(int id) => CatagoryID = id;
 
         // Inherited from Generic_Button
-        public override void OnMouseDown() => Controller.TriggerCommand(CommandID, CatagoryID.ToString());
+        public override void OnMouseUp() => Controller.TriggerCommand(CommandID, CatagoryID.ToString());
 
         private Image ColorPatchImage;
         private TextMeshProUGUI NameTextMesh;

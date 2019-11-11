@@ -6,7 +6,7 @@ using System;
 namespace UI {
     [RequireComponent(typeof(BoxCollider2D))]
     public class Button : MonoBehaviour, IControllerElement {
-        public virtual void OnMouseDown() => Controller.TriggerCommand(CommandID);
+        public virtual void OnMouseUp() => Controller.TriggerCommand(CommandID);
 
         protected int CommandID = -1;
         public void SetCommandID(int commandID) => CommandID = commandID;

@@ -82,6 +82,7 @@ namespace UI {
             newExpense.SetController(Controller);
             newExpense.SetCommandID(0);
             newExpense.UpdateView(model);
+            newExpense.SetTileRect(ExpenseTileUIData.Tile);
             return newExpense;
         }
 

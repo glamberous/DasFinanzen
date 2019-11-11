@@ -7,7 +7,7 @@ namespace UI {
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class DateElement : Button {
         // Inherited from Generic_Button
-        public override void OnMouseDown() => Controller.TriggerCommand(CommandID, DateTextMesh.text);
+        public override void OnMouseUp() => Controller.TriggerCommand(CommandID, DateTextMesh.text);
 
         private TextMeshProUGUI DateTextMesh = null;
         private GameObject SelectionBox = null;
