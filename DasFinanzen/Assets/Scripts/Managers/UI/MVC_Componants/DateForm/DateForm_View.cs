@@ -2,28 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 
 namespace UI {
     public class DateForm_View : MonoBehaviour, IView {
         [SerializeField] private DateElement Original = null;
-        [SerializeField] private RectTransform CanvasRect = null;
+        [SerializeField] private RectTransform TileRect = null;
+        [SerializeField] private TextMeshProUGUI MonthTitle = null;
+        [SerializeField] private Button ConfirmButton = null;
 
-        private DateForm_HumbleView HumbleView = null;
+        private DateForm_HumbleView HumbleView = new DateForm_HumbleView();
+        private DateForm_Controller Controller = null;
 
         public void Awake() {
-            HumbleView = new DateForm_HumbleView();
-            HumbleView.Awake(Original, CanvasRect.sizeDelta.x);
+            DateForm_Controller Controller = new DateForm_Controller();
+            HumbleView.Awake(Controller, Original, TileRect, MonthTitle);
 
             //DateForm_Controller Controller = new DateForm_Controller();
-            //Example.SetController(Controller);
-
+            ConfirmButton.SetController(Controller);
+            
             //Cross reference the Command ID's from the Controller class near the bottom of this page.
-            //Example.SetCommandID(0); 
+            ConfirmButton.SetCommandID(1);
         }
 
         public void Activate() {
             HumbleView.ConstructView(new DateForm_ModelCollection());
             //Add any Listeners needed here.
+            Messenger.AddListener(Events.TEMP_DAY_UPDATED, Refresh);
             Debug.Log("DateForm_View Activated.");
         }
 
@@ -32,6 +37,7 @@ namespace UI {
         public void Deactivate() {
             HumbleView.DeconstructView();
             //Remove any Listeners needed here.
+            Messenger.RemoveListener(Events.TEMP_DAY_UPDATED, Refresh);
             Debug.Log("DateForm_View Deactivated.");
         }
     }
@@ -39,34 +45,54 @@ namespace UI {
     public class DateForm_HumbleView {
         private const float DateElementOffset = 30f;
         private float StartingTileHeight = 0f;
-        private float ScreenWidth = 0f;
-        private int RowCount = 0;
-        private DateElement[] DateElements = new DateElement[31];
-        private RectTransform Tile = null;
+        private float RowOffset = 0f;
+        private DateElement[] DateElements = new DateElement[1];
+        private RectTransform TileRect = null;
+        private TextMeshProUGUI MonthTitle = null;
+        private DateForm_Controller Controller = null;
 
-        public void Awake(DateElement original, float screenWidth) {
+        public void Awake(DateForm_Controller controller, DateElement original, RectTransform parentRect, TextMeshProUGUI monthTitle) {
+            Controller = controller;
             DateElements[0] = original;
-            ScreenWidth = screenWidth;
-            Tile = original.transform.parent.gameObject.GetComponent<RectTransform>();
-            StartingTileHeight = Tile.sizeDelta.y;
+            TileRect = parentRect;
+            StartingTileHeight = TileRect.sizeDelta.y;
+            MonthTitle = monthTitle;
         }
 
         public void ConstructView(DateForm_ModelCollection modelCollection) {
-            for (int dateCount = 1; dateCount < modelCollection.numOfDates; dateCount++) {
-                DateElements[dateCount] = ConstructDateElement(dateCount);
+            DateElement TempElement = DateElements[0];
+            DateElements = new DateElement[modelCollection.numOfDates];
+            DateElements[0] = TempElement;
+            DateElements[0].SetDate(1);
+            DateElements[0].SetController(Controller);
+            DateElements[0].SetCommandID(0);
+
+            for (int dateIndex = 1; dateIndex < modelCollection.numOfDates; dateIndex++)
+                DateElements[dateIndex] = ConstructDateElement(dateIndex);
+            TileRect.sizeDelta = new Vector2(TileRect.sizeDelta.x, StartingTileHeight + RowOffset);
+
+            for (int dateIndex = 0; dateIndex < modelCollection.numOfDates; dateIndex++) {
+                if (dateIndex + 1 == modelCollection.TempDay)
+                    DateElements[dateIndex].SetSelected(true);
+                else
+                    DateElements[dateIndex].SetSelected(false);
             }
-            Tile.sizeDelta = new Vector2(Tile.sizeDelta.x, StartingTileHeight + (RowCount * DateElementOffset));
+            MonthTitle.text = modelCollection.Strings[Managers.Data.Runtime.SelectedTime.Month + 0];
         }
 
         private DateElement ConstructDateElement(int dateCount) {
             DateElement newDateElement = GameObject.Instantiate(original: DateElements[dateCount-1], parent: DateElements[dateCount-1].transform.parent.transform) as DateElement;
-            newDateElement.SetDate(dateCount);
-            if (newDateElement.transform.localPosition.x + DateElementOffset <= ScreenWidth)
-                newDateElement.transform.localPosition = new Vector3(newDateElement.transform.localPosition.x + DateElementOffset, newDateElement.transform.localPosition.y, newDateElement.transform.localPosition.z);
+            newDateElement.SetDate(dateCount + 1);
+            RectTransform newRect = newDateElement.GetComponent<RectTransform>();
+            if (newRect.anchoredPosition.x + DateElementOffset <= TileRect.rect.width - (TileRect.offsetMin.x + -TileRect.offsetMax.x))
+                newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x + DateElementOffset, newRect.anchoredPosition.y);
             else {
-                RowCount++;
-                newDateElement.transform.localPosition = new Vector3(DateElements[0].transform.localPosition.x, DateElements[0].transform.localPosition.y + (DateElementOffset * RowCount), DateElements[0].transform.localPosition.z);
+                RectTransform originalRect = DateElements[0].GetComponent<RectTransform>();
+                newRect.anchoredPosition = new Vector3(originalRect.anchoredPosition.x, newRect.anchoredPosition.y - DateElementOffset);
+                RowOffset += DateElementOffset;
             }
+            newDateElement.SetController(Controller);
+            newDateElement.SetCommandID(0);
             return newDateElement;
         }
 
@@ -77,8 +103,9 @@ namespace UI {
 
         public void DeconstructView() {
             for (int Index = 1; Index < DateElements.Length; Index++)
-                GameObject.Destroy(DateElements[Index].gameObject);
-            RowCount = 0;
+                if (DateElements[Index] != null)
+                    GameObject.Destroy(DateElements[Index].gameObject);
+            RowOffset = 0f;
         }
     }
 
@@ -86,16 +113,26 @@ namespace UI {
         public void TriggerCommand(int commandID, string input) {
             switch (commandID) {
                 case 0: SetDate(Convert.ToInt32(input)); break;
+                case 1: SaveDate(); break;
                 default: Debug.Log("[WARNING][DateForm_Controller] CommandID not recognized! "); return;
             }
         }
 
         private void SetDate(int date) {
+            Managers.Data.Runtime.TempDay = date;
+            Messenger.Broadcast(Events.TEMP_DAY_UPDATED);
+        }
 
+        private void SaveDate() {
+            Managers.Data.Runtime.TempExpenseModel.Date = Managers.Data.Runtime.TempExpenseModel.Date.AddDays(Managers.Data.Runtime.TempDay - Managers.Data.Runtime.TempExpenseModel.Date.Day);
+            Messenger.Broadcast(Events.TEMP_EXPENSE_UPDATED);
+            Managers.UI.Pop();
         }
     }
 
     public class DateForm_ModelCollection {
+        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { (Managers.Data.Runtime.SelectedTime.Month + 0) });
         public int numOfDates = DateTime.DaysInMonth(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month);
+        public int TempDay = Managers.Data.Runtime.TempDay;
     }
 }

@@ -10,9 +10,13 @@ namespace UI {
         public override void OnMouseDown() => Controller.TriggerCommand(CommandID, DateTextMesh.text);
 
         private TextMeshProUGUI DateTextMesh = null;
+        private GameObject SelectionBox = null;
+
+        public void SetSelected(bool selected) => SelectionBox.SetActive(selected);
 
         private void Awake() {
-            gameObject.GetComponent<TextMeshProUGUI>();
+            DateTextMesh = gameObject.GetComponent<TextMeshProUGUI>();
+            SelectionBox = gameObject.transform.GetChild(0).gameObject;
         }
 
         public void SetDate(int date) => DateTextMesh.text = date.ToString();

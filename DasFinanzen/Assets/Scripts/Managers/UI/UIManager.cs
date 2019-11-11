@@ -31,7 +31,7 @@ public class UIManager : MonoBehaviour {
 }
 
 public class UIManagerHumble : IManager {
-    private int SortingOrder = 0;
+    private float SortingOrder = 0;
 
     public void Push(UI.WINDOW window) {
         if (Windows.ContainsKey(window))
@@ -41,12 +41,13 @@ public class UIManagerHumble : IManager {
             UIStack.Push(Windows[UI.WINDOW.DIALOGUE].GetComponent<IWindow>().Activate());
             Debug.Log($"[ERROR] Unnable to find Window {window.ToString()}.");
         }
-        UIStack.Peek().SetLayer(SortingOrder++);
+        UIStack.Peek().SetZLayer(SortingOrder);
+        SortingOrder -= 100;
     }
 
     public void Pop() {
         UIStack.Pop().Deactivate();
-        SortingOrder--;
+        SortingOrder += 100;
     }
 
     public ManagerStatus status { get; private set; } 

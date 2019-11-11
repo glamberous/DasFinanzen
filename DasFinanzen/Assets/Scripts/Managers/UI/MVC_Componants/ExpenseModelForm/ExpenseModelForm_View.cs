@@ -13,6 +13,7 @@ namespace UI {
         [SerializeField] private Button DeleteExpenseButton = null;
         [SerializeField] private Currency_InputField CurrencyInputField = null;
         [SerializeField] private String_InputField StringInputField = null;
+        [SerializeField] private Button EditDate = null;
 
         private ExpenseModelForm_HumbleView HumbleView = null;
 
@@ -25,15 +26,18 @@ namespace UI {
             DeleteExpenseButton.SetController(Controller);
             CurrencyInputField.SetController(Controller);
             StringInputField.SetController(Controller);
+            EditDate.SetController(Controller);
 
             SaveExpenseButton.SetCommandID(0);
             DeleteExpenseButton.SetCommandID(1);
             CurrencyInputField.SetCommandID(2);
             StringInputField.SetCommandID(3);
+            EditDate.SetCommandID(4);
         }
 
         public void Activate() {
             HumbleView.ConstructView(new ExpenseModelForm_ModelCollection(), DeleteExpenseButton);
+            Messenger.AddListener(Events.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Activated.");
         }
 
@@ -41,6 +45,7 @@ namespace UI {
 
         public void Deactivate() {
             HumbleView.DeconstructView();
+            Messenger.RemoveListener(Events.TEMP_EXPENSE_UPDATED, Refresh);
             Debug.Log("ExpenseDataEntryView Deactivated.");
         }
     }
@@ -83,6 +88,7 @@ namespace UI {
                 case 1: DeleteExpense(); break;
                 case 2: SetAmount(input); break;
                 case 3: SetName(input); break;
+                case 4: PushEditDateWindow();break;
                 default: Debug.Log($"[WARNING][ExpenseModelForm_Controller] CommandID {commandID} not recognized! ");  return;
             }
         }
@@ -105,6 +111,11 @@ namespace UI {
 
         private void SetName(string input) {
             Managers.Data.Runtime.TempExpenseModel.NameText = input;
+        }
+
+        private void PushEditDateWindow() {
+            Managers.Data.Runtime.TempDay = Managers.Data.Runtime.TempExpenseModel.Date.Day;
+            Managers.UI.Push(WINDOW.EDIT_DATE);
         }
     }
 

@@ -4,10 +4,10 @@ using UnityEngine;
 namespace UI {
     public class Window : MonoBehaviour, IWindow {
         private IView[] Views = null;
-        private Canvas Canvas = null;
+        private GameObject LayerSorterObject = null;
 
         public void Awake() {
-            Canvas = gameObject.GetComponent<Canvas>();
+            LayerSorterObject = gameObject.transform.GetChild(0).gameObject;
             Views = GetComponentsInChildren<IView>();
         }
 
@@ -28,6 +28,6 @@ namespace UI {
                 view.Deactivate();
         }
 
-        public void SetLayer(int input) => Canvas.sortingOrder = input;
+        public void SetZLayer(float input) => LayerSorterObject.transform.localPosition = new Vector3(0, 0, input);
     }
 }

@@ -9,6 +9,8 @@ public class RuntimeData {
 
     public ExpenseModel TempExpenseModel = null;
 
+    public int TempDay = -1;
+
     public GoalModel TempGoalModel = null;
 
     public int DialogueWindowKey = 0;

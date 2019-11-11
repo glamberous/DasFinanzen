@@ -8,10 +8,9 @@ namespace UI {
         [SerializeField] private TextMeshProUGUI TitleText = null;
         [SerializeField] private Button CloseButton = null;
 
-        private EditDate_W_HumbleView HumbleView = null;
+        private EditDate_W_HumbleView HumbleView = new EditDate_W_HumbleView();
 
         public void Awake() {
-            HumbleView = new EditDate_W_HumbleView();
             HumbleView.Awake(TitleText);
 
             EditDate_W_Controller Controller = new EditDate_W_Controller();
@@ -48,7 +47,7 @@ namespace UI {
         }
 
         public void RefreshView(EditDate_W_ModelCollection modelCollection) {
-            Title.text = modelCollection.Strings[(Managers.Data.Runtime.SelectedTime.Month + 0)];
+            Title.text = modelCollection.Strings[26];
         }
 
         public void DeconstructView() {
@@ -68,6 +67,6 @@ namespace UI {
     }
 
     public class EditDate_W_ModelCollection {
-        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { (Managers.Data.Runtime.SelectedTime.Month + 0) });
+        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 26 });
     }
 }
