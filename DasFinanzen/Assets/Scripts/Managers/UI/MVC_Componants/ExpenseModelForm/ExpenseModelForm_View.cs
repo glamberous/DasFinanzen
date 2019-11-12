@@ -64,8 +64,12 @@ namespace UI {
         }
 
         public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, Button deleteButton) {
-            modelCollection.ExpenseModel.NameText = modelCollection.ExpenseModel.Catagory.NameText;
-            deleteButton.gameObject.SetActive(modelCollection.ExpenseModel.ExpenseID != -1);
+            if (modelCollection.ExpenseModel.ExpenseID == -1) {
+                modelCollection.ExpenseModel.NameText = modelCollection.ExpenseModel.Catagory.NameText;
+                deleteButton.gameObject.SetActive(false);
+            } 
+            else
+                deleteButton.gameObject.SetActive(true);
             RefreshView(modelCollection);
         }
 

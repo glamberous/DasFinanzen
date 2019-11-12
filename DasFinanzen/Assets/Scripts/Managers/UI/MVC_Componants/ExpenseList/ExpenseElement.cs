@@ -12,7 +12,8 @@ namespace UI {
 
         // Inherited from Generic_Button
         public override void OnMouseUp() {
-            if (GetMouseAsWorldPoint() == OriginalMouseCoord)
+            Debug.Log("Testing");
+            if (GetMouseAsWorldPoint().y >= OriginalMouseCoord.y-1 && GetMouseAsWorldPoint().y <= OriginalMouseCoord.y+1)
                 Controller.TriggerCommand(CommandID, ExpenseID.ToString());
         }
 

@@ -60,12 +60,7 @@ namespace UI {
         }
 
         public void ConstructView(DateForm_ModelCollection modelCollection) {
-            DateElement TempElement = DateElements[0];
-            DateElements = new DateElement[modelCollection.numOfDates];
-            DateElements[0] = TempElement;
-            DateElements[0].SetDate(1);
-            DateElements[0].SetController(Controller);
-            DateElements[0].SetCommandID(0);
+            ResetOriginalElement(DateElements[0], modelCollection.numOfDates);
 
             for (int dateIndex = 1; dateIndex < modelCollection.numOfDates; dateIndex++)
                 DateElements[dateIndex] = ConstructDateElement(dateIndex);
@@ -80,9 +75,16 @@ namespace UI {
             MonthTitle.text = modelCollection.Strings[Managers.Data.Runtime.SelectedTime.Month + 0];
         }
 
+        private void ResetOriginalElement(DateElement original, int arrayLength) {
+            DateElements = new DateElement[arrayLength];
+            DateElements[0] = original;
+            DateElements[0].SetDate(1);
+            DateElements[0].SetController(Controller);
+            DateElements[0].SetCommandID(0);
+        }
+
         private DateElement ConstructDateElement(int dateCount) {
             DateElement newDateElement = GameObject.Instantiate(original: DateElements[dateCount-1], parent: DateElements[dateCount-1].transform.parent.transform) as DateElement;
-            newDateElement.SetDate(dateCount + 1);
             RectTransform newRect = newDateElement.GetComponent<RectTransform>();
             if (newRect.anchoredPosition.x + DateElementOffset <= TileRect.rect.width - (TileRect.offsetMin.x + -TileRect.offsetMax.x))
                 newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x + DateElementOffset, newRect.anchoredPosition.y);
@@ -91,6 +93,7 @@ namespace UI {
                 newRect.anchoredPosition = new Vector3(originalRect.anchoredPosition.x, newRect.anchoredPosition.y - DateElementOffset);
                 RowOffset += DateElementOffset;
             }
+            newDateElement.SetDate(dateCount + 1);
             newDateElement.SetController(Controller);
             newDateElement.SetCommandID(0);
             return newDateElement;
@@ -103,8 +106,7 @@ namespace UI {
 
         public void DeconstructView() {
             for (int Index = 1; Index < DateElements.Length; Index++)
-                if (DateElements[Index] != null)
-                    GameObject.Destroy(DateElements[Index].gameObject);
+                GameObject.Destroy(DateElements[Index].gameObject);
             RowOffset = 0f;
         }
     }

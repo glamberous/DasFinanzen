@@ -39,6 +39,7 @@ namespace UI {
         private ExpenseList_Controller Controller = new ExpenseList_Controller();
         private ExpenseElement Original = null;
         private TileUIData ExpenseTileUIData = null;
+        private float OriginalTileYCoord;
         private TextMeshProUGUI Transaction = null;
         private TextMeshProUGUI Spent = null;
 
@@ -47,9 +48,11 @@ namespace UI {
             Spent = spentText;
             Original = original;
             ExpenseTileUIData = new TileUIData(original.gameObject);
+            OriginalTileYCoord = ExpenseTileUIData.Tile.transform.position.y;
         }
 
         public void ConstructView(ExpenseList_ModelCollection modelCollection) {
+            ExpenseTileUIData.Tile.transform.position = new Vector3(ExpenseTileUIData.Tile.transform.position.x, OriginalTileYCoord, ExpenseTileUIData.Tile.transform.position.z);
             if (modelCollection.ExpenseModels.Count == 0)
                 ConstructEmptyView();
             else
@@ -81,8 +84,8 @@ namespace UI {
             newExpense.SetExpenseID(model.ExpenseID);
             newExpense.SetController(Controller);
             newExpense.SetCommandID(0);
-            newExpense.UpdateView(model);
             newExpense.SetTileRect(ExpenseTileUIData.Tile);
+            newExpense.UpdateView(model);
             return newExpense;
         }
 
