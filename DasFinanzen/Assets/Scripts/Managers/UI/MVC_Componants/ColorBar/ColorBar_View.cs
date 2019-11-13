@@ -13,8 +13,6 @@ namespace UI {
         public void Awake() {
             HumbleView = new ColorBar_HumbleView();
             HumbleView.Awake(CanvasRect.sizeDelta.x);
-            Debug.Log("Canvas Width: " + CanvasRect.sizeDelta.x.ToString());
-            Debug.Log("Screen Width: " + Screen.width.ToString());
         }
 
         public void Activate() {
