@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Localization {
     public static class Events {
-        public const string LOCALE_CHANGED = "LOCALE_CHANGED";
+        public const string TEXT_UPDATED = "LOCALE_CHANGED";
     }
 }
 

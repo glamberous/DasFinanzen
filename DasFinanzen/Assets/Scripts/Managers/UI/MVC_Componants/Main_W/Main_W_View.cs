@@ -8,9 +8,9 @@ namespace UI {
     public class Main_W_View : MonoBehaviour, IView {
         [SerializeField] TextMeshProUGUI MonthText = null;
         [SerializeField] TextMeshProUGUI PreviousText = null;
-        [SerializeField] Button PreviousButton = null;
+        [SerializeField] Button_Int PreviousButton = null;
         [SerializeField] TextMeshProUGUI NextText = null;
-        [SerializeField] Button NextButton = null;
+        [SerializeField] Button_Int NextButton = null;
 
     private Main_W_HumbleView HumbleView = null;
 
@@ -18,13 +18,8 @@ namespace UI {
             HumbleView = new Main_W_HumbleView();
             HumbleView.Awake(MonthText, PreviousText, NextText);
 
-            Main_W_Controller Controller = new Main_W_Controller();
-            PreviousButton.SetController(Controller);
-            NextButton.SetController(Controller);
-
-            //Cross reference the Command ID's from the Controller class near the bottom of this page.
-            PreviousButton.SetCommandID(0);
-            NextButton.SetCommandID(1);
+            PreviousButton.SetOnClickAction(Controller.Instance.AddMonthToSelectedTime, -1);
+            NextButton.SetOnClickAction(Controller.Instance.AddMonthToSelectedTime, 1);
         }
 
         public void Activate() {
@@ -67,29 +62,6 @@ namespace UI {
 
         public void DeconstructView() {
 
-        }
-    }
-
-    public class Main_W_Controller : IController {
-        public void TriggerCommand(int commandID, string input) {
-            switch (commandID) {
-                case 0: AddMonth(-1); break;
-                case 1: AddMonth(1); break;
-                default: Debug.Log($"[WARNING][Main_W_Controller] CommandID {commandID} not recognized! "); return;
-            }
-        }
-
-        private void AddMonth(int num) {
-            DateTime newDateTime = new DateTime(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month, 1).AddMonths(num);
-            Managers.Data.Runtime.SelectedTime = IfCurrentMonthReturnDateTimeNow(newDateTime);
-            Messenger.Broadcast(Events.MONTH_CHANGED);
-        }
-
-        private DateTime IfCurrentMonthReturnDateTimeNow(DateTime testDateTime) {
-            if (testDateTime.Year == DateTime.Now.Year && testDateTime.Month == DateTime.Now.Month)
-                return DateTime.Now;
-            else
-                return testDateTime;
         }
     }
 

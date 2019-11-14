@@ -25,7 +25,7 @@ namespace UI {
             HumbleView.ConstructView(new CatagoryList_ModelCollection(), DailyOriginal, MonthlyOriginal);
             Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
-            Messenger.AddListener(Localization.Events.LOCALE_CHANGED, Refresh);
+            Messenger.AddListener(Localization.Events.TEXT_UPDATED, Refresh);
             Debug.Log("CatagoryView Activated.");
         }
 
@@ -34,7 +34,7 @@ namespace UI {
         public void Deactivate() {
             Messenger.RemoveListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
-            Messenger.RemoveListener(Localization.Events.LOCALE_CHANGED, Refresh);
+            Messenger.RemoveListener(Localization.Events.TEXT_UPDATED, Refresh);
             HumbleView.DeconstructView();
             Debug.Log("CatagoryView Deactivated.");
         }
@@ -56,29 +56,26 @@ namespace UI {
         }
 
         public void ConstructView(CatagoryList_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
-            CatagoryList_Controller Controller = new CatagoryList_Controller();
             TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
             TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);
             foreach (CatagoryModel catagoryModel in ModelCollection.CatagoryModels)
                 if (catagoryModel.Recurring)
-                    RecurringCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData, RecurringCatagoryElements.Count, Controller));
+                    RecurringCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData, RecurringCatagoryElements.Count));
                 else
-                    DailyCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData, DailyCatagoryElements.Count, Controller));
+                    DailyCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData, DailyCatagoryElements.Count));
             MonthlyUIData.UpdateTileSize(RecurringCatagoryElements.Count);
             DailyUIData.UpdateTileSize(DailyCatagoryElements.Count);
             RefreshView(ModelCollection);
         }
 
-        private CatagoryElement ConstructCatagoryElement(CatagoryModel myCatagoryModel, TileUIData UIData, int count, CatagoryList_Controller controller) {
+        private CatagoryElement ConstructCatagoryElement(CatagoryModel model, TileUIData UIData, int count) {
             CatagoryElement newCatagory;
             if (count == 0)
                 newCatagory = UIData.Original.GetComponent<CatagoryElement>();
             else
                 newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<CatagoryElement>(), parent: UIData.Parent.transform) as CatagoryElement;
             newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * count), UIData.StartPos.z);
-            newCatagory.SetController(controller);
-            newCatagory.SetCommandID(0);
-            newCatagory.SetCatagoryID(myCatagoryModel.CatagoryID);
+            newCatagory.SetOnClickAction(Controller.Instance.PushCatagoryWindow, model.CatagoryID);
             return newCatagory;
         }
 
@@ -109,20 +106,6 @@ namespace UI {
                 if (count++ != 0)
                     GameObject.Destroy(catagoryElement.gameObject);
             }
-        }
-    }
-
-    public class CatagoryList_Controller : IController {
-        public void TriggerCommand(int commandID, string input) {
-            switch(commandID) {
-                case 0: CatagoryClicked(Convert.ToInt32(input)); break;
-                default: Debug.Log("[WARNING][CatagoryList_Controller] CommandID not recognized! "); return;
-            }
-        }
-
-        private void CatagoryClicked(int id) {
-            Managers.Data.Runtime.CurrentCatagoryID = id;
-            Managers.UI.Push(WINDOW.CATAGORY);
         }
     }
 

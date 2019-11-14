@@ -9,20 +9,14 @@ namespace UI {
         [SerializeField] private DateElement Original = null;
         [SerializeField] private RectTransform TileRect = null;
         [SerializeField] private TextMeshProUGUI MonthTitle = null;
-        [SerializeField] private Button ConfirmButton = null;
+        [SerializeField] private Button_Void ConfirmButton = null;
 
         private DateForm_HumbleView HumbleView = new DateForm_HumbleView();
-        private DateForm_Controller Controller = null;
 
         public void Awake() {
-            DateForm_Controller Controller = new DateForm_Controller();
-            HumbleView.Awake(Controller, Original, TileRect, MonthTitle);
+            HumbleView.Awake(Original, TileRect, MonthTitle);
 
-            //DateForm_Controller Controller = new DateForm_Controller();
-            ConfirmButton.SetController(Controller);
-            
-            //Cross reference the Command ID's from the Controller class near the bottom of this page.
-            ConfirmButton.SetCommandID(1);
+            ConfirmButton.SetOnClickAction(Controller.Instance.SaveTempDayToTempExpense);
         }
 
         public void Activate() {
@@ -48,14 +42,14 @@ namespace UI {
         private float RowOffset = 0f;
         private DateElement[] DateElements = new DateElement[1];
         private RectTransform TileRect = null;
-        private TextMeshProUGUI MonthTitle = null;
-        private DateForm_Controller Controller = null;
 
-        public void Awake(DateForm_Controller controller, DateElement original, RectTransform parentRect, TextMeshProUGUI monthTitle) {
-            Controller = controller;
+        private TextMeshProUGUI MonthTitle = null;
+
+        public void Awake(DateElement original, RectTransform tileRect, TextMeshProUGUI monthTitle) {
             DateElements[0] = original;
-            TileRect = parentRect;
+            TileRect = tileRect;
             StartingTileHeight = TileRect.sizeDelta.y;
+
             MonthTitle = monthTitle;
         }
 
@@ -72,15 +66,14 @@ namespace UI {
                 else
                     DateElements[dateIndex].SetSelected(false);
             }
-            MonthTitle.text = modelCollection.Strings[Managers.Data.Runtime.SelectedTime.Month + 0];
+            MonthTitle.text = $"[{Managers.Data.Runtime.SelectedTime.Month + 0}]";
+            Managers.Locale.Refresh();
         }
 
         private void ResetOriginalElement(DateElement original, int arrayLength) {
             DateElements = new DateElement[arrayLength];
             DateElements[0] = original;
             DateElements[0].SetDate(1);
-            DateElements[0].SetController(Controller);
-            DateElements[0].SetCommandID(0);
         }
 
         private DateElement ConstructDateElement(int dateCount) {
@@ -94,8 +87,6 @@ namespace UI {
                 RowOffset += DateElementOffset;
             }
             newDateElement.SetDate(dateCount + 1);
-            newDateElement.SetController(Controller);
-            newDateElement.SetCommandID(0);
             return newDateElement;
         }
 
@@ -111,29 +102,7 @@ namespace UI {
         }
     }
 
-    public class DateForm_Controller : IController {
-        public void TriggerCommand(int commandID, string input) {
-            switch (commandID) {
-                case 0: SetDate(Convert.ToInt32(input)); break;
-                case 1: SaveDate(); break;
-                default: Debug.Log("[WARNING][DateForm_Controller] CommandID not recognized! "); return;
-            }
-        }
-
-        private void SetDate(int date) {
-            Managers.Data.Runtime.TempDay = date;
-            Messenger.Broadcast(Events.TEMP_DAY_UPDATED);
-        }
-
-        private void SaveDate() {
-            Managers.Data.Runtime.TempExpenseModel.Date = Managers.Data.Runtime.TempExpenseModel.Date.AddDays(Managers.Data.Runtime.TempDay - Managers.Data.Runtime.TempExpenseModel.Date.Day);
-            Messenger.Broadcast(Events.TEMP_EXPENSE_UPDATED);
-            Managers.UI.Pop();
-        }
-    }
-
     public class DateForm_ModelCollection {
-        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { (Managers.Data.Runtime.SelectedTime.Month + 0) });
         public int numOfDates = DateTime.DaysInMonth(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month);
         public int TempDay = Managers.Data.Runtime.TempDay;
     }
