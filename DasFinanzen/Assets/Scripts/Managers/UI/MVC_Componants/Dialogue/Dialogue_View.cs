@@ -8,7 +8,7 @@ namespace UI {
     public class Dialogue_View : MonoBehaviour, IView {
         [SerializeField] private RectTransform Tile = null;
         [SerializeField] private TextMeshProUGUI DialogueTextMesh = null;
-        [SerializeField] private Void_Button CloseButton = null;
+        [SerializeField] private Button CloseButton = null;
 
         private Dialogue_HumbleView HumbleView = null;
 
@@ -63,6 +63,17 @@ namespace UI {
         public void DeconstructView() {
 
         }
+    }
+
+    public class Dialogue_Controller : IController {
+        public void TriggerCommand(int commandID, string input) {
+            switch (commandID) {
+                case 0: Close(); break;
+                default: Debug.Log("[WARNING][Dialogue_Controller] CommandID not recognized! "); return;
+            }
+        }
+
+        public void Close() => Managers.UI.Pop();
     }
 
     public class Dialogue_ModelCollection {

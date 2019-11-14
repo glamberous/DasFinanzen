@@ -4,7 +4,6 @@ using UnityEngine;
 using Localization;
 using System.Text.RegularExpressions;
 using System;
-using TMPro;
 
 public class LocalizationManager : MonoBehaviour {
 
@@ -14,44 +13,30 @@ public class LocalizationManager : MonoBehaviour {
     public LocalizationManagerHumble Manager { get; private set; }
 }
 
-public struct LocaleObject {
-    public LocaleObject(string input1, TextMeshProUGUI input2) {
-        String = input1;
-        Mesh = input2;
-    }
-
-    public string String;
-    public TextMeshProUGUI Mesh;
-}
-
 public class LocalizationManagerHumble : IManager {
-    private Dictionary<int, LocaleObject> LocaleDict = new Dictionary<int, LocaleObject>();
-    //private Dictionary<int, string> LocaleDict = null;
-    //private Dictionary<int, TextMeshProUGUI> TextMeshDict = null;
+    private Dictionary<int, string> LocalizedDictionary = null;
 
     public ManagerStatus status { get; private set; }
     public void Startup() {
         Debug.Log("Localization Manager starting...");
 
-        LoadLocaleDictStrings(Managers.Data.FileData.Locale, Resources.FindObjectsOfTypeAll<TextMeshProUGUI>());
-        LoadTextMeshDict();
-        Refresh();
+        LoadLocale(Managers.Data.FileData.Locale);
 
         status = ManagerStatus.Started;
         Debug.Log("Localization Manager started.");
     }
 
-    private void LoadLocaleDictStrings(LOCALE locale) {
+    private void LoadLocale(LOCALE locale) {
         switch(locale) {
-            case LOCALE.EN: LocaleDict = GetLocaleDictFromFile("EN"); break;
-            default: LocaleDict = GetLocaleDictFromFile("EN"); break;
+            case LOCALE.EN: LocalizedDictionary = GetLocaleDictFromFile("EN"); break;
+            default: LocalizedDictionary = GetLocaleDictFromFile("EN"); break;
         }
     }
 
     private Dictionary<int, string> GetLocaleDictFromFile(string LocaleCode) {
         string[] textFileLines = Resources.Load<TextAsset>($"Localization/{LocaleCode}_Locale").text.Split(new char[] { '\n', '\r' });
-        LocaleDict = new Dictionary<int, LocaleObject>();
 
+        Dictionary<int, string> LocaleDict = new Dictionary<int, string>();
         int tempDictKey = -1;
         string tempDictValue = "";
 
@@ -67,37 +52,30 @@ public class LocalizationManagerHumble : IManager {
                 tempDictValue += line;
         }
         // Ensure final string key in file is added to the dictionary.
-        LocaleDict[tempDictKey] = new LocaleObject(tempDictValue.TrimEnd('\n'), null);
+        LocaleDict[tempDictKey] = tempDictValue.TrimEnd('\n');
+        return LocaleDict;
     }
 
     public void SetLocale(LOCALE locale) {
         Managers.Data.FileData.Locale = locale;
-        LoadLocaleDict(locale);
+        LoadLocale(locale);
         Managers.Data.Save();
-        Refresh();
+        Messenger.Broadcast(Events.LOCALE_CHANGED);
     }
 
-    private void LoadTextMeshDict(TextMeshProUGUI[] textMeshes) {
-        foreach (TextMeshProUGUI textMesh in textMeshes)
-
+    public Dictionary<int, string> GetStringDict(int[] keys) {
+        Dictionary<int, string> newDict = new Dictionary<int, string>();
+        foreach (int key in keys)
+            newDict[key] = GetString(key);
+        return newDict;
     }
 
-    public void Refresh() {
-        TextMeshProUGUI[] TextMeshes = GameObject.FindObjectsOfTypeAll<TextMeshProUGUI>();
-        for (int index = 0; index < TextMeshes.Length; index++)
-            TextMeshes[index].text = GetString(TextMeshes[index].text);
-    }
-
-    public string GetString(string text) {
-        if (Regex.IsMatch(text, @"^\[\d+\]$")) {
-            int key = Int32.Parse(Regex.Match(text, @"^\[\d+\]$").Value);
-            if (LocaleDict.ContainsKey(key))
-                return LocaleDict[key];
-            else {
-                Debug.Log("[WARNING] String key [{key}] missing.");
-                return $"[{key}] KEY MISSING";
-            }
+    private string GetString(int key) {
+        if (LocalizedDictionary.ContainsKey(key))
+            return LocalizedDictionary[key];
+        else {
+            Debug.Log("[WARNING] String key [{key}] missing.");
+            return $"[{key}] KEY MISSING";
         }
-        return text;
     }
 }

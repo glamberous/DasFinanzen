@@ -7,7 +7,7 @@ namespace UI {
     public class Goal_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI AmountText = null;
         [SerializeField] private TextMeshProUGUI RemainingText = null;
-        [SerializeField] private Void_Button GoalWindowButton = null;
+        [SerializeField] private Button GoalWindowButton = null;
 
         private Goal_HumbleView HumbleView = null;
 
@@ -25,7 +25,7 @@ namespace UI {
             Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(Events.GOAL_UPDATED, Refresh);
             Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
-            Messenger.AddListener(Localization.Events.TEXT_UPDATED, Refresh);
+            Messenger.AddListener(Localization.Events.LOCALE_CHANGED, Refresh);
         }
 
         public void Refresh() {
@@ -36,7 +36,7 @@ namespace UI {
             Messenger.RemoveListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.RemoveListener(Events.GOAL_UPDATED, Refresh);
             Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
-            Messenger.RemoveListener(Localization.Events.TEXT_UPDATED, Refresh);
+            Messenger.RemoveListener(Localization.Events.LOCALE_CHANGED, Refresh);
             HumbleView.DeconstructView();
         }
     }
@@ -63,6 +63,20 @@ namespace UI {
 
         public void DeconstructView() {
 
+        }
+    }
+
+    public class Goal_Controller : IController {
+        public void TriggerCommand(int commandID, string input) {
+            switch(commandID) {
+                case 0: TriggerGoalWindow(); break;
+                default: Debug.Log($"[WARNING][Goal_Controller] CommandID {commandID} not recognized! "); return;
+            }
+        }
+
+        private void TriggerGoalWindow() {
+            Managers.Data.Runtime.TempGoalModel = DataQueries.GetGoalModel(Managers.Data.FileData.GoalModels, Managers.Data.Runtime.SelectedTime);
+            Managers.UI.Push(WINDOW.EDIT_GOAL);
         }
     }
 

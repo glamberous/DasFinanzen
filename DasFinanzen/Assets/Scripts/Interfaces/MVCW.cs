@@ -1,5 +1,5 @@
 ﻿
-using System;
+
 
 public interface IModel {
     void Save();
@@ -10,11 +10,16 @@ public interface IModelCollection {
 
 }
 
-public interface IElement<T> {
-    void SetOnClickAction(Action<T> action, T var = default(T));
+public interface IController {
+    void TriggerCommand(int commandID, string input = null);
 }
 
-public interface IInputField {
+public interface IControllerElement {
+    void SetController(IController controller);
+    void SetCommandID(int commandID);
+}
+
+public interface IInputField : IControllerElement {
     void SetDisplayText(string input);
 }
 

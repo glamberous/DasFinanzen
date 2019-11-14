@@ -6,13 +6,19 @@ using TMPro;
 namespace UI {
     public class EditGoal_W_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI TitleText = null;
-        [SerializeField] private Void_Button CloseButton = null;
+        [SerializeField] private Button CloseButton = null;
 
         private EditGoal_W_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new EditGoal_W_HumbleView();
             HumbleView.Awake(TitleText);
+
+            EditGoal_W_Controller Controller = new EditGoal_W_Controller();
+            CloseButton.SetController(Controller);
+
+            //Cross reference the Command ID's from the Controller class near the bottom of this page.
+            CloseButton.SetCommandID(0); 
         }
 
         public void Activate() {
@@ -48,6 +54,17 @@ namespace UI {
         public void DeconstructView() {
 
         }
+    }
+
+    public class EditGoal_W_Controller : IController {
+        public void TriggerCommand(int commandID, string input) {
+            switch (commandID) {
+                case 0: Close(); break;
+                default: Debug.Log("[WARNING][EditGoal_W_Controller] CommandID not recognized! "); return;
+            }
+        }
+
+        public void Close() => Managers.UI.Pop();
     }
 
     public class EditGoal_W_ModelCollection {

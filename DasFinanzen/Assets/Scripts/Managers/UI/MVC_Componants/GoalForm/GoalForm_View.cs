@@ -6,7 +6,7 @@ namespace UI {
     public class GoalForm_View : MonoBehaviour, IView {
         [SerializeField] private Currency_InputField CurrencyInput = null;
         [SerializeField] private TextMeshProUGUI AmountTitle = null;
-        [SerializeField] private Void_Button Confirm = null;
+        [SerializeField] private Button Confirm = null;
 
         private GoalForm_HumbleView HumbleView = null;
 
@@ -58,6 +58,26 @@ namespace UI {
 
         public void DeconstructView() {
 
+        }
+    }
+
+    public class GoalForm_Controller : IController {
+        public void TriggerCommand(int commandID, string input = null) {
+            switch (commandID) {
+                case 0: SetAmount(input); break;
+                case 1: SaveGoal(); break;
+                default: Debug.Log("[WARNING][EditGoal_Controller] CommandID not recognized! "); return;
+            }
+        }
+
+        private void SaveGoal() {
+            Managers.Data.Runtime.TempGoalModel.Save();
+            Managers.Data.Runtime.TempGoalModel = null;
+            Managers.UI.Pop();
+        }
+
+        private void SetAmount(string input) {
+            Managers.Data.Runtime.TempGoalModel.Amount = DataReformatter.ConvertStringToDecimal(input);
         }
     }
 

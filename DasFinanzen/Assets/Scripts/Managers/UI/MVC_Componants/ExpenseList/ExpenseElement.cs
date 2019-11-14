@@ -6,7 +6,16 @@ using System;
 using TMPro;
 
 namespace UI {
-    public class ExpenseElement : Button_Int {
+    public class ExpenseElement : Button {
+        [HideInInspector] public int ExpenseID { get; private set; } = -1;
+        public void SetExpenseID(int id) => ExpenseID = id;
+
+        // Inherited from Generic_Button
+        public override void OnMouseUp() {
+            if (GetMouseAsWorldPoint().y >= OriginalMouseCoord.y-0.5f && GetMouseAsWorldPoint().y <= OriginalMouseCoord.y+0.5f)
+                Controller.TriggerCommand(CommandID, ExpenseID.ToString());
+        }
+
         private RectTransform TileRect = null;
         public void SetTileRect(RectTransform tile) => TileRect = tile;
 

@@ -7,13 +7,17 @@ using TMPro;
 namespace UI {
     public class Expense_W_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI TitleText = null;
-        [SerializeField] private Void_Button BackButton = null;
+        [SerializeField] private Button BackButton = null;
 
         private Expense_W_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new Expense_W_HumbleView();
             HumbleView.Awake(TitleText);
+
+            Expense_W_Controller Controller = new Expense_W_Controller();
+            BackButton.SetController(Controller);
+            BackButton.SetCommandID(0);
         }
 
         public void Activate() {
@@ -47,6 +51,20 @@ namespace UI {
 
         public void DeconstructView() {
 
+        }
+    }
+
+    public class Expense_W_Controller : IController {
+        public void TriggerCommand(int commandID, string input = null) {
+            switch (commandID) {
+                case 0: BackButton(); break;
+                default: Debug.Log("[WARNING][Expense_W_Controller] CommandID not recognized! "); return;
+            }
+        }
+
+        private void BackButton() {
+            Managers.Data.Runtime.TempExpenseModel = null;
+            Managers.UI.Pop();
         }
     }
 
