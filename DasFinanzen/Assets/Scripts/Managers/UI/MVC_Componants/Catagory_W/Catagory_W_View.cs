@@ -6,20 +6,15 @@ using TMPro;
 namespace UI {
     public class Catagory_W_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI TitleText = null;
-        [SerializeField] private Button BackButton = null;
-        [SerializeField] private Button AddExpense = null;
+        [SerializeField] private Button_Void BackButton = null;
+        [SerializeField] private Button_Void AddExpense = null;
 
     private Catagory_W_HumbleView HumbleView = null;
         public void Awake() {
             HumbleView = new Catagory_W_HumbleView();
 
-            Catagory_W_Controller Controller = new Catagory_W_Controller();
-            BackButton.SetController(Controller);
-            AddExpense.SetController(Controller);
-
-            //Cross reference the Command ID's from the Controller class near the bottom of this page.
-            BackButton.SetCommandID(0);
-            AddExpense.SetCommandID(1);
+            BackButton.SetOnClickAction(Controller.Instance.Pop, null);
+            AddExpense.SetOnClickAction(Controller.Instance.PushAddExpenseWindow, null);
         }
 
         public void Activate() {
@@ -51,23 +46,6 @@ namespace UI {
 
         public void DeconstructView() {
 
-        }
-    }
-
-    public class Catagory_W_Controller : IController {
-        public void TriggerCommand(int commandID, string input) {
-            switch (commandID) {
-                case 0: BackButton();  break;
-                case 1: AddExpense(); break;
-                default: Debug.Log("[WARNING][Catagory_W_Controller] CommandID not recognized! "); return;
-            }
-        }
-
-        private void BackButton() => Managers.UI.Pop();
-
-        private void AddExpense() {
-            Managers.Data.Runtime.TempExpenseModel = new ExpenseModel();
-            Managers.UI.Push(WINDOW.EXPENSE);
         }
     }
 

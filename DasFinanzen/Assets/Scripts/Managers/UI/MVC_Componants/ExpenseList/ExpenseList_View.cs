@@ -7,6 +7,7 @@ using TMPro;
 namespace UI {
     public class ExpenseList_View : MonoBehaviour, IView {
         [SerializeField] private ExpenseElement Original = null;
+        [SerializeField] private RectTransform TileRect = null;
         [SerializeField] private TextMeshProUGUI TransactionText = null;
         [SerializeField] private TextMeshProUGUI SpentText = null;
 
@@ -14,7 +15,7 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new ExpenseList_HumbleView();
-            HumbleView.Awake(Original, TransactionText, SpentText);
+            HumbleView.Awake(Original, TileRect, TransactionText, SpentText);
         }
 
         public void Activate() {
@@ -35,56 +36,59 @@ namespace UI {
     }
 
     public class ExpenseList_HumbleView {
-        private List<ExpenseElement> ExpenseElements = new List<ExpenseElement>();
-        private ExpenseList_Controller Controller = new ExpenseList_Controller();
-        private ExpenseElement Original = null;
-        private TileUIData ExpenseTileUIData = null;
-        private float OriginalTileYCoord;
+        private const float CatagoryOffset = 20f;
+        private float StartingTileHeight;
+        private ExpenseElement[] ExpenseElements = new ExpenseElement[1];
+        private RectTransform TileRect = null;
+        //private TileUIData ExpenseTileUIData = null;
+        
         private TextMeshProUGUI Transaction = null;
         private TextMeshProUGUI Spent = null;
 
-        public void Awake(ExpenseElement original, TextMeshProUGUI transactionText, TextMeshProUGUI spentText) {
+        public void Awake(ExpenseElement original, RectTransform tileRect, TextMeshProUGUI transactionText, TextMeshProUGUI spentText) {
+            ExpenseElements[0] = original;
+            TileRect = tileRect;
+            StartingTileHeight = TileRect.sizeDelta.y;
+
             Transaction = transactionText;
             Spent = spentText;
-            Original = original;
-            ExpenseTileUIData = new TileUIData(original.gameObject);
-            OriginalTileYCoord = ExpenseTileUIData.Tile.transform.position.y;
         }
 
         public void ConstructView(ExpenseList_ModelCollection modelCollection) {
-            ExpenseTileUIData.Tile.transform.position = new Vector3(ExpenseTileUIData.Tile.transform.position.x, OriginalTileYCoord, ExpenseTileUIData.Tile.transform.position.z);
             if (modelCollection.ExpenseModels.Count == 0)
                 ConstructEmptyView();
-            else
+            else 
                 ConstructRegularView(modelCollection);
         }
 
         private void ConstructEmptyView() {
-            ExpenseTileUIData.Parent.SetActive(false);
+            TileRect.gameObject.SetActive(false);
             // Probably needs more Code here for unique UI (informative text) when Empty.
         }
 
         private void ConstructRegularView(ExpenseList_ModelCollection modelCollection) {
-            ExpenseTileUIData.Parent.SetActive(true);
-            foreach (ExpenseModel model in modelCollection.ExpenseModels)
-                ExpenseElements.Add(ConstructExpenseElement(model));
-            ExpenseTileUIData.UpdateTileSize(ExpenseElements.Count);
+            ResetOriginalElement(ExpenseElements[0], modelCollection.ExpenseModels.Count);
+            TileRect.gameObject.SetActive(true);
+            ExpenseElements[0].UpdateView(modelCollection.ExpenseModels[0]);
+            for (int index = 1; index < modelCollection.ExpenseModels.Count; index++)
+                ExpenseElements[index] = ConstructExpenseElement(modelCollection.ExpenseModels[index], index);
+            TileRect.sizeDelta = new Vector2(TileRect.sizeDelta.x, StartingTileHeight + (modelCollection.ExpenseModels.Count * CatagoryOffset));
 
             Transaction.text = modelCollection.Strings[24];
-            Spent.text = modelCollection.Strings[18];   
+            Spent.text = modelCollection.Strings[18];
         }
 
-        private ExpenseElement ConstructExpenseElement(ExpenseModel model) {
-            ExpenseElement newExpense;
-            if (ExpenseElements.Count == 0)
-                newExpense = Original;
-            else
-                newExpense = GameObject.Instantiate(original: Original, parent: ExpenseTileUIData.Parent.transform) as ExpenseElement;
-            newExpense.transform.localPosition = new Vector3(ExpenseTileUIData.StartPos.x, ExpenseTileUIData.StartPos.y - (Constants.CatagoryOffset * ExpenseElements.Count), ExpenseTileUIData.StartPos.z);
-            newExpense.SetExpenseID(model.ExpenseID);
-            newExpense.SetController(Controller);
-            newExpense.SetCommandID(0);
-            newExpense.SetTileRect(ExpenseTileUIData.Tile);
+        private void ResetOriginalElement(ExpenseElement original, int arrayLength) {
+            ExpenseElements = new ExpenseElement[arrayLength];
+            ExpenseElements[0] = original;
+        }
+
+        private ExpenseElement ConstructExpenseElement(ExpenseModel model, int index) {
+            ExpenseElement newExpense = GameObject.Instantiate(original: ExpenseElements[index-1], parent: ExpenseElements[index-1].transform.parent.transform) as ExpenseElement;
+            RectTransform newRect = newExpense.GetComponent<RectTransform>();
+            newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x, newRect.anchoredPosition.y + CatagoryOffset);
+            newExpense.SetOnClickAction(Controller.Instance.PushEditExpenseWindow, model.ExpenseID);
+            newExpense.SetTileRect(TileRect);
             newExpense.UpdateView(model);
             return newExpense;
         }
@@ -95,25 +99,8 @@ namespace UI {
         }
 
         public void DeconstructView() {
-            int count = 0;
-            foreach (ExpenseElement expenseElement in ExpenseElements)
-                if (0 != count++)
-                    GameObject.Destroy(expenseElement.gameObject);
-            ExpenseElements = new List<ExpenseElement>();
-        }
-    }
-
-    public class ExpenseList_Controller : IController {
-        public void TriggerCommand(int commandID, string input) {
-            switch (commandID) {
-                case 0: ExpenseClicked(Convert.ToInt32(input)); break;
-                default: Debug.Log("[WARNING][ExpenseList_Controller] CommandID not recognized! "); return;
-            }
-        }
-
-        private void ExpenseClicked(int id) {
-            Managers.Data.Runtime.TempExpenseModel = DataQueries.GetExpenseModel(Managers.Data.FileData.ExpenseModels, id);
-            Managers.UI.Push(WINDOW.EXPENSE);
+            for (int index = 1; index < ExpenseElements.Length; index++)
+                GameObject.Destroy(ExpenseElements[index].gameObject);
         }
     }
 

@@ -90,15 +90,6 @@ namespace UI {
         }
     }
 
-    public class DAS_Controller : IController {
-        public void TriggerCommand(int commandID, string input) {
-            switch (commandID) {
-                case 0: break;
-                default: Debug.Log("[WARNING][DAS_Controller] CommandID not recognized! "); return;
-            }
-        }
-    }
-
     public class DAS_ModelCollection {
         // Put Model Collections Here
         public DateTime CurrentlySetTime = Managers.Data.Runtime.SelectedTime;

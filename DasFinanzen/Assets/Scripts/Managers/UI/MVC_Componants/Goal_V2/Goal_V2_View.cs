@@ -17,12 +17,6 @@ namespace UI {
         public void Awake() {
             HumbleView = new Goal_V2_HumbleView();
             HumbleView.Awake(PlannedText, PlannedAmount, SpentText, SpentAmount, RemainingText, RemainingAmount);
-
-            //Goal_V2_Controller Controller = new Goal_V2_Controller();
-            //Example.SetController(Controller);
-
-            //Cross reference the Command ID's from the Controller class near the bottom of this page.
-            //Example.SetCommandID(0); 
         }
 
         public void Activate() {
@@ -83,15 +77,6 @@ namespace UI {
 
         public void DeconstructView() {
 
-        }
-    }
-
-    public class Goal_V2_Controller : IController {
-        public void TriggerCommand(int commandID, string input) {
-            switch (commandID) {
-                case 0: break;
-                default: Debug.Log("[WARNING][Goal_V2_Controller] CommandID not recognized! "); return;
-            }
         }
     }
 

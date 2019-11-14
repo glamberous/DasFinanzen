@@ -6,18 +6,13 @@ using TMPro;
 namespace UI {
     public class EditDate_W_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI TitleText = null;
-        [SerializeField] private Button CloseButton = null;
+        [SerializeField] private Button_Void CloseButton = null;
 
         private EditDate_W_HumbleView HumbleView = new EditDate_W_HumbleView();
 
         public void Awake() {
             HumbleView.Awake(TitleText);
-
-            EditDate_W_Controller Controller = new EditDate_W_Controller();
-            CloseButton.SetController(Controller);
-
-            //Cross reference the Command ID's from the Controller class near the bottom of this page.
-            CloseButton.SetCommandID(0);
+            CloseButton.SetOnClickAction(Controller.Instance.Pop);
         }
 
         public void Activate() {
@@ -53,17 +48,6 @@ namespace UI {
         public void DeconstructView() {
 
         }
-    }
-
-    public class EditDate_W_Controller : IController {
-        public void TriggerCommand(int commandID, string input) {
-            switch (commandID) {
-                case 0: Close(); break;
-                default: Debug.Log("[WARNING][EditDate_W_Controller] CommandID not recognized! "); return;
-            }
-        }
-
-        public void Close() => Managers.UI.Pop();
     }
 
     public class EditDate_W_ModelCollection {
