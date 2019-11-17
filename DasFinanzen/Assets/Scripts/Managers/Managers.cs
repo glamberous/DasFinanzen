@@ -8,9 +8,9 @@ using UnityEngine;
 //Add new Managers to make them required
 
 public class Managers : MonoBehaviour {
-    public static DataManager Data { get; private set; }
-    public static UIManager UI { get; private set; }
-    public static LocalizationManager Locale { get; private set; }
+    public static DataManagerHumble Data { get; private set; }
+    public static UIManagerHumble UI { get; private set; }
+    public static LocalizationManagerHumble Locale { get; private set; }
     //Add More Managers here
 
     private List<IManager> startSequence;

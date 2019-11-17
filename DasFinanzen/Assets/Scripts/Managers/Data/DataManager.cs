@@ -1,7 +1,11 @@
 ﻿
 using UnityEngine;
 
-public class DataManager : MonoBehaviour, IManager {
+public class DataManager : MonoBehaviour {
+    [HideInInspector] public DataManagerHumble Manager { get; private set; } = new DataManagerHumble();
+}
+
+public class DataManagerHumble : IManager { 
     public RuntimeData Runtime { get; private set; } = new RuntimeData();
     public FileData FileData { get => SaveLoad.FileData; }
     private SaveLoadSystem SaveLoad = null;

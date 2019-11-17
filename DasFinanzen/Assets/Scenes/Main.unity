@@ -3115,12 +3115,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed9b3ef89a8f98418e9b1609db2357e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DialogueWindow: {fileID: 854291043}
-  MainWindow: {fileID: 1394624967}
-  CatagoryWindow: {fileID: 1122545391}
-  ExpenseWindow: {fileID: 2038742829}
-  EditGoalWindow: {fileID: 753571500}
-  EditDateWindow: {fileID: 1208990826}
 --- !u!114 &434004929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5558,6 +5552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf55d6b8c8cffc544a9dd6fc1d50c593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windowID: 6
 --- !u!114 &753571505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6373,6 +6368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf55d6b8c8cffc544a9dd6fc1d50c593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windowID: 1
 --- !u!114 &854291046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8098,6 +8094,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf55d6b8c8cffc544a9dd6fc1d50c593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windowID: 3
 --- !u!114 &1122545396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8126,7 +8123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Original: {fileID: 398886999}
-  TileRect: {fileID: 309090015}
+  TileRect: {fileID: 0}
   TransactionText: {fileID: 2080761691}
   SpentText: {fileID: 29310765}
 --- !u!114 &1122545398
@@ -8959,6 +8956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf55d6b8c8cffc544a9dd6fc1d50c593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windowID: 7
 --- !u!114 &1208990829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9035,9 +9033,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Original: {fileID: 1232136826}
-  TileRect: {fileID: 1086580978}
-  MonthTitle: {fileID: 756556347}
-  ConfirmButton: {fileID: 1911057487}
+  TileRect: {fileID: 0}
+  MonthTitle: {fileID: 0}
+  ConfirmButton: {fileID: 0}
 --- !u!1 &1210274035
 GameObject:
   m_ObjectHideFlags: 0
@@ -10328,6 +10326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf55d6b8c8cffc544a9dd6fc1d50c593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windowID: 2
 --- !u!114 &1394624969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10432,9 +10431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef97845b824c2a42b3c90e547ceed1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HeaderText: {fileID: 1713279709}
-  Original: {fileID: 13638022}
-  SpentText: {fileID: 746761615}
+  HeaderText: {fileID: 0}
+  Original: {fileID: 0}
+  SpentText: {fileID: 0}
   IsRecurring: 0
 --- !u!114 &1394624975
 MonoBehaviour:
@@ -10481,10 +10480,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef97845b824c2a42b3c90e547ceed1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HeaderText: {fileID: 1356871101}
-  Original: {fileID: 2048230561}
-  SpentText: {fileID: 1571396961}
-  IsRecurring: 1
+  HeaderText: {fileID: 0}
+  Original: {fileID: 0}
+  SpentText: {fileID: 0}
+  IsRecurring: 0
 --- !u!1 &1419889402
 GameObject:
   m_ObjectHideFlags: 0
@@ -15118,6 +15117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf55d6b8c8cffc544a9dd6fc1d50c593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windowID: 4
 --- !u!114 &2038742834
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,20 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour {
-    // Add any UI Views to this manager in the Editor.
-    [SerializeField] private GameObject DialogueWindow = null;
-    [SerializeField] private GameObject MainWindow = null;
-    [SerializeField] private GameObject CatagoryWindow = null;
-    [SerializeField] private GameObject ExpenseWindow = null;
-    [SerializeField] private GameObject EditGoalWindow = null;
-    [SerializeField] private GameObject EditDateWindow = null;
-    //[SerializeField] private GraphUIView GraphView = null;
-    // Add new views here
-    private float SortingOrder = 0;
+    [HideInInspector] public UIManagerHumble Manager { get; private set; } = new UIManagerHumble();
+
+    private void Awake() {
+        SceneManager.sceneLoaded += Manager.OnSceneLoaded;
+    }
+}
+
+public class UIManagerHumble : IManager { 
     private Dictionary<UI.WINDOW, GameObject> Windows = null;
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        foreach (IWindow windowObj in Resources.FindObjectsOfTypeAll(typeof(IWindow)) as IWindow[])
+            Windows[windowObj.GetEnum()] = windowObj.GetGameObject();
+    }
+
+    public ManagerStatus status { get; private set; }
+    public void Startup() {
+        Debug.Log("UI Manager starting...");
+
+        foreach (KeyValuePair<WINDOW, GameObject> window in Windows)
+            window.Value.SetActive(false);
+
+        Push(UI.WINDOW.MAIN);
+
+        status = ManagerStatus.Started;
+        Debug.Log("UI Manager started.");
+    }
+
     private Stack<IWindow> UIStack = new Stack<IWindow>();
+    private float SortingOrder = 0;
 
     public void Push(UI.WINDOW window) {
         if (Windows.ContainsKey(window))
@@ -33,28 +51,6 @@ public class UIManager : MonoBehaviour {
         UIStack.Pop().Deactivate();
         SortingOrder += 100;
     }
-
-    public ManagerStatus status { get; private set; }
-    public void Startup() {
-        Debug.Log("UI Manager starting...");
-
-        Windows[UI.WINDOW.DIALOGUE] = DialogueWindow;
-        Windows[UI.WINDOW.MAIN] = MainWindow;
-        Windows[UI.WINDOW.CATAGORY] = CatagoryWindow;
-        Windows[UI.WINDOW.EXPENSE] = ExpenseWindow;
-        Windows[UI.WINDOW.EDIT_GOAL] = EditGoalWindow;
-        Windows[UI.WINDOW.EDIT_DATE] = EditDateWindow;
-
-        foreach (KeyValuePair<UI.WINDOW, GameObject> view in Windows)
-            view.Value.SetActive(false);
-        Push(UI.WINDOW.MAIN);
-
-        status = ManagerStatus.Started;
-        Debug.Log("UI Manager started.");
-    }
-
-    
-    
 }
 
 

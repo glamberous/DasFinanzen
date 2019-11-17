@@ -1,6 +1,7 @@
 ﻿
 namespace UI {
     public enum WINDOW {
+        NULL,
         DIALOGUE,
         MAIN,
         CATAGORY,

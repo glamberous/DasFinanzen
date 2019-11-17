@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace UI {
     public class Window : MonoBehaviour, IWindow {
+        [SerializeField] WINDOW windowID = WINDOW.NULL;
+
         private IView[] Views = null;
         private GameObject LayerSorterObject = null;
 
@@ -10,6 +12,9 @@ namespace UI {
             LayerSorterObject = gameObject.transform.GetChild(0).gameObject;
             Views = GetComponentsInChildren<IView>();
         }
+
+        public WINDOW GetEnum() => windowID;
+        public GameObject GetGameObject() => gameObject;
 
         public IWindow Activate() {
             // You need to set it active before Activating/Initializing all the views otherwise Awake() doesn't get called.

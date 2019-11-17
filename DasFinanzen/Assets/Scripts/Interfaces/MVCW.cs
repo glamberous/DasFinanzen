@@ -1,5 +1,6 @@
 ﻿
 using System;
+using UnityEngine;
 
 public interface IModel {
     void Save();
@@ -23,6 +24,8 @@ public interface IButton<T> : IControllerElement<T> {
 }
 
 public interface IWindow {
+    UI.WINDOW GetEnum();
+    GameObject GetGameObject();
     IWindow Activate();
     void Deactivate();
     void SetZLayer(float input);
