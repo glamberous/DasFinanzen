@@ -5,17 +5,11 @@ using TMPro;
 
 namespace UI {
     [RequireComponent(typeof(TMP_InputField))]
-    public class String_InputField : MonoBehaviour, IInputField {
+    public class String_InputField : GenericElement<string>, IInputField<string> {
         private TMP_InputField TextInput = null;
         public void Awake() => TextInput = GetComponent<TMP_InputField>();
 
-        private IController Controller = null;
-        public void SetController(IController controller) => Controller = controller;
-
-        private int CommandID = -1;
-        public void SetCommandID(int commandID) => CommandID = commandID;
-
         public void SetDisplayText(string input) => TextInput.text = input;
-        public void OnEndEdit() => Controller.TriggerCommand(CommandID, TextInput.text);
+        public void OnEndEdit() => Action(TextInput.text);
     }
 }

@@ -6,7 +6,7 @@ namespace UI {
     public class GoalForm_View : MonoBehaviour, IView {
         [SerializeField] private Currency_InputField CurrencyInput = null;
         [SerializeField] private TextMeshProUGUI AmountTitle = null;
-        [SerializeField] private Void_Button Confirm = null;
+        [SerializeField] private Button_Void Confirm = null;
 
         private GoalForm_HumbleView HumbleView = null;
 
@@ -14,12 +14,8 @@ namespace UI {
             HumbleView = new GoalForm_HumbleView();
             HumbleView.Awake(AmountTitle, CurrencyInput);
 
-            GoalForm_Controller Controller = new GoalForm_Controller();
-            CurrencyInput.SetController(Controller);
-            Confirm.SetController(Controller);
-            
-            CurrencyInput.SetCommandID(0);
-            Confirm.SetCommandID(1);
+            CurrencyInput.SetAction(Controller.Instance.SetTempExpenseAmount);
+            Confirm.SetAction(Controller.Instance.SaveTempExpense);
         }
 
         public void Activate() {

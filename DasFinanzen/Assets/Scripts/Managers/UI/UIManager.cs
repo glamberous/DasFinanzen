@@ -13,25 +13,9 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject EditDateWindow = null;
     //[SerializeField] private GraphUIView GraphView = null;
     // Add new views here
-
-    private void Awake() { // TODO change key's to Enums
-        Dictionary<UI.WINDOW, GameObject> Windows = new Dictionary<UI.WINDOW, GameObject>();
-        Windows[UI.WINDOW.DIALOGUE] = DialogueWindow;
-        Windows[UI.WINDOW.MAIN] = MainWindow;
-        Windows[UI.WINDOW.CATAGORY] = CatagoryWindow;
-        Windows[UI.WINDOW.EXPENSE] = ExpenseWindow;
-        Windows[UI.WINDOW.EDIT_GOAL] = EditGoalWindow;
-        Windows[UI.WINDOW.EDIT_DATE] = EditDateWindow;
-        //Windows["Graph"] = GraphWindow;
-        // Add new views here
-
-        Manager = new UIManagerHumble(Windows);
-    }
-    public UIManagerHumble Manager { get; private set; }
-}
-
-public class UIManagerHumble : IManager {
     private float SortingOrder = 0;
+    private Dictionary<UI.WINDOW, GameObject> Windows = null;
+    private Stack<IWindow> UIStack = new Stack<IWindow>();
 
     public void Push(UI.WINDOW window) {
         if (Windows.ContainsKey(window))
@@ -50,9 +34,16 @@ public class UIManagerHumble : IManager {
         SortingOrder += 100;
     }
 
-    public ManagerStatus status { get; private set; } 
+    public ManagerStatus status { get; private set; }
     public void Startup() {
         Debug.Log("UI Manager starting...");
+
+        Windows[UI.WINDOW.DIALOGUE] = DialogueWindow;
+        Windows[UI.WINDOW.MAIN] = MainWindow;
+        Windows[UI.WINDOW.CATAGORY] = CatagoryWindow;
+        Windows[UI.WINDOW.EXPENSE] = ExpenseWindow;
+        Windows[UI.WINDOW.EDIT_GOAL] = EditGoalWindow;
+        Windows[UI.WINDOW.EDIT_DATE] = EditDateWindow;
 
         foreach (KeyValuePair<UI.WINDOW, GameObject> view in Windows)
             view.Value.SetActive(false);
@@ -62,8 +53,8 @@ public class UIManagerHumble : IManager {
         Debug.Log("UI Manager started.");
     }
 
-    private Dictionary<UI.WINDOW, GameObject> Windows = null;
-    public UIManagerHumble(Dictionary<UI.WINDOW, GameObject> windows) => Windows = windows;
-
-    private Stack<IWindow> UIStack = new Stack<IWindow>();
+    
+    
 }
+
+

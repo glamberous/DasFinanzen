@@ -12,7 +12,7 @@ namespace UI {
 
         public void Awake() {
             HumbleView.Awake(TitleText);
-            CloseButton.SetOnClickAction(Controller.Instance.Pop);
+            CloseButton.SetAction(Controller.Instance.Pop);
         }
 
         public void Activate() {

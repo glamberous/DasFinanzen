@@ -16,11 +16,6 @@ namespace UI {
         public void Awake() {
             HumbleView = new DAS_HumbleView();
             HumbleView.Awake(BDASAmount, ADASAmount);
-            //DAS_Controller Controller = new DAS_Controller();
-            //Example.SetController(Controller);
-
-            //Cross reference the Command ID's from the Controller class near the bottom of this page.
-            //Example.SetCommandID(0); 
         }
 
         public void Activate() {

@@ -6,17 +6,11 @@ using TMPro;
 
 namespace UI {
     [RequireComponent(typeof(TMP_InputField))]
-    public class Currency_InputField : MonoBehaviour, IInputField {
+    public class Currency_InputField : GenericElement<decimal>, IInputField<decimal> {
         [SerializeField] private TextMeshProUGUI TextDisplay = null;
         
         private TMP_InputField TextInput = null;
         public void Awake() => TextInput = GetComponent<TMP_InputField>();
-
-        private IController Controller = null;
-        public void SetController(IController controller) => Controller = controller;
-
-        private int CommandID = -1;
-        public void SetCommandID(int commandID) => CommandID = commandID;
 
         public void OnValueChanged() {
             if (TextInput.text.StartsWith("0"))
@@ -35,7 +29,7 @@ namespace UI {
         }
 
         public void SetDisplayText(string input) => TextDisplay.text = "$" + input;
-        public void OnEndEdit() => Controller.TriggerCommand(CommandID, TextDisplay.text.Remove(0, 1));
+        public void OnEndEdit() => Action(Convert.ToDecimal(TextDisplay.text.Remove(0, 1)));
     }
 }
 

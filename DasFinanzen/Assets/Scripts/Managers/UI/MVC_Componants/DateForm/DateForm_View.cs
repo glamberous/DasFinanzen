@@ -16,7 +16,7 @@ namespace UI {
         public void Awake() {
             HumbleView.Awake(Original, TileRect, MonthTitle);
 
-            ConfirmButton.SetOnClickAction(Controller.Instance.SaveTempDayToTempExpense);
+            ConfirmButton.SetAction(Controller.Instance.SaveTempDayToTempExpense);
         }
 
         public void Activate() {
@@ -65,9 +65,8 @@ namespace UI {
                     DateElements[dateIndex].SetSelected(true);
                 else
                     DateElements[dateIndex].SetSelected(false);
-            }
+            }       
             MonthTitle.text = $"[{Managers.Data.Runtime.SelectedTime.Month + 0}]";
-            Managers.Locale.Refresh();
         }
 
         private void ResetOriginalElement(DateElement original, int arrayLength) {

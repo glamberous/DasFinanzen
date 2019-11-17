@@ -7,25 +7,23 @@ using TMPro;
 
 namespace UI {
     public class CatagoryList_View : MonoBehaviour, IView {
-        [SerializeField] private TextMeshProUGUI DailyText = null;
-        [SerializeField] private CatagoryElement DailyOriginal = null;
-        [SerializeField] private TextMeshProUGUI MonthlyText = null;
-        [SerializeField] private CatagoryElement MonthlyOriginal = null;
-        [SerializeField] private TextMeshProUGUI SpentText1 = null;
-        [SerializeField] private TextMeshProUGUI SpentText2 = null;
+        [SerializeField] private TextMeshProUGUI HeaderText = null;
+        [SerializeField] private CatagoryElement Original = null;
+        [SerializeField] private TextMeshProUGUI SpentText = null;
+        [SerializeField] private bool IsRecurring = false;
 
         private CatagoryList_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new CatagoryList_HumbleView();
-            HumbleView.Awake(DailyText, MonthlyText, SpentText1, SpentText2);
+            HumbleView.Awake(Original, HeaderText, SpentText, IsRecurring);
         }
 
         public void Activate() {
-            HumbleView.ConstructView(new CatagoryList_ModelCollection(), DailyOriginal, MonthlyOriginal);
+            HumbleView.ConstructView(new CatagoryList_ModelCollection());
             Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
-            Messenger.AddListener(Localization.Events.TEXT_UPDATED, Refresh);
+            Messenger.AddListener(Localization.Events.LOCALE_CHANGED, Refresh);
             Debug.Log("CatagoryView Activated.");
         }
 
@@ -34,78 +32,92 @@ namespace UI {
         public void Deactivate() {
             Messenger.RemoveListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
-            Messenger.RemoveListener(Localization.Events.TEXT_UPDATED, Refresh);
+            Messenger.RemoveListener(Localization.Events.LOCALE_CHANGED, Refresh);
             HumbleView.DeconstructView();
             Debug.Log("CatagoryView Deactivated.");
         }
     }
 
     public class CatagoryList_HumbleView {
-        private List<CatagoryElement> RecurringCatagoryElements = new List<CatagoryElement>();
-        private List<CatagoryElement> DailyCatagoryElements = new List<CatagoryElement>();
-        private TextMeshProUGUI Daily = null;
-        private TextMeshProUGUI Monthly = null;
-        private TextMeshProUGUI Spent1 = null;
-        private TextMeshProUGUI Spent2 = null;
+        private const float CatagoryOffset = 20.0f;
+        private float StartingTileHeight;
+        private bool IsRecurring;
+        private CatagoryElement[] CatagoryElements = new CatagoryElement[1];
 
-        public void Awake(TextMeshProUGUI dailyHeader, TextMeshProUGUI monthlyHeader, TextMeshProUGUI spentText1, TextMeshProUGUI spentText2) {
-            Daily = dailyHeader;
-            Monthly = monthlyHeader;
-            Spent1 = spentText1;
-            Spent2 = spentText2;
+        private TextMeshProUGUI Header = null;
+        private TextMeshProUGUI Spent = null;
+
+        public void Awake(CatagoryElement original, TextMeshProUGUI headerText, TextMeshProUGUI spentText, bool recurring) {
+            CatagoryElements[0] = original;
+            IsRecurring = recurring;
+
+            Header = headerText;
+            Spent = spentText;
         }
 
-        public void ConstructView(CatagoryList_ModelCollection ModelCollection, CatagoryElement dailyOriginal, CatagoryElement monthlyOriginal) {
-            TileUIData DailyUIData = new TileUIData(dailyOriginal.gameObject);
-            TileUIData MonthlyUIData = new TileUIData(monthlyOriginal.gameObject);
-            foreach (CatagoryModel catagoryModel in ModelCollection.CatagoryModels)
-                if (catagoryModel.Recurring)
-                    RecurringCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, MonthlyUIData, RecurringCatagoryElements.Count));
-                else
-                    DailyCatagoryElements.Add(ConstructCatagoryElement(catagoryModel, DailyUIData, DailyCatagoryElements.Count));
-            MonthlyUIData.UpdateTileSize(RecurringCatagoryElements.Count);
-            DailyUIData.UpdateTileSize(DailyCatagoryElements.Count);
-            RefreshView(ModelCollection);
+        public void ConstructView(CatagoryList_ModelCollection modelCollection) {
+            CatagoryModel[] filteredCatagoryModels = GetFilteredCatagoryModels(modelCollection.CatagoryModels);
+            decimal[] expenseTotals = GetExpenseTotals(filteredCatagoryModels, modelCollection.ExpenseModels);
+            ResetOriginalElement(CatagoryElements[0], filteredCatagoryModels.Length);
+
+            CatagoryElements[0].UpdateView(filteredCatagoryModels[0], expenseTotals[0]);
+            for (int index = 1; index < CatagoryElements.Length; index++)
+                CatagoryElements[index] = ConstructCatagoryElement(filteredCatagoryModels[index], index, expenseTotals[0]);
+
+            Header.text = IsRecurring ? modelCollection.Strings[17] : modelCollection.Strings[16];
+            Spent.text = modelCollection.Strings[18];
         }
 
-        private CatagoryElement ConstructCatagoryElement(CatagoryModel model, TileUIData UIData, int count) {
-            CatagoryElement newCatagory;
-            if (count == 0)
-                newCatagory = UIData.Original.GetComponent<CatagoryElement>();
-            else
-                newCatagory = GameObject.Instantiate(original: UIData.Original.GetComponent<CatagoryElement>(), parent: UIData.Parent.transform) as CatagoryElement;
-            newCatagory.transform.localPosition = new Vector3(UIData.StartPos.x, UIData.StartPos.y - (Constants.CatagoryOffset * count), UIData.StartPos.z);
-            newCatagory.SetOnClickAction(Controller.Instance.PushCatagoryWindow, model.CatagoryID);
-            return newCatagory;
+        private CatagoryModel[] GetFilteredCatagoryModels(List<CatagoryModel> catagoryModels) {
+            int count = MatchedIsRecurringCount(catagoryModels);
+            CatagoryModel[] newCatagoryModels = new CatagoryModel[count];
+            for (int index = 0; index < count; index++)
+                newCatagoryModels[index] = catagoryModels[index];
+            return newCatagoryModels;
+        }
+
+        private int MatchedIsRecurringCount(List<CatagoryModel> catagoryModels) {
+            int count = 0;
+            foreach (CatagoryModel catagoryModel in catagoryModels)
+                if (catagoryModel.Recurring == IsRecurring)
+                    count++;
+            return count;
+        }
+
+        private decimal[] GetExpenseTotals(CatagoryModel[] catagoryModels, List<ExpenseModel> expenseModels) {
+            decimal[] totals = new decimal[catagoryModels.Length];
+            for (int index = 0; index < catagoryModels.Length; index++) {
+                totals[index] = 0.00m;
+                foreach (ExpenseModel expenseModel in expenseModels)
+                    if (catagoryModels[index].CatagoryID == expenseModel.CatagoryID)
+                        totals[index] += expenseModel.Amount;
+            }
+            return totals;
+        }
+
+        private void ResetOriginalElement(CatagoryElement original, int arrayLength) {
+            CatagoryElements = new CatagoryElement[arrayLength];
+            CatagoryElements[0] = original;
+        }
+
+        private CatagoryElement ConstructCatagoryElement(CatagoryModel model, int index, decimal total) {
+            CatagoryElement newExpense = GameObject.Instantiate(original: CatagoryElements[index - 1], parent: CatagoryElements[index - 1].transform.parent.transform) as CatagoryElement;
+            RectTransform newRect = newExpense.GetComponent<RectTransform>();
+            newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x, newRect.anchoredPosition.y + CatagoryOffset);
+            newExpense.SetAction(Controller.Instance.PushCatagoryWindow, model.CatagoryID);
+            //newExpense.SetTileRect(TileRect); Add Later if I want the catagory tiles to scroll.
+            newExpense.UpdateView(model, total);
+            return newExpense;
         }
 
         public void RefreshView(CatagoryList_ModelCollection modelCollection) {
-            Daily.text = modelCollection.Strings[16];
-            Monthly.text = modelCollection.Strings[17];
-            Spent1.text = modelCollection.Strings[18];
-            Spent2.text = modelCollection.Strings[18];
-
-            Dictionary<int, decimal> ExpenseTotalsDict = DataReformatter.GetExpenseTotalsDict(modelCollection.CatagoryModels, modelCollection.ExpenseModels);
-            Dictionary<int, CatagoryModel> CatagoryModelDict = DataReformatter.GetCatagoryModelsDict(modelCollection.CatagoryModels);
-
-            foreach (CatagoryElement catagoryElem in RecurringCatagoryElements)
-                catagoryElem.UpdateView(CatagoryModelDict[catagoryElem.CatagoryID], ExpenseTotalsDict[catagoryElem.CatagoryID]);
-            foreach (CatagoryElement catagoryElem in DailyCatagoryElements)
-                catagoryElem.UpdateView(CatagoryModelDict[catagoryElem.CatagoryID], ExpenseTotalsDict[catagoryElem.CatagoryID]);
+            DeconstructView();
+            ConstructView(modelCollection);
         }
 
         public void DeconstructView() {
-            DestroyCatagoryElements(RecurringCatagoryElements);
-            DestroyCatagoryElements(DailyCatagoryElements);
-        }
-
-        private void DestroyCatagoryElements(List<CatagoryElement> catagoryElements) {
-            int count = 0;
-            foreach (CatagoryElement catagoryElement in catagoryElements) {
-                RecurringCatagoryElements.Remove(catagoryElement);
-                if (count++ != 0)
-                    GameObject.Destroy(catagoryElement.gameObject);
-            }
+            for (int index = 1; index < CatagoryElements.Length; index++)
+                GameObject.Destroy(CatagoryElements[index].gameObject);
         }
     }
 

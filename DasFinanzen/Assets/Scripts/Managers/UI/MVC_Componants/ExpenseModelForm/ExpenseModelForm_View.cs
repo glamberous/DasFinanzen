@@ -9,17 +9,23 @@ namespace UI {
         [SerializeField] private TextMeshProUGUI DateTextDisplay = null; // TODO Need to build a custom Date_InputField like the other fields.
         [SerializeField] private TextMeshProUGUI AmountTitle = null;
 
-        [SerializeField] private Void_Button SaveExpenseButton = null;
-        [SerializeField] private Void_Button DeleteExpenseButton = null;
+        [SerializeField] private Button_Void SaveExpenseButton = null;
+        [SerializeField] private Button_Void DeleteExpenseButton = null;
         [SerializeField] private Currency_InputField CurrencyInputField = null;
         [SerializeField] private String_InputField StringInputField = null;
-        [SerializeField] private Void_Button EditDate = null;
+        [SerializeField] private Button_Void EditDateButton = null;
 
         private ExpenseModelForm_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new ExpenseModelForm_HumbleView();
             HumbleView.Awake(AmountTitle, CurrencyInputField, StringInputField, DateTextDisplay);
+
+            SaveExpenseButton.SetAction(Controller.Instance.SaveTempExpense);
+            DeleteExpenseButton.SetAction(Controller.Instance.DeleteTempExpense);
+            EditDateButton.SetAction(Controller.Instance.PushEditDateWindow);
+            StringInputField.SetAction(Controller.Instance.SetTempExpenseName);
+
         }
 
         public void Activate() {
@@ -50,7 +56,7 @@ namespace UI {
             Date = date;
         }
 
-        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, Void_Button deleteButton) {
+        public void ConstructView(ExpenseModelForm_ModelCollection modelCollection, Button_Void deleteButton) {
             if (modelCollection.ExpenseModel.ExpenseID == -1) {
                 modelCollection.ExpenseModel.NameText = modelCollection.ExpenseModel.Catagory.NameText;
                 deleteButton.gameObject.SetActive(false);
@@ -64,6 +70,7 @@ namespace UI {
             AmountInput.SetDisplayText(modelCollection.ExpenseModel.Amount.ToString());
             NameInput.SetDisplayText(modelCollection.ExpenseModel.NameText);
             Date.text = modelCollection.ExpenseModel.Date.ToString("MM/dd");
+
             AmountTitle.text = modelCollection.Strings[22];
         }
 

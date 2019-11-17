@@ -7,17 +7,17 @@ namespace UI {
     public class Goal_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI AmountText = null;
         [SerializeField] private TextMeshProUGUI RemainingText = null;
-        [SerializeField] private Void_Button GoalWindowButton = null;
+        [SerializeField] private Button_Void GoalWindowButton = null;
 
         private Goal_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new Goal_HumbleView();
             HumbleView.Awake(AmountText, RemainingText);
+        }
 
-            Goal_Controller Controller = new Goal_Controller();
-            GoalWindowButton.SetController(Controller);
-            GoalWindowButton.SetCommandID(0);
+        public void Start() {
+            GoalWindowButton.SetAction(Controller.Instance.PushGoalWindow);
         }
 
         public void Activate() {
@@ -25,7 +25,6 @@ namespace UI {
             Messenger.AddListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.AddListener(Events.GOAL_UPDATED, Refresh);
             Messenger.AddListener(Events.MONTH_CHANGED, Refresh);
-            Messenger.AddListener(Localization.Events.TEXT_UPDATED, Refresh);
         }
 
         public void Refresh() {
@@ -36,7 +35,6 @@ namespace UI {
             Messenger.RemoveListener(Events.EXPENSES_UPDATED, Refresh);
             Messenger.RemoveListener(Events.GOAL_UPDATED, Refresh);
             Messenger.RemoveListener(Events.MONTH_CHANGED, Refresh);
-            Messenger.RemoveListener(Localization.Events.TEXT_UPDATED, Refresh);
             HumbleView.DeconstructView();
         }
     }

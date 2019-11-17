@@ -13,8 +13,8 @@ namespace UI {
         public void Awake() {
             HumbleView = new Catagory_W_HumbleView();
 
-            BackButton.SetOnClickAction(Controller.Instance.Pop, null);
-            AddExpense.SetOnClickAction(Controller.Instance.PushAddExpenseWindow, null);
+            BackButton.SetAction(Controller.Instance.Pop, null);
+            AddExpense.SetAction(Controller.Instance.PushAddExpenseWindow, null);
         }
 
         public void Activate() {

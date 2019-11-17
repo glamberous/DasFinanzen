@@ -18,7 +18,7 @@ namespace UI {
         #endregion
 
         #region PushUI
-        public void PushEditDateWindow(int input) {
+        public void PushEditDateWindow(Void input = null) {
             Runtime.TempDay = Runtime.TempExpenseModel.Date.Day;
             Manager.Push(WINDOW.EDIT_DATE);
         }

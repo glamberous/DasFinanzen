@@ -8126,6 +8126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Original: {fileID: 398886999}
+  TileRect: {fileID: 309090015}
   TransactionText: {fileID: 2080761691}
   SpentText: {fileID: 29310765}
 --- !u!114 &1122545398
@@ -8491,9 +8492,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1163623074}
   - component: {fileID: 1163623076}
-  - component: {fileID: 1163623077}
   - component: {fileID: 1163623075}
   - component: {fileID: 1163623078}
+  - component: {fileID: 1163623077}
   m_Layer: 5
   m_Name: Next
   m_TagString: Untagged
@@ -8648,7 +8649,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1163623073}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b2e147cad03f2848b173a83a4054af2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2260b1ddefde8674fb62f4ce8b070c51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!61 &1163623078
@@ -10307,6 +10308,7 @@ GameObject:
   - component: {fileID: 1394624973}
   - component: {fileID: 1394624969}
   - component: {fileID: 1394624974}
+  - component: {fileID: 1394624977}
   m_Layer: 5
   m_Name: Main_Window
   m_TagString: Untagged
@@ -10430,12 +10432,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef97845b824c2a42b3c90e547ceed1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DailyText: {fileID: 1713279709}
-  DailyOriginal: {fileID: 13638022}
-  MonthlyText: {fileID: 1356871101}
-  MonthlyOriginal: {fileID: 2048230561}
-  SpentText1: {fileID: 746761615}
-  SpentText2: {fileID: 1571396961}
+  HeaderText: {fileID: 1713279709}
+  Original: {fileID: 13638022}
+  SpentText: {fileID: 746761615}
+  IsRecurring: 0
 --- !u!114 &1394624975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10469,6 +10469,22 @@ MonoBehaviour:
   BDASAmount: {fileID: 1120186012}
   ADASTitle: {fileID: 1807297508}
   ADASAmount: {fileID: 130838927}
+--- !u!114 &1394624977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394624967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aef97845b824c2a42b3c90e547ceed1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HeaderText: {fileID: 1356871101}
+  Original: {fileID: 2048230561}
+  SpentText: {fileID: 1571396961}
+  IsRecurring: 1
 --- !u!1 &1419889402
 GameObject:
   m_ObjectHideFlags: 0
@@ -10999,8 +11015,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1466785925}
-  - component: {fileID: 1466785927}
   - component: {fileID: 1466785929}
+  - component: {fileID: 1466785927}
   - component: {fileID: 1466785926}
   - component: {fileID: 1466785928}
   m_Layer: 5
@@ -11183,7 +11199,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1466785924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b2e147cad03f2848b173a83a4054af2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2260b1ddefde8674fb62f4ce8b070c51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1488761459
@@ -15120,7 +15136,7 @@ MonoBehaviour:
   DeleteExpenseButton: {fileID: 451458685}
   CurrencyInputField: {fileID: 263513991}
   StringInputField: {fileID: 1875116831}
-  EditDate: {fileID: 1079469666}
+  EditDateButton: {fileID: 0}
 --- !u!114 &2038742835
 MonoBehaviour:
   m_ObjectHideFlags: 0

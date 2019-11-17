@@ -40,7 +40,6 @@ namespace UI {
         private float StartingTileHeight;
         private ExpenseElement[] ExpenseElements = new ExpenseElement[1];
         private RectTransform TileRect = null;
-        //private TileUIData ExpenseTileUIData = null;
         
         private TextMeshProUGUI Transaction = null;
         private TextMeshProUGUI Spent = null;
@@ -87,7 +86,7 @@ namespace UI {
             ExpenseElement newExpense = GameObject.Instantiate(original: ExpenseElements[index-1], parent: ExpenseElements[index-1].transform.parent.transform) as ExpenseElement;
             RectTransform newRect = newExpense.GetComponent<RectTransform>();
             newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x, newRect.anchoredPosition.y + CatagoryOffset);
-            newExpense.SetOnClickAction(Controller.Instance.PushEditExpenseWindow, model.ExpenseID);
+            newExpense.SetAction(Controller.Instance.PushEditExpenseWindow, model.ExpenseID);
             newExpense.SetTileRect(TileRect);
             newExpense.UpdateView(model);
             return newExpense;

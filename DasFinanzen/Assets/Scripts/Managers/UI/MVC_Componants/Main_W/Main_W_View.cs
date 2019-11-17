@@ -17,9 +17,11 @@ namespace UI {
         public void Awake() {
             HumbleView = new Main_W_HumbleView();
             HumbleView.Awake(MonthText, PreviousText, NextText);
+        }
 
-            PreviousButton.SetOnClickAction(Controller.Instance.AddMonthToSelectedTime, -1);
-            NextButton.SetOnClickAction(Controller.Instance.AddMonthToSelectedTime, 1);
+        public void Start() {
+            PreviousButton.SetAction(Controller.Instance.AddMonthToSelectedTime, -1);
+            NextButton.SetAction(Controller.Instance.AddMonthToSelectedTime, 1);
         }
 
         public void Activate() {

@@ -7,13 +7,15 @@ using TMPro;
 namespace UI {
     public class Expense_W_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI TitleText = null;
-        [SerializeField] private Void_Button BackButton = null;
+        [SerializeField] private Button_Void BackButton = null;
 
         private Expense_W_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new Expense_W_HumbleView();
             HumbleView.Awake(TitleText);
+
+            BackButton.SetAction(Controller.Instance.Pop);
         }
 
         public void Activate() {

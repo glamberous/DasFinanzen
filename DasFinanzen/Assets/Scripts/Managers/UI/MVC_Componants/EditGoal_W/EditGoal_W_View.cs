@@ -6,13 +6,14 @@ using TMPro;
 namespace UI {
     public class EditGoal_W_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI TitleText = null;
-        [SerializeField] private Void_Button CloseButton = null;
+        [SerializeField] private Button_Void CloseButton = null;
 
         private EditGoal_W_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new EditGoal_W_HumbleView();
             HumbleView.Awake(TitleText);
+            CloseButton.SetAction(Controller.Instance.Pop);
         }
 
         public void Activate() {

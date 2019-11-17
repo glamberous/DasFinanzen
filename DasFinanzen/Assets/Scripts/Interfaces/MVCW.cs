@@ -10,12 +10,16 @@ public interface IModelCollection {
 
 }
 
-public interface IElement<T> {
-    void SetOnClickAction(Action<T> action, T var = default(T));
+public interface IControllerElement<T> {
+    void SetAction(Action<T> action, T var = default(T));
 }
 
-public interface IInputField {
+public interface IInputField<T> : IControllerElement<T> {
     void SetDisplayText(string input);
+}
+
+public interface IButton<T> : IControllerElement<T> {
+    void OnMouseUpAsButton();
 }
 
 public interface IWindow {

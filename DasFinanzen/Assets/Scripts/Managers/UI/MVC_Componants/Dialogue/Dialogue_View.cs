@@ -8,7 +8,7 @@ namespace UI {
     public class Dialogue_View : MonoBehaviour, IView {
         [SerializeField] private RectTransform Tile = null;
         [SerializeField] private TextMeshProUGUI DialogueTextMesh = null;
-        [SerializeField] private Void_Button CloseButton = null;
+        [SerializeField] private Button_Void CloseButton = null;
 
         private Dialogue_HumbleView HumbleView = null;
 
@@ -16,11 +16,7 @@ namespace UI {
             HumbleView = new Dialogue_HumbleView();
             HumbleView.Awake(Tile, DialogueTextMesh);
 
-            Dialogue_Controller Controller = new Dialogue_Controller();
-            CloseButton.SetController(Controller);
-
-            //Cross reference the Command ID's from the Controller class near the bottom of this page.
-            CloseButton.SetCommandID(0); 
+            CloseButton.SetAction(Controller.Instance.Pop);
         }
 
         public void Activate() {
