@@ -13,20 +13,23 @@ public class UIManager : MonoBehaviour {
 }
 
 public class UIManagerHumble : IManager { 
-    private Dictionary<UI.WINDOW, GameObject> Windows = null;
+    private Dictionary<UI.WINDOW, GameObject> Windows = new Dictionary<WINDOW, GameObject>();
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-        foreach (IWindow windowObj in Resources.FindObjectsOfTypeAll(typeof(IWindow)) as IWindow[])
+        // Probably turn this into a switch when I get more scenes?
+        if (scene.name == "Main")
+            LoadMain();
+    }
+
+    private void LoadMain() {
+        Windows = new Dictionary<WINDOW, GameObject>();
+        foreach (IWindow windowObj in Resources.FindObjectsOfTypeAll(typeof(Window)) as IWindow[])
             Windows[windowObj.GetEnum()] = windowObj.GetGameObject();
+        Push(UI.WINDOW.MAIN);
     }
 
     public ManagerStatus status { get; private set; }
     public void Startup() {
         Debug.Log("UI Manager starting...");
-
-        foreach (KeyValuePair<WINDOW, GameObject> window in Windows)
-            window.Value.SetActive(false);
-
-        Push(UI.WINDOW.MAIN);
 
         status = ManagerStatus.Started;
         Debug.Log("UI Manager started.");

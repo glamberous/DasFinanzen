@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class StartupController : MonoBehaviour {
-    //[SerializeField] private Slider progressBar = null;
+    [SerializeField] private Slider progressBar = null;
 
     private void Awake() {
         Messenger<int, int>.AddListener(StartupEvent.MANAGERS_PROGRESS, OnManagersProgress);
@@ -18,10 +19,10 @@ public class StartupController : MonoBehaviour {
 
     private void OnManagersProgress(int numReady, int numModules) {
         float progress = (float)numReady / numModules;
-        //progressBar.value = progress;
+        progressBar.value = progress;
     }
 
     private void OnManagersStarted() {
-        //Managers.Mission.GoToNext();
+        SceneManager.LoadScene("Main");
     }
 }

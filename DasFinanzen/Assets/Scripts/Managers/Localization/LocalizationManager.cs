@@ -6,11 +6,7 @@ using System.Text.RegularExpressions;
 using System;
 
 public class LocalizationManager : MonoBehaviour {
-
-    public void Awake() {
-        Manager = new LocalizationManagerHumble();
-    }
-    public LocalizationManagerHumble Manager { get; private set; }
+    public LocalizationManagerHumble Manager { get; private set; } = new LocalizationManagerHumble();
 }
 
 public class LocalizationManagerHumble : IManager {
