@@ -9,6 +9,7 @@ namespace UI {
     public class CatagoryList_View : MonoBehaviour, IView {
         [SerializeField] private TextMeshProUGUI HeaderText = null;
         [SerializeField] private CatagoryElement Original = null;
+        [SerializeField] private RectTransform TileRect = null;
         [SerializeField] private TextMeshProUGUI SpentText = null;
         [SerializeField] private bool IsRecurring = false;
 
@@ -16,7 +17,7 @@ namespace UI {
 
         public void Awake() {
             HumbleView = new CatagoryList_HumbleView();
-            HumbleView.Awake(Original, HeaderText, SpentText, IsRecurring);
+            HumbleView.Awake(Original, TileRect, HeaderText, SpentText, IsRecurring);
         }
 
         public void Activate() {
@@ -41,13 +42,16 @@ namespace UI {
         private float StartingTileHeight;
         private bool IsRecurring;
         private CatagoryElement[] CatagoryElements = new CatagoryElement[1];
+        private RectTransform TileRect = null;
 
         private TextMeshProUGUI Header = null;
         private TextMeshProUGUI Spent = null;
 
-        public void Awake(CatagoryElement original, TextMeshProUGUI headerText, TextMeshProUGUI spentText, bool recurring) {
+        public void Awake(CatagoryElement original, RectTransform tileRect, TextMeshProUGUI headerText, TextMeshProUGUI spentText, bool recurring) {
             CatagoryElements[0] = original;
             IsRecurring = recurring;
+            TileRect = tileRect;
+            StartingTileHeight = TileRect.sizeDelta.y;
 
             Header = headerText;
             Spent = spentText;
@@ -61,16 +65,18 @@ namespace UI {
             CatagoryElements[0].UpdateView(filteredCatagoryModels[0], expenseTotals[0]);
             for (int index = 1; index < CatagoryElements.Length; index++)
                 CatagoryElements[index] = ConstructCatagoryElement(filteredCatagoryModels[index], index, expenseTotals[0]);
+            TileRect.sizeDelta = new Vector2(TileRect.sizeDelta.x, StartingTileHeight + (CatagoryOffset * (CatagoryElements.Length - 1)));
 
             Header.text = IsRecurring ? modelCollection.Strings[17] : modelCollection.Strings[16];
             Spent.text = modelCollection.Strings[18];
         }
 
         private CatagoryModel[] GetFilteredCatagoryModels(List<CatagoryModel> catagoryModels) {
-            int count = MatchedIsRecurringCount(catagoryModels);
-            CatagoryModel[] newCatagoryModels = new CatagoryModel[count];
-            for (int index = 0; index < count; index++)
-                newCatagoryModels[index] = catagoryModels[index];
+            CatagoryModel[] newCatagoryModels = new CatagoryModel[MatchedIsRecurringCount(catagoryModels)];
+            int count = 0;
+            for (int index = 0; index < catagoryModels.Count; index++)
+                if (catagoryModels[index].Recurring == IsRecurring)
+                    newCatagoryModels[count++] = catagoryModels[index];
             return newCatagoryModels;
         }
 
@@ -101,7 +107,7 @@ namespace UI {
         private CatagoryElement ConstructCatagoryElement(CatagoryModel model, int index, decimal total) {
             CatagoryElement newExpense = GameObject.Instantiate(original: CatagoryElements[index - 1], parent: CatagoryElements[index - 1].transform.parent.transform) as CatagoryElement;
             RectTransform newRect = newExpense.GetComponent<RectTransform>();
-            newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x, newRect.anchoredPosition.y + CatagoryOffset);
+            newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x, newRect.anchoredPosition.y - CatagoryOffset);
             newExpense.SetAction(Controller.Instance.PushCatagoryWindow, model.CatagoryID);
             //newExpense.SetTileRect(TileRect); Add Later if I want the catagory tiles to scroll.
             newExpense.UpdateView(model, total);

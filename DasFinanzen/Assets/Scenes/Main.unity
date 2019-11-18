@@ -7998,7 +7998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Original: {fileID: 398886999}
-  TileRect: {fileID: 0}
+  TileRect: {fileID: 309090015}
   TransactionText: {fileID: 2080761691}
   SpentText: {fileID: 29310765}
 --- !u!114 &1122545398
@@ -10308,6 +10308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeaderText: {fileID: 1713279709}
   Original: {fileID: 13638022}
+  TileRect: {fileID: 176037012}
   SpentText: {fileID: 746761615}
   IsRecurring: 0
 --- !u!114 &1394624975
@@ -10357,6 +10358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeaderText: {fileID: 1356871101}
   Original: {fileID: 2048230561}
+  TileRect: {fileID: 1043304149}
   SpentText: {fileID: 1571396961}
   IsRecurring: 1
 --- !u!1 &1419889402

@@ -25,7 +25,7 @@ namespace UI {
             DeleteExpenseButton.SetAction(Controller.Instance.DeleteTempExpense);
             EditDateButton.SetAction(Controller.Instance.PushEditDateWindow);
             StringInputField.SetAction(Controller.Instance.SetTempExpenseName);
-
+            CurrencyInputField.SetAction(Controller.Instance.SetTempExpenseAmount);
         }
 
         public void Activate() {
