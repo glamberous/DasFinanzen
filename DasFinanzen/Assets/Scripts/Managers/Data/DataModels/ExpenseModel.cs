@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class ExpenseModel : IModel {
+public class ExpenseModel : IModel, IComparable {
     public int ExpenseID { get; private set; } = -1;
 
     public DateTime Date = Managers.Data.Runtime.SelectedTime;
@@ -28,6 +28,11 @@ public class ExpenseModel : IModel {
 
     private CatagoryModel _Catagory;
 
+    public int CompareTo(object input) {
+        ExpenseModel compareModel = input as ExpenseModel;
+        return DateTime.Compare(this.Date, compareModel.Date);
+    }
+
     public void Save() {
         if (ExpenseID == -1) {
             ExpenseID = IDTracker.CreateNew(IDType.EXPENSE);
@@ -38,6 +43,7 @@ public class ExpenseModel : IModel {
             Managers.Data.FileData.ExpenseModels.Remove(modelToRemove);
         }
         Managers.Data.FileData.ExpenseModels.Add(this);
+        Managers.Data.FileData.ExpenseModels.Sort();
         Managers.Data.Save();
         Messenger.Broadcast(UI.Events.EXPENSES_UPDATED);
     }

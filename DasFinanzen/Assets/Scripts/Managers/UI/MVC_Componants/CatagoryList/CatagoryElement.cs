@@ -19,6 +19,7 @@ namespace UI {
             NameTextMesh.text = model.NameText;
             SetColor(model.ColorCode);
             TotalTextMesh.text = "$" + catagoryTotal.ToString();
+            SetAction(Controller.Instance.PushCatagoryWindow, model.CatagoryID);
         }
 
         private void SetColor(string colorCode) {

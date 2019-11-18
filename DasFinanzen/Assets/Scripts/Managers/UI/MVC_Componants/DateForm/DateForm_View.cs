@@ -72,7 +72,7 @@ namespace UI {
         private void ResetOriginalElement(DateElement original, int arrayLength) {
             DateElements = new DateElement[arrayLength];
             DateElements[0] = original;
-            DateElements[0].SetDate(1);
+            DateElements[0].UpdateView(1);
         }
 
         private DateElement ConstructDateElement(int dateCount) {
@@ -85,7 +85,7 @@ namespace UI {
                 newRect.anchoredPosition = new Vector3(originalRect.anchoredPosition.x, newRect.anchoredPosition.y - DateElementOffset);
                 RowOffset += DateElementOffset;
             }
-            newDateElement.SetDate(dateCount + 1);
+            newDateElement.UpdateView(dateCount + 1);
             return newDateElement;
         }
 

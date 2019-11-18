@@ -64,7 +64,7 @@ namespace UI {
 
             CatagoryElements[0].UpdateView(filteredCatagoryModels[0], expenseTotals[0]);
             for (int index = 1; index < CatagoryElements.Length; index++)
-                CatagoryElements[index] = ConstructCatagoryElement(filteredCatagoryModels[index], index, expenseTotals[0]);
+                CatagoryElements[index] = ConstructCatagoryElement(filteredCatagoryModels[index], expenseTotals[index], index);
             TileRect.sizeDelta = new Vector2(TileRect.sizeDelta.x, StartingTileHeight + (CatagoryOffset * (CatagoryElements.Length - 1)));
 
             Header.text = IsRecurring ? modelCollection.Strings[17] : modelCollection.Strings[16];
@@ -104,11 +104,10 @@ namespace UI {
             CatagoryElements[0] = original;
         }
 
-        private CatagoryElement ConstructCatagoryElement(CatagoryModel model, int index, decimal total) {
+        private CatagoryElement ConstructCatagoryElement(CatagoryModel model, decimal total, int index) {
             CatagoryElement newExpense = GameObject.Instantiate(original: CatagoryElements[index - 1], parent: CatagoryElements[index - 1].transform.parent.transform) as CatagoryElement;
             RectTransform newRect = newExpense.GetComponent<RectTransform>();
             newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x, newRect.anchoredPosition.y - CatagoryOffset);
-            newExpense.SetAction(Controller.Instance.PushCatagoryWindow, model.CatagoryID);
             //newExpense.SetTileRect(TileRect); Add Later if I want the catagory tiles to scroll.
             newExpense.UpdateView(model, total);
             return newExpense;

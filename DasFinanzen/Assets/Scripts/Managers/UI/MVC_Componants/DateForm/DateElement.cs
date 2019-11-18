@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 namespace UI {
     [RequireComponent(typeof(TextMeshProUGUI))]
@@ -19,7 +20,10 @@ namespace UI {
             SelectionBox = gameObject.transform.GetChild(0).gameObject;
         }
 
-        public void SetDate(int date) => DateTextMesh.text = date.ToString();
+        public void UpdateView(int date) {
+            DateTextMesh.text = date.ToString();
+            SetAction(Controller.Instance.SetTempDay, date);
+        }
     }
 }
 

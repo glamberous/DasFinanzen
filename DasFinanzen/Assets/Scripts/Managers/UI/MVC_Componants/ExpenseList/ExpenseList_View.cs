@@ -71,7 +71,7 @@ namespace UI {
             ExpenseElements[0].UpdateView(modelCollection.ExpenseModels[0]);
             for (int index = 1; index < modelCollection.ExpenseModels.Count; index++)
                 ExpenseElements[index] = ConstructExpenseElement(modelCollection.ExpenseModels[index], index);
-            TileRect.sizeDelta = new Vector2(TileRect.sizeDelta.x, StartingTileHeight + (modelCollection.ExpenseModels.Count * CatagoryOffset));
+            TileRect.sizeDelta = new Vector2(TileRect.sizeDelta.x, StartingTileHeight + ((modelCollection.ExpenseModels.Count - 1) * CatagoryOffset));
 
             Transaction.text = modelCollection.Strings[24];
             Spent.text = modelCollection.Strings[18];
@@ -85,9 +85,7 @@ namespace UI {
         private ExpenseElement ConstructExpenseElement(ExpenseModel model, int index) {
             ExpenseElement newExpense = GameObject.Instantiate(original: ExpenseElements[index-1], parent: ExpenseElements[index-1].transform.parent.transform) as ExpenseElement;
             RectTransform newRect = newExpense.GetComponent<RectTransform>();
-            newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x, newRect.anchoredPosition.y + CatagoryOffset);
-            newExpense.SetAction(Controller.Instance.PushEditExpenseWindow, model.ExpenseID);
-            newExpense.SetTileRect(TileRect);
+            newRect.anchoredPosition = new Vector3(newRect.anchoredPosition.x, newRect.anchoredPosition.y - CatagoryOffset);
             newExpense.UpdateView(model);
             return newExpense;
         }

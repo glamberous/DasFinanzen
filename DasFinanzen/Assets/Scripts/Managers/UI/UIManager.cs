@@ -24,6 +24,10 @@ public class UIManagerHumble : IManager {
         Windows = new Dictionary<WINDOW, GameObject>();
         foreach (IWindow windowObj in Resources.FindObjectsOfTypeAll(typeof(Window)) as IWindow[])
             Windows[windowObj.GetEnum()] = windowObj.GetGameObject();
+
+        foreach (KeyValuePair<WINDOW, GameObject> pair in Windows)
+            pair.Value.SetActive(false);
+
         Push(UI.WINDOW.MAIN);
     }
 

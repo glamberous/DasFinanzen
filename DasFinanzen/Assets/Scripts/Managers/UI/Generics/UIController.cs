@@ -78,6 +78,7 @@ namespace UI {
         public void SaveTempDayToTempExpense(Void input = null) {
             Runtime.TempExpenseModel.Date = Runtime.TempExpenseModel.Date.AddDays(Runtime.TempDay - Runtime.TempExpenseModel.Date.Day);
             Messenger.Broadcast(Events.TEMP_EXPENSE_UPDATED);
+            Manager.Pop();
         }
         #endregion
 
