@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using TMPro;
 
 namespace UI {
@@ -44,7 +43,7 @@ namespace UI {
         }
 
         public void RefreshView(Expense_W_ModelCollection modelCollection) {
-            PageTitle.text = IDTracker.IsNew(modelCollection.ExpenseModel.ExpenseID) ? modelCollection.Strings[23] : modelCollection.Strings[21];
+            PageTitle.text = modelCollection.TitleString;
         }
 
         public void DeconstructView() {
@@ -54,7 +53,7 @@ namespace UI {
 
     public class Expense_W_ModelCollection {
         public ExpenseModel ExpenseModel = Managers.Data.Runtime.TempExpenseModel;
-        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 21, 23 });
+        public string TitleString = IDTracker.IsNew(Managers.Data.Runtime.TempExpenseModel.ExpenseID) ? Managers.Locale.GetString(23) : Managers.Locale.GetString(21);
     }
 }
 

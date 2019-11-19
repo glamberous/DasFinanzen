@@ -5,18 +5,15 @@ using TMPro;
 
 namespace UI {
     public class Goal_V2_View : MonoBehaviour, IView {
-        [SerializeField] private TextMeshProUGUI PlannedText = null;
         [SerializeField] private TextMeshProUGUI PlannedAmount = null;
-        [SerializeField] private TextMeshProUGUI SpentText = null;
         [SerializeField] private TextMeshProUGUI SpentAmount = null;
-        [SerializeField] private TextMeshProUGUI RemainingText = null;
         [SerializeField] private TextMeshProUGUI RemainingAmount = null;
 
         private Goal_V2_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new Goal_V2_HumbleView();
-            HumbleView.Awake(PlannedText, PlannedAmount, SpentText, SpentAmount, RemainingText, RemainingAmount);
+            HumbleView.Awake(PlannedAmount, SpentAmount, RemainingAmount);
         }
 
         public void Activate() {
@@ -41,19 +38,13 @@ namespace UI {
     }
 
     public class Goal_V2_HumbleView {
-        private TextMeshProUGUI PlannedText = null;
         private TextMeshProUGUI PlannedAmount = null;
-        private TextMeshProUGUI SpentText = null;
         private TextMeshProUGUI SpentAmount = null;
-        private TextMeshProUGUI RemainingText = null;
         private TextMeshProUGUI RemainingAmount = null;
 
-        public void Awake(TextMeshProUGUI plannedText, TextMeshProUGUI plannedAmount, TextMeshProUGUI spentText, TextMeshProUGUI spentAmount, TextMeshProUGUI remainingText, TextMeshProUGUI remainingAmount) {
-            PlannedText = plannedText;
+        public void Awake(TextMeshProUGUI plannedAmount, TextMeshProUGUI spentAmount, TextMeshProUGUI remainingAmount) {
             PlannedAmount = plannedAmount;
-            SpentText = spentText;
             SpentAmount = spentAmount;
-            RemainingText = remainingText;
             RemainingAmount = remainingAmount;
         }
 
@@ -62,10 +53,6 @@ namespace UI {
         }
 
         public void RefreshView(Goal_V2_ModelCollection modelCollection) {
-            RemainingText.text = modelCollection.Strings[20];
-            SpentText.text = modelCollection.Strings[18];
-            PlannedText.text = modelCollection.Strings[19];
-
             decimal ExpensesTotal = DataReformatter.GetExpensesTotal(modelCollection.ExpenseModels);
             SpentAmount.text = "$" + ExpensesTotal.ToString();
 
@@ -81,7 +68,6 @@ namespace UI {
     }
 
     public class Goal_V2_ModelCollection {
-        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 18, 19, 20 });
         public GoalModel GoalModel = DataQueries.GetGoalModel(Managers.Data.FileData.GoalModels, Managers.Data.Runtime.SelectedTime);
         public List<ExpenseModel> ExpenseModels = DataQueries.GetExpenseModels(Managers.Data.FileData.ExpenseModels, Managers.Data.Runtime.SelectedTime);
     }

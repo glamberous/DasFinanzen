@@ -5,14 +5,13 @@ using UnityEngine;
 namespace UI {
     public class GoalForm_View : MonoBehaviour, IView {
         [SerializeField] private Currency_InputField CurrencyInput = null;
-        [SerializeField] private TextMeshProUGUI AmountTitle = null;
         [SerializeField] private Button_Void Confirm = null;
 
         private GoalForm_HumbleView HumbleView = null;
 
         public void Awake() {
             HumbleView = new GoalForm_HumbleView();
-            HumbleView.Awake(AmountTitle, CurrencyInput);
+            HumbleView.Awake(CurrencyInput);
 
             CurrencyInput.SetAction(Controller.Instance.SetTempExpenseAmount);
             Confirm.SetAction(Controller.Instance.SaveTempExpense);
@@ -35,10 +34,8 @@ namespace UI {
 
     public class GoalForm_HumbleView {
         private Currency_InputField CurrencyInput = null;
-        private TextMeshProUGUI AmountTitle = null;
 
-        public void Awake(TextMeshProUGUI amountTitle, Currency_InputField currencyInput) {
-            AmountTitle = amountTitle;
+        public void Awake(Currency_InputField currencyInput) {
             CurrencyInput = currencyInput;
         }
 
@@ -47,8 +44,6 @@ namespace UI {
         }
 
         public void RefreshView(GoalForm_ModelCollection modelCollection) {
-            AmountTitle.text = modelCollection.Strings[22];
-
             CurrencyInput.SetDisplayText(modelCollection.GoalModel.Amount.ToString());
         }
 
@@ -58,7 +53,6 @@ namespace UI {
     }
 
     public class GoalForm_ModelCollection {
-        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { 22 });
         public GoalModel GoalModel = DataQueries.GetGoalModel(Managers.Data.FileData.GoalModels, Managers.Data.Runtime.SelectedTime);
     }
 }

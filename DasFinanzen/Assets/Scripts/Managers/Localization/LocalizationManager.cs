@@ -4,13 +4,50 @@ using UnityEngine;
 using Localization;
 using System.Text.RegularExpressions;
 using System;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LocalizationManager : MonoBehaviour {
     public LocalizationManagerHumble Manager { get; private set; } = new LocalizationManagerHumble();
+
+    private void Awake() {
+        SceneManager.sceneLoaded += Manager.OnSceneLoaded;
+    }
 }
 
 public class LocalizationManagerHumble : IManager {
     private Dictionary<int, string> LocalizedDictionary = null;
+
+    private Regex KeyRegex = new Regex(@"^\[\d+\]$");
+    private char[] BracketChars = new char[] { '[', ']' };
+
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        foreach (TextMeshProUGUI textMesh in Resources.FindObjectsOfTypeAll(typeof(TextMeshProUGUI)) as TextMeshProUGUI[])
+            AssessAndReplaceString(textMesh);
+    }
+
+    private void AssessAndReplaceString(TextMeshProUGUI textMesh) {
+        if (KeyRegex.IsMatch(textMesh.text))
+            textMesh.text = GetString(GetKey(textMesh.text));
+    }
+
+    private int GetKey(string input) => Convert.ToInt32(input.Trim(BracketChars));
+
+    public string GetString(int key) {
+        if (LocalizedDictionary.ContainsKey(key))
+            return LocalizedDictionary[key];
+        else {
+            Debug.Log("[WARNING] String key [{key}] missing.");
+            return $"[{key}] KEY MISSING";
+        }
+    }
+
+    public Dictionary<int, string> GetStringDict(int[] keys) {
+        Dictionary<int, string> newDict = new Dictionary<int, string>();
+        foreach (int key in keys)
+            newDict[key] = GetString(key);
+        return newDict;
+    }
 
     public ManagerStatus status { get; private set; }
     public void Startup() {
@@ -36,11 +73,8 @@ public class LocalizationManagerHumble : IManager {
         int tempDictKey = -1;
         string tempDictValue = "";
 
-        Regex regexObject = new Regex(@"^\[\d+\]$");
-        char[] BracketChars = new char[] { '[', ']' };
-
         foreach (string line in textFileLines) {
-            if (regexObject.IsMatch(line)) {
+            if (KeyRegex.IsMatch(line)) {
                 LocaleDict[tempDictKey] = tempDictValue.TrimEnd('\n');
                 tempDictValue = "";
                 tempDictKey = Convert.ToInt32(line.Trim(BracketChars));
@@ -56,22 +90,6 @@ public class LocalizationManagerHumble : IManager {
         Managers.Data.FileData.Locale = locale;
         LoadLocale(locale);
         Managers.Data.Save();
-        Messenger.Broadcast(Events.LOCALE_CHANGED);
-    }
-
-    public Dictionary<int, string> GetStringDict(int[] keys) {
-        Dictionary<int, string> newDict = new Dictionary<int, string>();
-        foreach (int key in keys)
-            newDict[key] = GetString(key);
-        return newDict;
-    }
-
-    private string GetString(int key) {
-        if (LocalizedDictionary.ContainsKey(key))
-            return LocalizedDictionary[key];
-        else {
-            Debug.Log("[WARNING] String key [{key}] missing.");
-            return $"[{key}] KEY MISSING";
-        }
+        //Messenger.Broadcast(Events.LOCALE_CHANGED); // Change this to scene reload.
     }
 }

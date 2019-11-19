@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour {
 
 public class UIManagerHumble : IManager { 
     private Dictionary<UI.WINDOW, GameObject> Windows = new Dictionary<WINDOW, GameObject>();
+
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         // Probably turn this into a switch when I get more scenes?
         if (scene.name == "Main")

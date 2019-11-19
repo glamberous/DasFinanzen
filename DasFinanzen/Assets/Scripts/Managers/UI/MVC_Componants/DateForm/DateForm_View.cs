@@ -65,8 +65,8 @@ namespace UI {
                     DateElements[dateIndex].SetSelected(true);
                 else
                     DateElements[dateIndex].SetSelected(false);
-            }       
-            MonthTitle.text = $"[{Managers.Data.Runtime.SelectedTime.Month + 0}]";
+            }
+            MonthTitle.text = modelCollection.MonthText;
         }
 
         private void ResetOriginalElement(DateElement original, int arrayLength) {
@@ -104,5 +104,6 @@ namespace UI {
     public class DateForm_ModelCollection {
         public int numOfDates = DateTime.DaysInMonth(Managers.Data.Runtime.SelectedTime.Year, Managers.Data.Runtime.SelectedTime.Month);
         public int TempDay = Managers.Data.Runtime.TempDay;
+        public string MonthText = Managers.Locale.GetString(Managers.Data.Runtime.SelectedTime.Month + 0);
     }
 }

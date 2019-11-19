@@ -50,7 +50,7 @@ namespace UI {
         }
 
         public void RefreshView(Dialogue_ModelCollection modelCollection) {
-            DialogueTextMesh.text = modelCollection.Strings[modelCollection.StringKey];
+            DialogueTextMesh.text = modelCollection.DialogueWindowString;
             LayoutRebuilder.ForceRebuildLayoutImmediate(TextMeshRect);
             Tile.sizeDelta = new Vector2(Tile.sizeDelta.x, TextMeshRect.sizeDelta.y + 5f);
             DialogueTextMesh.transform.localPosition = new Vector3(DialogueTextMesh.transform.localPosition.x, (TextMeshRect.sizeDelta.y / 2f) * -1, DialogueTextMesh.transform.localPosition.z);
@@ -63,6 +63,6 @@ namespace UI {
 
     public class Dialogue_ModelCollection {
         public int StringKey = Managers.Data.Runtime.DialogueWindowKey;
-        public Dictionary<int, string> Strings = Managers.Locale.GetStringDict(new int[] { Managers.Data.Runtime.DialogueWindowKey });
+        public string DialogueWindowString = Managers.Locale.GetString(Managers.Data.Runtime.DialogueWindowKey);
     }
 }
