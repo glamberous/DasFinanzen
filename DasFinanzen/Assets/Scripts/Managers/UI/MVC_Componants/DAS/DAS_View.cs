@@ -6,9 +6,7 @@ using TMPro;
 
 namespace UI {
     public class DAS_View : MonoBehaviour, IView {
-        [SerializeField] private TextMeshProUGUI BDASTitle = null;
         [SerializeField] private TextMeshProUGUI BDASAmount = null;
-        [SerializeField] private TextMeshProUGUI ADASTitle = null;
         [SerializeField] private TextMeshProUGUI ADASAmount = null;
 
         private DAS_HumbleView HumbleView = null;
